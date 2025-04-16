@@ -131,37 +131,65 @@ class _StudentHomeState extends State<StudentHome> {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             children: [
-              Divider(),
+              // Divider(),
               const SizedBox(height: 10),
 
               // Banner Carousel
-              if (courseController.getBannerList.isNotEmpty)
-                SizedBox(
-                  height: 200,
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: courseController.getBannerList.length,
-                    itemBuilder: (context, index) {
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.network(
-                          courseController.getBannerList[index],
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) =>
-                              Icon(Icons.broken_image, size: 80),
-                        ),
-                      );
-                    },
-                    onPageChanged: (index) {
-                      setState(() {
-                        _currentPage = index;
-                      });
-                    },
-                  ),
+              SizedBox(
+                height: 220,
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: courseController.getBannerList.length,
+                  physics: BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return AnimatedBuilder(
+                      animation: _pageController,
+                      builder: (context, child) {
+                        double value = 1.0;
+                        if (_pageController.position.haveDimensions) {
+                          double? page = _pageController.hasClients ? _pageController.page : null;
+
+
+                          if (page != null) {
+                            value = (1 - ((page - index).abs() * 0.4)).clamp(0.8, 1.0);
+                          }
+
+                        }
+
+                        return Center(
+                          child: Transform.scale(
+                            scale: Curves.easeOut.transform(value),
+                            child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.network(
+                                  courseController.getBannerList[index],
+                                  fit: BoxFit.cover,
+                                  // errorBuilder: (_, __, ___) => Icon(Icons.broken_image, size: 80),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentPage = index;
+                    });
+                  },
                 ),
+              ),
+
+
+
               const SizedBox(height: 10),
               Divider(),
-
               Align(
                 alignment: Alignment.center,
                 child: SmoothPageIndicator(
@@ -174,6 +202,7 @@ class _StudentHomeState extends State<StudentHome> {
                   ),
                 ),
               ),
+
 
               const SizedBox(height: 20),
 
@@ -237,12 +266,21 @@ class _StudentHomeState extends State<StudentHome> {
         ? 1
         : 0;
 
+    // Determine screen width and calculate crossAxisCount dynamically
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
+    int crossAxisCount = isLandscape
+        ? (screenWidth ~/ 220).clamp(2, 4)
+        : 2; // Show more columns in landscape
+
     return GridView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       itemCount: itemCount,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
         childAspectRatio: 1 / 1.1,
@@ -257,10 +295,12 @@ class _StudentHomeState extends State<StudentHome> {
             ? courseController.allContentList![index].pdfUpload?.toString() ?? ''
             : '';
         final imgUrl = hasContent
-            ? courseController.allContentList![index].contentImage?.toString() ?? ''
+            ? courseController.allContentList![index].contentImage?.toString() ??
+            ''
             : '';
         final videoUrl = hasContent
-            ? courseController.allContentList![index].vedioUpload?.toString() ?? ''
+            ? courseController.allContentList![index].vedioUpload?.toString() ??
+            ''
             : '';
 
         return Container(
@@ -290,6 +330,7 @@ class _StudentHomeState extends State<StudentHome> {
       },
     );
   }
+
 
   Widget buildHorizontalPdfGrid(CourseController courseController) {
     if (courseController.getpdfNotes.isEmpty) {

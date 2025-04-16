@@ -5,6 +5,7 @@ import 'package:e_learning_app/data/model/response/allContentModel.dart';
 import 'package:e_learning_app/data/model/response/bannerModel.dart';
 import 'package:e_learning_app/data/model/response/mcqModel.dart';
 import 'package:e_learning_app/data/model/response/pdfnotesModel.dart';
+import 'package:e_learning_app/data/model/response/termsConditionModel.dart';
 import 'package:e_learning_app/data/model/response/testSeriesModel.dart';
 import 'package:e_learning_app/data/repository/coursee_repo.dart';
 import 'package:get/get.dart';
@@ -26,6 +27,7 @@ class CourseController extends GetxController with GetxServiceMixin {
   List<TestSeriesModel> allTestSeries = [];
   List <PdfNotesModel> getpdfNotes = [];
   List <McqModel> getQuestions = [];
+  List <TermsConditionModel> getTermsCondition = [];
 
   List getBannerList = [];
 
@@ -72,6 +74,27 @@ class CourseController extends GetxController with GetxServiceMixin {
 
     if (responseModel.status == 200) {
       allTestSeries=testSeriesModelFromJson(jsonEncode(responseModel.data));
+
+    }
+
+    isLoading = false;
+    update();
+    return responseModel;
+  }  Future<ResponseModel> getTermsAndCondition() async {
+    isLoading = true;
+    update();
+
+    Response response = await courseRepo.getTermsCondition();
+    ResponseModel responseModel = await checkResponseModel(response);
+
+    showCustomSnackBar(
+      responseModel.message,
+      isError: responseModel.status == 200 ? false : true,
+    );
+
+
+    if (responseModel.status == 200) {
+      getTermsCondition=termsConditionModelFromJson(jsonEncode(responseModel.data));
 
     }
 

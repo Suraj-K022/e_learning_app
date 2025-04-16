@@ -12,8 +12,6 @@ import '../../../utils/images.dart';
 
 import '../../Tutor/Tutor_Dashboard/tutor_dashboard.dart';
 
-import '../SignUpScreen/signup_screen.dart';
-
 class OtpVerificationScreen extends StatefulWidget {
   final String type;
   final String phNumber;

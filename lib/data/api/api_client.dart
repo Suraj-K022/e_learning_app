@@ -126,61 +126,6 @@ class ApiClient extends GetxService {
   }
 
 
-//   Future<Response> postMultipartData(String uri,
-//       {Map<String, String>? body,
-//         Map<String, String>? headers,
-//         List<MultipartBody>? multipartBody}) async {
-//     try {
-//       log('====> API Call: Header: $_mainHeaders');
-//       log('====> API Call: Url: ${AppConstants.baseUrl}$uri');
-//       log('====> API Body: $body');
-//
-//       http.MultipartRequest request = http.MultipartRequest(
-//         'POST',
-//         Uri.parse(AppConstants.baseUrl + uri),
-//       );
-//
-//       request.headers.addAll(headers ?? _mainHeaders);
-//
-//       if (body != null) {
-//         request.fields.addAll(body);
-//       }
-//
-//       if (multipartBody != null) {
-//         multipartBody.forEach(
-//
-//           (element)async {
-//             print("sdfsdfd ${element.file}");
-//             request.files.add(
-//               await http.MultipartFile.fromPath(
-//                 element.key,
-//                 element.file.toString(),
-//                 // contentType: MediaType("image", "jpeg"),
-//               ),
-//             );
-//
-//           },
-//         );
-//         // for (var item in multipartBody) {
-//         //   print("sdfsdfd ${item.file}");
-//
-//         // }
-//       }
-//       print("sdfsdfd ${request.files}");
-//       // // Log file details
-//       // for (var file in request.files) {
-//       //   log("File Info => Name: ${file.filename}, Field: ${file.field}, Length: ${file.length}");
-//       // }
-//
-//
-//       http.Response response =
-//       await http.Response.fromStream(await request.send());
-// log("asdsd ${response.body}");
-//       return handleResponse(response, uri);
-//     } catch (e) {
-//       return Response(statusCode: 1, statusText: e.toString());
-//     }
-//   }
 
 
   Future<Response> putData(String uri, dynamic body,

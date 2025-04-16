@@ -97,7 +97,22 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar:
+      Padding(
+        padding: const EdgeInsets.all(24),
+        child: CustomButton(
+          onPressed: nextQuestion,
+          child: Poppins(
+            text: 'Next',
+            fontWeight: FontWeight.w500,
+            color: Get.theme.scaffoldBackgroundColor,
+            fontSize: 16,
+          ),
+        ),
+      ),
+
       appBar: AppBar(
+
         actions: [
           Center(
             child: Poppins(
@@ -195,7 +210,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
               Expanded(
                 child: PageView.builder(
                   controller: _pageController,
-                  physics: const NeverScrollableScrollPhysics(),
+                  physics:  NeverScrollableScrollPhysics(),
                   itemCount: questions.length,
                   itemBuilder: (context, index) {
                     final questionItem = questions[index];
@@ -259,18 +274,6 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                       ),
                     );
                   },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: CustomButton(
-                  onPressed: nextQuestion,
-                  child: Poppins(
-                    text: 'Next',
-                    fontWeight: FontWeight.w500,
-                    color: Get.theme.scaffoldBackgroundColor,
-                    fontSize: 16,
-                  ),
                 ),
               ),
             ],

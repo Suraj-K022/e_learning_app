@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../../../controller/course_Controller.dart';
 
 import '../../../../../../customWidgets/customtext.dart';
 
 
-class PrivacyPolicyScreen extends StatelessWidget {
+class PrivacyPolicyScreen extends StatefulWidget {
   const PrivacyPolicyScreen({super.key});
 
+  @override
+  State<PrivacyPolicyScreen> createState() => _PrivacyPolicyScreenState();
+}
+
+class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
+  @override
+  void initState() {
+
+    super.initState();
+    Get.find<CourseController>().getTermsAndCondition();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,13 +43,28 @@ class PrivacyPolicyScreen extends StatelessWidget {
         ),
 
       ),
-      body: ListView(padding: EdgeInsets.symmetric(horizontal: 24),
-        children: [
+      body: GetBuilder<CourseController>(
+        builder: (courseController) {
+          if (courseController.getTermsCondition.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+            itemCount: courseController.getTermsCondition.length,
+            itemBuilder: (context, index) {
+              return Poppins(
+                text: courseController.getTermsCondition[index].content ?? '',
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+                maxLines: 10,
+                color: Get.theme.hintColor,
+                textAlign: TextAlign.start,
+              );
+            },
+          );
+        },
+      ),
 
-
-          SizedBox(height: Get.height/3,),
-          Poppins(text: 'Nothing to Show',fontWeight: FontWeight.w600,fontSize: 20,color: Get.theme.hintColor,textAlign: TextAlign.center,)
-        ],),
     );
   }
 }
