@@ -45,30 +45,36 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
   }
 
   // Show loading indicator
-  Widget buildLoading() => Column(mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      SizedBox(height: Get.height/3,),
-      Center(
-        child: CircularProgressIndicator(color: Colors.blue),
-      ),
-    ],
-  );
+  Widget buildLoading() => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: Get.height / 3,
+          ),
+          Center(
+            child: CircularProgressIndicator(
+              color: Get.theme.primaryColor,
+            ),
+          ),
+        ],
+      );
 
   // Show message when nothing found
   Widget buildEmptyState(String message) => Center(
-    child: Padding(
-      padding: EdgeInsets.only(top: Get.height / 3),
-      child: Poppins(
-        text: message,
-        fontSize: 16,
-        fontWeight: FontWeight.w500,
-        color: Get.theme.hintColor,
-      ),
-    ),
-  );
+        child: Padding(
+          padding: EdgeInsets.only(top: Get.height / 3),
+          child: Poppins(
+            text: message,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Get.theme.hintColor,
+          ),
+        ),
+      );
 
   // Grid view builder
-  Widget buildGridView({required int count, required IndexedWidgetBuilder builder}) {
+  Widget buildGridView(
+      {required int count, required IndexedWidgetBuilder builder}) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: GridView.builder(
@@ -103,7 +109,13 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
           fontWeight: FontWeight.w500,
           color: Get.theme.secondaryHeaderColor,
         ),
-        leading: InkWell(onTap: ()=>Get.back(),child: Icon(Icons.arrow_back_ios,color: Get.theme.secondaryHeaderColor,size: 24,)),
+        leading: InkWell(
+            onTap: () => Get.back(),
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Get.theme.secondaryHeaderColor,
+              size: 24,
+            )),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -111,7 +123,8 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
             // Show search only if it's not PDF
             if (!isPdf && !isTestSeries)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                 child: CustomTextField(
                   controller: _searchController,
                   hintText: 'Search...',
@@ -137,7 +150,8 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
                       return InkWell(
                         onTap: () {
                           final pdfUrl = contentList?[index].pdfUpload ?? '';
-                          final videoUrl = contentList?[index].vedioUpload ?? '';
+                          final videoUrl =
+                              contentList?[index].vedioUpload ?? '';
                           final imgUrl = contentList?[index].contentImage ?? '';
 
                           Get.to(CoursePreviewList(
@@ -160,7 +174,7 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
                 }
 
                 // Show PDFs or Test Series
-                if (isPdf ) {
+                if (isPdf) {
                   if (controller.getpdfNotes.isEmpty) {
                     return buildEmptyState("No PDFs found.");
                   }
@@ -187,8 +201,8 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
                       );
                     },
                   );
-                }  // Show  Test Series
-                if ( isTestSeries) {
+                } // Show  Test Series
+                if (isTestSeries) {
                   if (controller.allTestSeries.isEmpty) {
                     return buildEmptyState("No Test found.");
                   }
@@ -199,10 +213,16 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
                       return InkWell(
                         onTap: () {
                           Get.to(TestSeriesScreen(
-
+                            testId:
+                                controller.allTestSeries[index].id.toString(),
                           ));
                         },
-                        child: TestSeriesWidget(title: controller.allTestSeries[index].title.toString(),image: controller.allTestSeries[index].imageUrl.toString(),),
+                        child: TestSeriesWidget(
+                          title:
+                              controller.allTestSeries[index].title.toString(),
+                          image: controller.allTestSeries[index].thumbnail
+                              .toString(),
+                        ),
                       );
                     },
                   );

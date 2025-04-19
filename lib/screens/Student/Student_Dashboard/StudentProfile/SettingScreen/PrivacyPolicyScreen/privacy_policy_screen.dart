@@ -4,7 +4,6 @@ import '../../../../../../controller/course_Controller.dart';
 
 import '../../../../../../customWidgets/customtext.dart';
 
-
 class PrivacyPolicyScreen extends StatefulWidget {
   const PrivacyPolicyScreen({super.key});
 
@@ -15,10 +14,10 @@ class PrivacyPolicyScreen extends StatefulWidget {
 class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
   @override
   void initState() {
-
     super.initState();
-    Get.find<CourseController>().getTermsAndCondition();
+    Get.find<CourseController>().getPolicy();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,19 +40,21 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
             size: 24,
           ),
         ),
-
       ),
       body: GetBuilder<CourseController>(
         builder: (courseController) {
-          if (courseController.getTermsCondition.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
+          if (courseController.getPrivacyPolicy.isEmpty) {
+            return Center(
+                child: CircularProgressIndicator(
+              color: Get.theme.primaryColor,
+            ));
           }
           return ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-            itemCount: courseController.getTermsCondition.length,
+            itemCount: courseController.getPrivacyPolicy.length,
             itemBuilder: (context, index) {
               return Poppins(
-                text: courseController.getTermsCondition[index].content ?? '',
+                text: courseController.getPrivacyPolicy[index].content ?? '',
                 fontWeight: FontWeight.w600,
                 fontSize: 12,
                 maxLines: 10,
@@ -64,7 +65,6 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
           );
         },
       ),
-
     );
   }
 }

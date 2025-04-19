@@ -64,8 +64,10 @@ class _CustomSwitchState extends State<CustomSwitch> {
                 height: 18,
                 decoration: BoxDecoration(
                   color: isSwitched
-                      ? (widget.activeCircleColor ?? Get.theme.scaffoldBackgroundColor)
-                      : (widget.inactiveCircleColor ?? Get.theme.secondaryHeaderColor),
+                      ? (widget.activeCircleColor ??
+                          Get.theme.scaffoldBackgroundColor)
+                      : (widget.inactiveCircleColor ??
+                          Get.theme.secondaryHeaderColor),
                   shape: BoxShape.circle,
                 ),
               ),

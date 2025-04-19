@@ -14,8 +14,9 @@ class CustomTextField extends StatefulWidget {
   final int? maxLines;
   final bool readOnly;
   final ValueChanged<String>? onChanged;
-  final int? maxDigits; // Added maxDigits
-  final TextInputType? keyboardType; // Added keyboardType
+  final int? maxDigits;
+  final TextInputType? keyboardType;
+  final String? errorText; // ✅ Added errorText field
 
   const CustomTextField({
     super.key,
@@ -29,8 +30,9 @@ class CustomTextField extends StatefulWidget {
     this.maxLines = 1,
     this.onChanged,
     this.readOnly = false,
-    this.maxDigits, // New parameter
-    this.keyboardType, // New parameter
+    this.maxDigits,
+    this.keyboardType,
+    this.errorText, // ✅ Include in constructor
   });
 
   @override
@@ -67,9 +69,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
         keyboardType: widget.keyboardType ?? TextInputType.text,
         inputFormatters: [
           if (widget.maxDigits != null)
-            LengthLimitingTextInputFormatter(widget.maxDigits), // Limit max digits
+            LengthLimitingTextInputFormatter(widget.maxDigits),
           if (widget.keyboardType == TextInputType.number)
-            FilteringTextInputFormatter.digitsOnly, // Only allow numbers if keyboardType is number
+            FilteringTextInputFormatter.digitsOnly,
         ],
         style: GoogleFonts.poppins(
           color: Get.theme.secondaryHeaderColor,
@@ -80,6 +82,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         decoration: InputDecoration(
           hintText: widget.hintText,
           hintStyle: GoogleFonts.poppins(color: Colors.grey),
+          errorText: widget.errorText, // ✅ Show error message if not null
           filled: true,
           fillColor: Colors.transparent,
           border: OutlineInputBorder(
@@ -94,15 +97,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(color: Get.theme.primaryColor),
           ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           prefixIcon: widget.prefixIcon != null
               ? Icon(widget.prefixIcon, color: Get.theme.primaryColor)
               : null,
           suffixIcon: widget.suffixIcon != null
               ? GestureDetector(
-            onTap: widget.onSuffixTap,
-            child: Icon(widget.suffixIcon, color: Colors.grey),
-          )
+                  onTap: widget.onSuffixTap,
+                  child: Icon(widget.suffixIcon, color: Colors.grey),
+                )
               : null,
         ),
       ),

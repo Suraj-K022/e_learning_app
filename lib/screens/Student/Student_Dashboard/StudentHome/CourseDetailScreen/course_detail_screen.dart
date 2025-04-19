@@ -23,7 +23,8 @@ class CourseDetailScreen extends StatefulWidget {
     required this.title,
     required this.description,
     required this.videoUrl,
-    required this.pdfUrl, required this.imgUrl,
+    required this.pdfUrl,
+    required this.imgUrl,
   });
 
   @override
@@ -42,7 +43,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
     _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
     _initializeVideo();
   }
-
 
   Future<void> _initializeVideo() async {
     try {
@@ -92,7 +92,9 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
       DeviceOrientation.landscapeRight,
     ]);
 
-    Get.to(() => FullScreenVideo(videoName: widget.title, controller: _controller))?.then((_) {
+    Get.to(() =>
+            FullScreenVideo(videoName: widget.title, controller: _controller))
+        ?.then((_) {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
@@ -140,104 +142,111 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
           const SizedBox(height: 20),
           _hasError
               ? Center(
-            child: Poppins(
-              text: "Failed to load video",
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.red,
-            ),
-          )
+                  child: Poppins(
+                    text: "Failed to load video",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.red,
+                  ),
+                )
               : _isVideoInitialized
-              ? Column(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: SizedBox(height: 300,
-                  child: AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: Stack(
-                      alignment: Alignment.center,
+                  ? Column(
                       children: [
-                        GestureDetector(
-                          onTap: _togglePlayPause,
-                          child: VideoPlayer(_controller),
-                        ),
-                        if (!_isPlaying)
-                          Container(
-                            color: Colors.black.withOpacity(0.5),
-                            child: IconButton(
-                              icon: const Icon(
-                                Icons.play_arrow,
-                                size: 64,
-                                color: Colors.white,
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: SizedBox(
+                            height: 300,
+                            child: AspectRatio(
+                              aspectRatio: _controller.value.aspectRatio,
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: _togglePlayPause,
+                                    child: VideoPlayer(_controller),
+                                  ),
+                                  if (!_isPlaying)
+                                    Container(
+                                      color: Colors.black.withOpacity(0.5),
+                                      child: IconButton(
+                                        icon: const Icon(
+                                          Icons.play_arrow,
+                                          size: 64,
+                                          color: Colors.white,
+                                        ),
+                                        onPressed: _togglePlayPause,
+                                      ),
+                                    ),
+                                  Positioned(
+                                    top: 8,
+                                    right: 8,
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.fullscreen,
+                                        size: 28,
+                                        color: Get.theme.cardColor,
+                                      ),
+                                      onPressed: _goFullScreen,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              onPressed: _togglePlayPause,
                             ),
                           ),
-                        Positioned(
-                          top: 8,
-                          right: 8,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.fullscreen,
-                              size: 28,
-                              color: Get.theme.cardColor,
-                            ),
-                            onPressed: _goFullScreen,
-                          ),
+                        ),
+                        ValueListenableBuilder(
+                          valueListenable: _controller,
+                          builder: (context, VideoPlayerValue value, child) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Slider(
+                                    value: value.position.inMilliseconds
+                                        .toDouble(),
+                                    min: 0,
+                                    max: value.duration.inMilliseconds
+                                        .toDouble(),
+                                    onChanged: (newValue) {
+                                      _seekTo(newValue /
+                                          value.duration.inMilliseconds);
+                                    },
+                                    activeColor: Get.theme.primaryColor,
+                                    inactiveColor: Get.theme.hintColor,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Poppins(
+                                      text: _formatDuration(value.position),
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: Get.theme.secondaryHeaderColor,
+                                    ),
+                                    Poppins(
+                                      text: '/',
+                                      color: Get.theme.secondaryHeaderColor,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                    ),
+                                    Poppins(
+                                      text: _formatDuration(value.duration),
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: Get.theme.secondaryHeaderColor,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       ],
-                    ),
-                  ),
-                ),
-              ),
-              ValueListenableBuilder(
-                valueListenable: _controller,
-                builder: (context, VideoPlayerValue value, child) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Slider(
-                          value: value.position.inMilliseconds.toDouble(),
-                          min: 0,
-                          max: value.duration.inMilliseconds.toDouble(),
-                          onChanged: (newValue) {
-                            _seekTo(newValue / value.duration.inMilliseconds);
-                          },
-                          activeColor: Get.theme.primaryColor,
-                          inactiveColor: Get.theme.hintColor,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Poppins(
-                            text: _formatDuration(value.position),
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12,
-                            color: Get.theme.secondaryHeaderColor,
-                          ),
-                          Poppins(
-                            text: '/',
-                            color: Get.theme.secondaryHeaderColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12,
-                          ),
-                          Poppins(
-                            text: _formatDuration(value.duration),
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12,
-                            color: Get.theme.secondaryHeaderColor,
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ],
-          )
-              : const Center(child: CircularProgressIndicator(color: Colors.blue)),
+                    )
+                  : Center(
+                      child: CircularProgressIndicator(
+                      color: Get.theme.primaryColor,
+                    )),
           const SizedBox(height: 20),
           Poppins(
             text: 'View PDF',
@@ -245,14 +254,19 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             fontSize: 16,
             color: Get.theme.secondaryHeaderColor,
           ),
-           SizedBox(height: 10),
-          InkWell(onTap:(){Get.to(PdfDetailScreen(title: widget.title, description: widget.description, pdfPath: widget.pdfUrl));},
+          SizedBox(height: 10),
+          InkWell(
+            onTap: () {
+              Get.to(PdfDetailScreen(
+                  title: widget.title,
+                  description: widget.description,
+                  pdfPath: widget.pdfUrl));
+            },
             child: PdfCard(
-              title: widget.title,
-              description: widget.description,
-              color: Colors.red,
-              imgUrl: widget.imgUrl
-            ),
+                title: widget.title,
+                description: widget.description,
+                color: Colors.red,
+                imgUrl: widget.imgUrl),
           ),
         ],
       ),
@@ -264,16 +278,12 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   }
 }
 
-
-
-
-
-
 class FullScreenVideo extends StatefulWidget {
   final VideoPlayerController controller;
   final String videoName;
 
-  const FullScreenVideo({super.key, required this.controller, required this.videoName});
+  const FullScreenVideo(
+      {super.key, required this.controller, required this.videoName});
 
   @override
   State<FullScreenVideo> createState() => _FullScreenVideoState();
@@ -311,7 +321,7 @@ class _FullScreenVideoState extends State<FullScreenVideo> {
   void _seekTo(double value) {
     final duration = widget.controller.value.duration;
     final newPosition =
-    Duration(milliseconds: (value * duration.inMilliseconds).toInt());
+        Duration(milliseconds: (value * duration.inMilliseconds).toInt());
     widget.controller.seekTo(newPosition);
     _startHideControlsTimer();
   }
@@ -352,8 +362,13 @@ class _FullScreenVideoState extends State<FullScreenVideo> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    InkWell(onTap: ()=>Get.back(),child: Icon(Icons.arrow_back_ios,color: Get.theme.scaffoldBackgroundColor,size: 24,)),
-
+                    InkWell(
+                        onTap: () => Get.back(),
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          color: Get.theme.scaffoldBackgroundColor,
+                          size: 24,
+                        )),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
@@ -376,7 +391,9 @@ class _FullScreenVideoState extends State<FullScreenVideo> {
                 alignment: Alignment.center,
                 child: IconButton(
                   icon: Icon(
-                    widget.controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                    widget.controller.value.isPlaying
+                        ? Icons.pause
+                        : Icons.play_arrow,
                     size: 60,
                     color: Colors.white,
                   ),
@@ -403,7 +420,8 @@ class _FullScreenVideoState extends State<FullScreenVideo> {
                       data: SliderTheme.of(context).copyWith(
                         trackHeight: 4,
                         minThumbSeparation: 1,
-                        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 5),
+                        thumbShape:
+                            const RoundSliderThumbShape(enabledThumbRadius: 5),
                         trackShape: const RectangularSliderTrackShape(),
                       ),
                       child: Slider(
@@ -427,7 +445,4 @@ class _FullScreenVideoState extends State<FullScreenVideo> {
       ),
     );
   }
-
-
 }
-

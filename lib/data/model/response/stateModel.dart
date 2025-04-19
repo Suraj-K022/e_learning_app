@@ -4,7 +4,8 @@
 
 import 'dart:convert';
 
-StateModel stateModelFromJson(String str) => StateModel.fromJson(json.decode(str));
+StateModel stateModelFromJson(String str) =>
+    StateModel.fromJson(json.decode(str));
 
 String stateModelToJson(StateModel data) => json.encode(data.toJson());
 
@@ -16,12 +17,16 @@ class StateModel {
   });
 
   factory StateModel.fromJson(Map<String, dynamic> json) => StateModel(
-    state: json["state"] == null ? [] : List<State>.from(json["state"]!.map((x) => State.fromJson(x))),
-  );
+        state: json["state"] == null
+            ? []
+            : List<State>.from(json["state"]!.map((x) => State.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "state": state == null ? [] : List<dynamic>.from(state!.map((x) => x.toJson())),
-  };
+        "state": state == null
+            ? []
+            : List<dynamic>.from(state!.map((x) => x.toJson())),
+      };
 }
 
 class State {
@@ -38,16 +43,20 @@ class State {
   });
 
   factory State.fromJson(Map<String, dynamic> json) => State(
-    id: json["id"],
-    name: json["name"],
-    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
-  );
+        id: json["id"],
+        name: json["name"],
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "created_at": createdAt?.toIso8601String(),
-    "updated_at": updatedAt?.toIso8601String(),
-  };
+        "id": id,
+        "name": name,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+      };
 }

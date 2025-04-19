@@ -15,8 +15,7 @@ Future<ResponseModel> checkResponseModel(Response response) async {
   if (response.statusCode == 401) {
     await Get.find<AuthController>().clearSharedData();
     Get.offAll(() => const SplashScreen());
-    showCustomSnackBar('Auth Failed', isError:
-    true);
+    showCustomSnackBar('Auth Failed', isError: true);
     return ResponseModel(401, 'Unauthorized', null);
   }
   if (response.statusCode == 200 || response.statusCode == 201) {
@@ -27,14 +26,11 @@ Future<ResponseModel> checkResponseModel(Response response) async {
       return ResponseModel(
           response.body['status'], response.body['message'] ?? '', null);
     }
-
-
   }
-  if(response.statusCode == 400){
+  if (response.statusCode == 400) {
     return ResponseModel(response.body['status'],
         response.body['message'] ?? '', response.body['data']);
-  }
-  else {
+  } else {
     if (!response.body.toString().startsWith('{')) {
       showCustomSnackBar('Internal Server Error :${response.statusCode}',
           isError: true);

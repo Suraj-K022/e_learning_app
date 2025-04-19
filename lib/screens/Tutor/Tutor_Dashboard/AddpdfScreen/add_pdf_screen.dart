@@ -1,19 +1,14 @@
 import 'dart:io';
-
 import 'package:e_learning_app/customWidgets/Custom_input_text_field.dart';
 import 'package:e_learning_app/customWidgets/customtext.dart';
-
+import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/uploadedPdfsScreen/uploaded_pdfs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:video_player/video_player.dart';
-
 import '../../../../controller/course_Controller.dart';
 import '../../../../customWidgets/custom_buttons.dart';
 
-
 class AddPdfScreen extends StatefulWidget {
-  // final String screenName;
   const AddPdfScreen({super.key});
 
   @override
@@ -23,14 +18,12 @@ class AddPdfScreen extends StatefulWidget {
 class _AddPdfScreenState extends State<AddPdfScreen> {
   final List<File> collection = [];
   final TextEditingController courseNameController = TextEditingController();
-  final TextEditingController courseTitleController = TextEditingController();
-  final TextEditingController courseContentController = TextEditingController();
-
 
   File? _pdfFile;
   File? _thumbnailFile;
 
   final ImagePicker _picker = ImagePicker();
+  bool isLoading = false;
 
   Future<void> _pickFile({
     required Future<XFile?> Function() pickFunction,
@@ -45,7 +38,6 @@ class _AddPdfScreenState extends State<AddPdfScreen> {
       });
     }
   }
-
 
   Future<void> _pickPDF() async {
     await _pickFile(
@@ -63,13 +55,23 @@ class _AddPdfScreenState extends State<AddPdfScreen> {
 
   Future<void> save() async {
     if (courseNameController.text.isEmpty ||
-
         _thumbnailFile == null ||
-
         _pdfFile == null) {
-      Get.snackbar("Missing Fields", "Please complete all fields and upload all files.");
+      Get.snackbar(
+        "Missing Fields",
+        "Please complete all fields and upload all files.",
+      );
       return;
     }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    Get.dialog(
+      Center(child: CircularProgressIndicator(color: Get.theme.primaryColor)),
+      barrierDismissible: false,
+    );
 
     final controller = Get.find<CourseController>();
     final result = await controller.addPdf(
@@ -78,14 +80,27 @@ class _AddPdfScreenState extends State<AddPdfScreen> {
       contentPdf: _pdfFile!,
     );
 
-    if (result.status == 200) {
+    Get.back(); // Close loading dialog
 
+    setState(() {
+      isLoading = false;
+    });
+
+    if (result.status == 200) {
+      // ✅ Clear all selected files and inputs
+      setState(() {
+        courseNameController.clear();
+        _thumbnailFile = null;
+        _pdfFile = null;
+        collection.clear();
+      });
+
+      Get.off(UploadedPdfsScreen());
+      Get.find<CourseController>().getPdfNotes();
     } else {
       Get.snackbar("Error", result.message);
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -93,13 +108,22 @@ class _AddPdfScreenState extends State<AddPdfScreen> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(24),
         child: CustomButton(
-          onPressed: save,
-          child: Poppins(
-            text: 'Save Pdf',
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Get.theme.secondaryHeaderColor,
-          ),
+          onPressed: isLoading ? null : save,
+          child: isLoading
+              ? SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    color: Get.theme.primaryColor,
+                  ),
+                )
+              : Poppins(
+                  text: 'Save Pdf',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Get.theme.secondaryHeaderColor,
+                ),
         ),
       ),
       appBar: AppBar(
@@ -113,7 +137,8 @@ class _AddPdfScreenState extends State<AddPdfScreen> {
         ),
         leading: InkWell(
           onTap: () => Get.back(),
-          child: Icon(Icons.arrow_back_ios, color: Get.theme.secondaryHeaderColor),
+          child:
+              Icon(Icons.arrow_back_ios, color: Get.theme.secondaryHeaderColor),
         ),
       ),
       body: ListView(
@@ -121,12 +146,10 @@ class _AddPdfScreenState extends State<AddPdfScreen> {
         children: [
           _buildLabel("Course Name"),
           const SizedBox(height: 8),
-          CustomTextField(hintText: 'Course Name', controller: courseNameController),
+          CustomTextField(
+              hintText: 'Course Name', controller: courseNameController),
           const SizedBox(height: 20),
-
           _buildFilePicker("Add Thumbnail", _pickThumbnail, _thumbnailFile),
-          // const SizedBox(height: 20),
-
           _buildFilePicker("Add PDF", _pickPDF, _pdfFile),
         ],
       ),
@@ -142,13 +165,15 @@ class _AddPdfScreenState extends State<AddPdfScreen> {
     );
   }
 
-  Widget _buildFilePicker(String label, VoidCallback onTap, File? selectedFile) {
+  Widget _buildFilePicker(
+      String label, VoidCallback onTap, File? selectedFile) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(
           onTap: onTap,
-          child: Container(margin: EdgeInsets.symmetric(vertical: 10),
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 10),
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
@@ -163,13 +188,13 @@ class _AddPdfScreenState extends State<AddPdfScreen> {
                   fontWeight: FontWeight.w500,
                   fontSize: 14,
                 ),
-                Icon(Icons.arrow_forward_ios, color: Get.theme.secondaryHeaderColor),
+                Icon(Icons.arrow_forward_ios,
+                    color: Get.theme.secondaryHeaderColor),
               ],
             ),
           ),
         ),
-        if (selectedFile != null) ...[
-          // const SizedBox(height: 8),
+        if (selectedFile != null)
           Poppins(
             text: 'Selected: ${selectedFile.path.split('/').last}',
             fontSize: 14,
@@ -177,8 +202,6 @@ class _AddPdfScreenState extends State<AddPdfScreen> {
             color: Get.theme.hintColor,
             maxLines: 3,
           ),
-          // const SizedBox(height: 20),
-        ],
       ],
     );
   }

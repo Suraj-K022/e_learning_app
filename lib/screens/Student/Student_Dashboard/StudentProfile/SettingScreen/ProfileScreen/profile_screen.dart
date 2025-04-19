@@ -85,7 +85,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         fontWeight: FontWeight.w500,
                       ),
                       Poppins(
-                        text: "Make sure you give your best shot, since you won't be able to change this later.",
+                        text:
+                            "Make sure you give your best shot, since you won't be able to change this later.",
                         color: Get.theme.hintColor,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
@@ -112,7 +113,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Get.theme.secondaryHeaderColor),
+                        border:
+                            Border.all(color: Get.theme.secondaryHeaderColor),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: Center(
@@ -174,19 +176,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         leading: IconButton(
           onPressed: () => Get.back(),
-          icon: Icon(Icons.arrow_back_ios, color: Get.theme.secondaryHeaderColor),
+          icon:
+              Icon(Icons.arrow_back_ios, color: Get.theme.secondaryHeaderColor),
         ),
         actions: [
           IconButton(
             onPressed: () {
               final profile = _authController.profileModel!;
               Get.to(() => EditScreen(
-                mobile: profile.mobile ?? '',
-                email: profile.email ?? '',
-                profileName: profile.name ?? '',
-              ));
+                    mobile: profile.mobile ?? '',
+                    email: profile.email ?? '',
+                    profileName: profile.name ?? '',
+                  ));
             },
-            icon: Icon(CupertinoIcons.pencil, size: 24, color: Get.theme.primaryColor),
+            icon: Icon(CupertinoIcons.pencil,
+                size: 24, color: Get.theme.primaryColor),
           ),
           const SizedBox(width: 8),
         ],
@@ -194,7 +198,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: GetBuilder<AuthController>(
         builder: (authController) {
           if (authController.isLoading || authController.profileModel == null) {
-            return Center(child: CircularProgressIndicator(color: Get.theme.primaryColor));
+            return Center(
+                child:
+                    CircularProgressIndicator(color: Get.theme.primaryColor));
           }
 
           final profile = authController.profileModel!;
@@ -211,13 +217,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: Get.width * 0.3,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: Get.theme.primaryColor, width: 2),
+                        border:
+                            Border.all(color: Get.theme.primaryColor, width: 2),
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        child: profile.image != null && profile.image!.isNotEmpty
+                        child: profile.image != null &&
+                                profile.image!.isNotEmpty
                             ? Image.network(profile.image!, fit: BoxFit.cover)
-                            : Image.asset(Images.defaultAvatar, fit: BoxFit.cover),
+                            : Image.asset(Images.defaultAvatar,
+                                fit: BoxFit.cover),
                       ),
                     ),
                     Positioned(
@@ -233,7 +242,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             shape: BoxShape.circle,
                             border: Border.all(color: Get.theme.primaryColor),
                           ),
-                          child: Icon(CupertinoIcons.pencil, size: 20, color: Get.theme.secondaryHeaderColor),
+                          child: Icon(CupertinoIcons.pencil,
+                              size: 20, color: Get.theme.secondaryHeaderColor),
                         ),
                       ),
                     ),

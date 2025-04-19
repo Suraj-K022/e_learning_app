@@ -9,8 +9,7 @@ import '../../../customWidgets/custom_buttons.dart';
 import '../../../customWidgets/customtext.dart';
 import '../../../data/model/body/registerUserBody.dart';
 import '../../../utils/images.dart';
-import '../../Student/Student_Dashboard/student_dashboard.dart';
-import '../../Tutor/Tutor_Dashboard/tutor_dashboard.dart';
+
 
 class SignupScreen extends StatefulWidget {
   final String type;
@@ -23,11 +22,10 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController fullnameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-
-
 
   void save() {
     final registerUserBody = RegisterUserBody(
@@ -39,26 +37,19 @@ class _SignupScreenState extends State<SignupScreen> {
       type: widget.type,
     );
 
-    Get.find<AuthController>().signUp(registerUserBody: registerUserBody).then((value) {
-
+    Get.find<AuthController>()
+        .signUp(registerUserBody: registerUserBody)
+        .then((value) {
       if (value.status == 200) {
         if (widget.type == "Student") {
           Get.off(() => SignInScreen(type: widget.type));
         } else {
           Get.off(() => SignInScreen(type: widget.type));
-
         }
+      } else {
+        showCustomSnackBar(value.message, isError: true);
       }
-      else{
-         showCustomSnackBar(value.message, isError: true);
-
-      }
-
-
-
     });
-
-
   }
 
   @override
@@ -112,12 +103,14 @@ class _SignupScreenState extends State<SignupScreen> {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
+                    borderRadius:
+                        BorderRadius.vertical(bottom: Radius.circular(30)),
                     color: Get.theme.primaryColor,
                   ),
                   height: Get.height * 0.4,
                 ),
-                Image.asset(Images.bglayer, width: Get.width, fit: BoxFit.cover),
+                Image.asset(Images.bglayer,
+                    width: Get.width, fit: BoxFit.cover),
                 Column(
                   children: [
                     SizedBox(height: 60),

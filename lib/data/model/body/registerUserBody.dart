@@ -4,9 +4,11 @@
 
 import 'dart:convert';
 
-RegisterUserBody registerUserBodyFromJson(String str) => RegisterUserBody.fromJson(json.decode(str));
+RegisterUserBody registerUserBodyFromJson(String str) =>
+    RegisterUserBody.fromJson(json.decode(str));
 
-String registerUserBodyToJson(RegisterUserBody data) => json.encode(data.toJson());
+String registerUserBodyToJson(RegisterUserBody data) =>
+    json.encode(data.toJson());
 
 class RegisterUserBody {
   String? name;
@@ -25,21 +27,22 @@ class RegisterUserBody {
     this.passwordConfirmation,
   });
 
-  factory RegisterUserBody.fromJson(Map<String, dynamic> json) => RegisterUserBody(
-    name: json["name"],
-    mobile: json["mobile"],
-    email: json["email"],
-    password: json["password"],
-    type: json["type"],
-    passwordConfirmation: json["password_confirmation"],
-  );
+  factory RegisterUserBody.fromJson(Map<String, dynamic> json) =>
+      RegisterUserBody(
+        name: json["name"],
+        mobile: json["mobile"],
+        email: json["email"],
+        password: json["password"],
+        type: json["type"],
+        passwordConfirmation: json["password_confirmation"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "name": name,
-    "mobile": mobile,
-    "email": email,
-    "password": password,
-    "type": type,
-    "password_confirmation": passwordConfirmation,
-  };
+        "name": name,
+        "mobile": mobile,
+        "email": email,
+        "password": password,
+        "type": type,
+        "password_confirmation": passwordConfirmation,
+      };
 }

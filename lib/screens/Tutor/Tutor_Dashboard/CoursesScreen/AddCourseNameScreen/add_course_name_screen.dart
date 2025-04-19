@@ -24,7 +24,8 @@ class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
   String? _thumbnailPath;
 
   Future<void> _pickThumbnail() async {
-    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _thumbnailFile = File(pickedFile.path);
@@ -41,17 +42,11 @@ class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
       return;
     }
 
-    Get.find<CourseController>()
-        .addCourse(coursename: courseName, thumbnailImg: [_thumbnailPath!])
-        .then((response) {
+    Get.find<CourseController>().addCourse(
+        coursename: courseName,
+        thumbnailImg: [_thumbnailPath!]).then((response) {
       if (response.status == 200) {
-
-
-
-
-
-       Get.close(1);
-        
+        Get.close(1);
       } else {
         Get.snackbar('Error', response.message);
       }
@@ -59,7 +54,6 @@ class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
       Get.snackbar('Error', 'Failed to add course: $error');
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -80,17 +74,25 @@ class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
         backgroundColor: Get.theme.scaffoldBackgroundColor,
         leading: InkWell(
           onTap: () => Get.back(),
-          child: Icon(Icons.arrow_back_ios_new, size: 24, color: Get.theme.secondaryHeaderColor),
+          child: Icon(Icons.arrow_back_ios_new,
+              size: 24, color: Get.theme.secondaryHeaderColor),
         ),
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         children: [
-          Poppins(text: 'Add Course', fontSize: 16, color: Get.theme.secondaryHeaderColor),
+          Poppins(
+              text: 'Add Course',
+              fontSize: 16,
+              color: Get.theme.secondaryHeaderColor),
           const SizedBox(height: 8),
-          CustomTextField(hintText: 'Add Course', controller: _courseNameController),
+          CustomTextField(
+              hintText: 'Add Course', controller: _courseNameController),
           const SizedBox(height: 20),
-          Poppins(text: 'Add Thumbnail', fontSize: 16, color: Get.theme.secondaryHeaderColor),
+          Poppins(
+              text: 'Add Thumbnail',
+              fontSize: 16,
+              color: Get.theme.secondaryHeaderColor),
           const SizedBox(height: 8),
           InkWell(
             onTap: _pickThumbnail,
@@ -109,7 +111,8 @@ class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
                     fontWeight: FontWeight.w500,
                     fontSize: 14,
                   ),
-                  Icon(Icons.arrow_forward_ios, size: 20, color: Get.theme.secondaryHeaderColor),
+                  Icon(Icons.arrow_forward_ios,
+                      size: 20, color: Get.theme.secondaryHeaderColor),
                 ],
               ),
             ),
@@ -126,7 +129,8 @@ class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
             const SizedBox(height: 10),
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.file(_thumbnailFile!, height: 160, fit: BoxFit.cover),
+              child:
+                  Image.file(_thumbnailFile!, height: 160, fit: BoxFit.cover),
             ),
           ],
         ],

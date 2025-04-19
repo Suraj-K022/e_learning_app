@@ -4,34 +4,48 @@
 
 import 'dart:convert';
 
-List<McqModel> mcqModelFromJson(String str) => List<McqModel>.from(json.decode(str).map((x) => McqModel.fromJson(x)));
+List<McqModel> mcqModelFromJson(String str) =>
+    List<McqModel>.from(json.decode(str).map((x) => McqModel.fromJson(x)));
 
-String mcqModelToJson(List<McqModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String mcqModelToJson(List<McqModel> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class McqModel {
   int? id;
-  String? question;
-  List<String>? options;
-  String? answer;
+  String? questionText;
+  String? optionA;
+  String? optionB;
+  String? optionC;
+  String? optionD;
+  String? correctOption;
 
   McqModel({
     this.id,
-    this.question,
-    this.options,
-    this.answer,
+    this.questionText,
+    this.optionA,
+    this.optionB,
+    this.optionC,
+    this.optionD,
+    this.correctOption,
   });
 
   factory McqModel.fromJson(Map<String, dynamic> json) => McqModel(
-    id: json["id"],
-    question: json["question"],
-    options: json["options"] == null ? [] : List<String>.from(json["options"]!.map((x) => x)),
-    answer: json["answer"],
-  );
+        id: json["id"],
+        questionText: json["question_text"],
+        optionA: json["option_a"],
+        optionB: json["option_b"],
+        optionC: json["option_c"],
+        optionD: json["option_d"],
+        correctOption: json["correct_option"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "question": question,
-    "options": options == null ? [] : List<dynamic>.from(options!.map((x) => x)),
-    "answer": answer,
-  };
+        "id": id,
+        "question_text": questionText,
+        "option_a": optionA,
+        "option_b": optionB,
+        "option_c": optionC,
+        "option_d": optionD,
+        "correct_option": correctOption,
+      };
 }

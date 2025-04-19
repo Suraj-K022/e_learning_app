@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import '../../../../../customWidgets/customtext.dart';
 
-
 class FaqsScreen extends StatelessWidget {
   const FaqsScreen({super.key});
 
@@ -29,17 +28,22 @@ class FaqsScreen extends StatelessWidget {
             size: 24,
           ),
         ),
-
       ),
-
-
-      body: ListView(padding: EdgeInsets.symmetric(horizontal: 24),
+      body: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 24),
         children: [
-
-
-          SizedBox(height: Get.height/3,),
-          Poppins(text: 'Nothing to Show',fontWeight: FontWeight.w600,fontSize: 20,color: Get.theme.hintColor,textAlign: TextAlign.center,)
-        ],),
+          SizedBox(
+            height: Get.height / 3,
+          ),
+          Poppins(
+            text: 'Nothing to Show',
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+            color: Get.theme.hintColor,
+            textAlign: TextAlign.center,
+          )
+        ],
+      ),
     );
   }
 }

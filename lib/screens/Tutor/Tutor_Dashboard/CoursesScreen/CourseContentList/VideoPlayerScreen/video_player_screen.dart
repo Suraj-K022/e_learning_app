@@ -1,4 +1,3 @@
-
 import 'package:e_learning_app/screens/Student/Student_Dashboard/StudentHome/PdfDetailScreen/pdf_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,7 +14,12 @@ class VideoPlayerScreen extends StatefulWidget {
   final String discription;
 
   final String videoUrl;
-  const VideoPlayerScreen({super.key, required this.videoUrl, required this.pdfPath, required this.pdfName, required this.discription});
+  const VideoPlayerScreen(
+      {super.key,
+      required this.videoUrl,
+      required this.pdfPath,
+      required this.pdfName,
+      required this.discription});
 
   @override
   _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
@@ -66,7 +70,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       appBar: AppBar(
         leading: InkWell(
           onTap: () => Get.back(),
-          child: Icon(Icons.arrow_back_ios_new, size: 24, color: Get.theme.secondaryHeaderColor),
+          child: Icon(Icons.arrow_back_ios_new,
+              size: 24, color: Get.theme.secondaryHeaderColor),
         ),
         backgroundColor: Get.theme.scaffoldBackgroundColor,
       ),
@@ -85,10 +90,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               children: [
                 _controller.value.isInitialized
                     ? AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
-                )
-                    :  Center(child: CircularProgressIndicator(color: Get.theme.primaryColor)),
+                        aspectRatio: _controller.value.aspectRatio,
+                        child: VideoPlayer(_controller),
+                      )
+                    : Center(
+                        child: CircularProgressIndicator(
+                            color: Get.theme.primaryColor)),
 
                 // Play/Pause Overlay
                 Positioned.fill(
@@ -146,15 +153,24 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               ],
             ),
           ),
-          SizedBox(height: 8,),
-          Poppins(text: widget.videoUrl,maxLines: 3,),
-
+          SizedBox(
+            height: 8,
+          ),
+          Poppins(
+            text: widget.videoUrl,
+            maxLines: 3,
+          ),
 
           SizedBox(height: 20),
 
           // PDF Button
           ListTile(
-            onTap: (){Get.to(PdfDetailScreen(title: widget.pdfName, description:widget.discription, pdfPath: widget.pdfPath));},
+            onTap: () {
+              Get.to(PdfDetailScreen(
+                  title: widget.pdfName,
+                  description: widget.discription,
+                  pdfPath: widget.pdfPath));
+            },
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
@@ -177,8 +193,13 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               color: Get.theme.secondaryHeaderColor,
             ),
           ),
-          SizedBox(height: 8,),
-          Poppins(text: widget.pdfPath,maxLines: 3,)
+          SizedBox(
+            height: 8,
+          ),
+          Poppins(
+            text: widget.pdfPath,
+            maxLines: 3,
+          )
         ],
       ),
     );

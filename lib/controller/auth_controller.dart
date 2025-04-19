@@ -5,9 +5,7 @@ import 'dart:io';
 import 'package:e_learning_app/data/model/base/response_model.dart';
 import 'package:e_learning_app/data/model/response/profileModel.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/response/response.dart';
 
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import '../data/model/body/registerUserBody.dart';
 import '../data/repository/auth_repo.dart';
 
@@ -22,8 +20,6 @@ class AuthController extends GetxController with GetxServiceMixin {
 
   String? userId;
   bool isLoading = false;
-  // RxString userpassword = ''.obs;
-  // InfoModel? infoModel;
   ProfileModel? profileModel;
   String? profilePic;
 
@@ -59,10 +55,6 @@ class AuthController extends GetxController with GetxServiceMixin {
 
     if (responseModel.status == 200) {
       authRepo.saveUserToken(response.body["token"]);
-      // userpassword.value = response.body["password"]; // Store OTP in RxString
-      // if (userpassword.value.isNotEmpty) {
-      //   log("Received password: ${userpassword.value}");
-      // }
     }
 
     update();
@@ -84,10 +76,6 @@ class AuthController extends GetxController with GetxServiceMixin {
         isError: responseModel.status == 200 ? false : true);
 
     if (responseModel.status == 200) {
-      // userpassword.value = response.body["password"]; // Store OTP in RxString
-      // if (userpassword.value.isNotEmpty) {
-      //   log("Received password: ${userpassword.value}");
-      // }
     } else {
       showCustomSnackBar(responseModel.message);
     }
@@ -172,20 +160,13 @@ class AuthController extends GetxController with GetxServiceMixin {
     }
   }
 
-
-
-
-
-
-  Future<ResponseModel> updateProfile(
-      {required String name,
-        required String email,
-        required String mobile,
-
-        }) async {
+  Future<ResponseModel> updateProfile({
+    required String name,
+    required String email,
+    required String mobile,
+  }) async {
     update();
-    Response response = await authRepo.updateProfile(
-       name,email,mobile);
+    Response response = await authRepo.updateProfile(name, email, mobile);
 
     log("AddCourse Response: ${jsonEncode(response.body)}");
 

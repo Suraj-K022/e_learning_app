@@ -1,5 +1,3 @@
-
-
 import 'dart:developer';
 import 'dart:io';
 
@@ -12,13 +10,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthRepo{
+class AuthRepo {
   final ApiClient apiClient;
   final SharedPreferences sharedPreferences;
-  AuthRepo( {
-    required this.apiClient,required this.sharedPreferences,
-
-});
+  AuthRepo({
+    required this.apiClient,
+    required this.sharedPreferences,
+  });
   Future<bool> saveUserToken(String token) async {
     try {
       apiClient.updateHeader(token);
@@ -32,8 +30,6 @@ class AuthRepo{
   String getUserToken() {
     return sharedPreferences.getString(AppConstants.token) ?? "";
   }
-
-
 
   bool isLoggedIn() {
     return sharedPreferences.containsKey(AppConstants.token);
@@ -62,16 +58,16 @@ class AuthRepo{
     return sharedPreferences.getBool(AppConstants.themeMode) ?? false;
   }
 
-
-
-  Future<Response> loginUser( String phNumber, String password,String type) async {
+  Future<Response> loginUser(
+      String phNumber, String password, String type) async {
     try {
-      return await apiClient.postData(AppConstants.login, {"email_or_mobile": phNumber,"password": password,"type":type});
+      return await apiClient.postData(AppConstants.login, {"email_or_mobile": phNumber, "password": password, "type": type});
     } catch (e) {
       debugPrint("Error sending phone number & pass: $e");
       rethrow;
     }
   }
+
 //sign up data
   Future<Response> registerUser(RegisterUserBody registerUserBody) async {
     try {
@@ -82,36 +78,36 @@ class AuthRepo{
     }
   }
 
-
   Future getProfile() async {
     try {
       return await apiClient.getData(AppConstants.profile);
-    } catch (e,straktrace) {
+    } catch (e, straktrace) {
       debugPrint("Error fetching Profile: $e $straktrace");
       rethrow;
     }
   }
+
   Future getProfilePic() async {
     try {
       return await apiClient.getData(AppConstants.profileimage);
-    } catch (e,straktrace) {
+    } catch (e, straktrace) {
       debugPrint("Error fetching Profile: $e $straktrace");
       rethrow;
     }
   }
+
   Future deleteProfile(int userId) async {
     try {
       return await apiClient.deleteData("${AppConstants.deleteUser}$userId");
-    } catch (e,straktrace) {
+    } catch (e, straktrace) {
       debugPrint("Error fetching Profile: $e $straktrace");
       rethrow;
     }
   }
 
-
   Future<Response> uploadProfilePic(
-      File? profileImg,
-      ) async {
+    File? profileImg,
+  ) async {
     try {
       List<MultipartBody> multipartBody = [];
       if (profileImg != null && await profileImg.exists()) {
@@ -129,13 +125,11 @@ class AuthRepo{
     }
   }
 
-
-
   Future<Response> updateProfile(
-      String name,
-      String email,
-      String mobile,
-      ) async {
+    String name,
+    String email,
+    String mobile,
+  ) async {
     try {
       return await apiClient.postMultipartData(
         AppConstants.updateprofile,
@@ -150,8 +144,4 @@ class AuthRepo{
       rethrow;
     }
   }
-
-
-
-
 }

@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../../../../customWidgets/customtext.dart';
 
-
 class PdfDetailScreen extends StatefulWidget {
   final String title;
   final String description;
@@ -64,45 +63,46 @@ class _PdfDetailScreenState extends State<PdfDetailScreen> {
             Expanded(
               child: isError
                   ? Center(
-                child: Poppins(
-                  text: "Failed to load PDF!",
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Get.theme.hintColor,
-                ),
-              )
+                      child: Poppins(
+                        text: "Failed to load PDF!",
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Get.theme.hintColor,
+                      ),
+                    )
                   : widget.pdfPath.startsWith("http")
-                  ? SfPdfViewer.network(
-                widget.pdfPath,
-                key: _pdfViewerKey,
-                onDocumentLoadFailed: (details) {
-                  setState(() {
-                    isError = true;
-                  });
-                },
-              )
-                  : File(widget.pdfPath).existsSync()
-                  ? SfPdfViewer.file(
-                File(widget.pdfPath),
-                key: _pdfViewerKey,
-                onDocumentLoadFailed: (details) {
-                  setState(() {
-                    isError = true;
-                  });
-                },
-              )
-                  : Center(
-                child: Poppins(
-                  text: "PDF not found!",
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.red,
-                ),
-              ),
+                      ? SfPdfViewer.network(
+                          widget.pdfPath,
+                          key: _pdfViewerKey,
+                          onDocumentLoadFailed: (details) {
+                            setState(() {
+                              isError = true;
+                            });
+                          },
+                        )
+                      : File(widget.pdfPath).existsSync()
+                          ? SfPdfViewer.file(
+                              File(widget.pdfPath),
+                              key: _pdfViewerKey,
+                              onDocumentLoadFailed: (details) {
+                                setState(() {
+                                  isError = true;
+                                });
+                              },
+                            )
+                          : Center(
+                              child: Poppins(
+                                text: "PDF not found!",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.red,
+                              ),
+                            ),
             ),
-            SizedBox(height: 20,)
+            SizedBox(
+              height: 20,
+            )
           ],
-
         ),
       ),
     );

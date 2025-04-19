@@ -1,19 +1,14 @@
-
 import 'dart:async';
 
 import 'package:e_learning_app/screens/AuthScreens/SignInScreen/sign_in_screen.dart';
 import 'package:e_learning_app/screens/Student/Student_Dashboard/student_dashboard.dart';
 import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/tutor_dashboard.dart';
-import 'package:e_learning_app/screens/splashscreen/entityScreen/entity_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controller/auth_controller.dart';
 import '../../customWidgets/customtext.dart';
 import '../onboardScreen/onboard_screen.dart';
-
-
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -74,5 +69,3 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
-
-

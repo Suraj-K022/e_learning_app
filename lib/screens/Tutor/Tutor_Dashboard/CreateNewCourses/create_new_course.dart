@@ -36,6 +36,16 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
   VideoPlayerController? _videoController;
   final ImagePicker _picker = ImagePicker();
 
+  // Error states
+  bool _titleError = false;
+  bool _contentError = false;
+  bool _thumbnailError = false;
+  bool _videoError = false;
+  bool _pdfError = false;
+
+  // Saving state
+  bool _isSaving = false;
+
   @override
   void initState() {
     super.initState();
@@ -90,32 +100,39 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
   }
 
   Future<void> save() async {
+    setState(() => _isSaving = true);
 
+    _titleError = courseTitleController.text.isEmpty;
+    _contentError = courseContentController.text.isEmpty;
+    _thumbnailError = _thumbnailFile == null;
+    _videoError = _videoFile == null;
+    _pdfError = _pdfFile == null;
 
-
-    if (courseNameController.text.isEmpty ||
-        courseTitleController.text.isEmpty ||
-        courseContentController.text.isEmpty ||
-        _thumbnailFile == null ||
-        _videoFile == null ||
-        _pdfFile == null) {
-      Get.snackbar("Missing Fields", "Please complete all fields and upload all files.");
+    if (_titleError ||
+        _contentError ||
+        _thumbnailError ||
+        _videoError ||
+        _pdfError) {
+      setState(() => _isSaving = false);
+      Get.snackbar(
+          "Missing Fields", "Please complete all fields and upload all files.");
       return;
     }
 
-    Get.find<CourseController>().addContent(
-      course: courseNameController.text,
-      title: courseTitleController.text,
-      description: courseContentController.text,
-      contentImg: File(_thumbnailFile!.path),
-      contentVideo: File(_videoFile!.path),
-      contentPdf: File(_pdfFile!.path),
-    ).then((value) {
+    try {
+      final value = await Get.find<CourseController>().addContent(
+        course: courseNameController.text,
+        title: courseTitleController.text,
+        description: courseContentController.text,
+        contentImg: File(_thumbnailFile!.path),
+        contentVideo: File(_videoFile!.path),
+        contentPdf: File(_pdfFile!.path),
+      );
+
       debugPrint("Response Status: ${value.status}");
 
       if (value.status == 200) {
-        Get.find<CourseController>().getAllCourses();
-
+        await Get.find<CourseController>().getAllCourses();
 
         if (widget.ScreenName == 'CourseContentScreen') {
           Get.close(1);
@@ -125,7 +142,12 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
       } else {
         debugPrint("Navigation skipped because status is not 200.");
       }
-    });
+    } catch (e) {
+      debugPrint("Error during save: $e");
+      Get.snackbar("Error", "Something went wrong. Please try again.");
+    } finally {
+      setState(() => _isSaving = false);
+    }
   }
 
   @override
@@ -133,15 +155,20 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
     return Scaffold(
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(24),
-        child: CustomButton(
-          onPressed: save,
-          child: Poppins(
-            text: 'Save Course',
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Get.theme.secondaryHeaderColor,
-          ),
-        ),
+        child: _isSaving
+            ? Center(
+                child: CircularProgressIndicator(
+                color: Get.theme.primaryColor,
+              ))
+            : CustomButton(
+                onPressed: save,
+                child: Poppins(
+                  text: 'Save Course',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Get.theme.secondaryHeaderColor,
+                ),
+              ),
       ),
       appBar: AppBar(
         centerTitle: true,
@@ -154,7 +181,8 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
         ),
         leading: InkWell(
           onTap: () => Get.back(),
-          child: Icon(Icons.arrow_back_ios, color: Get.theme.secondaryHeaderColor),
+          child:
+              Icon(Icons.arrow_back_ios, color: Get.theme.secondaryHeaderColor),
         ),
       ),
       body: ListView(
@@ -164,28 +192,36 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
           const SizedBox(height: 8),
           widget.courseName.isEmpty
               ? CustomTextField(
-            hintText: 'Course Name',
-            controller: courseNameController,
-          )
+                  hintText: 'Course Name',
+                  controller: courseNameController,
+                )
               : _buildCourseNameDisplay(widget.courseName),
           const SizedBox(height: 20),
           _buildLabel("Course Title"),
           const SizedBox(height: 8),
-          CustomTextField(hintText: 'Course Title', controller: courseTitleController),
+          CustomTextField(
+            hintText: 'Course Title',
+            controller: courseTitleController,
+            errorText: _titleError ? 'Course title is required' : null,
+          ),
           const SizedBox(height: 20),
           _buildLabel("Add Content"),
           const SizedBox(height: 8),
           CustomTextField(
             hintText: 'Add Content',
-            maxLines: 100,
             controller: courseContentController,
+            maxLines: 100,
+            errorText: _contentError ? 'Content description is required' : null,
           ),
           const SizedBox(height: 20),
-          _buildFilePicker("Add Thumbnail", _pickThumbnail, _thumbnailFile),
+          _buildFilePicker("Add Thumbnail", _pickThumbnail, _thumbnailFile,
+              error: _thumbnailError ? 'Thumbnail is required' : null),
           const SizedBox(height: 20),
-          _buildFilePicker("Upload Video", _pickVideo, _videoFile),
+          _buildFilePicker("Upload Video", _pickVideo, _videoFile,
+              error: _videoError ? 'Video is required' : null),
           const SizedBox(height: 20),
-          _buildFilePicker("Add PDF", _pickPDF, _pdfFile),
+          _buildFilePicker("Add PDF", _pickPDF, _pdfFile,
+              error: _pdfError ? 'PDF is required' : null),
         ],
       ),
     );
@@ -216,7 +252,12 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
     );
   }
 
-  Widget _buildFilePicker(String label, VoidCallback onTap, File? selectedFile) {
+  Widget _buildFilePicker(
+    String label,
+    VoidCallback onTap,
+    File? selectedFile, {
+    String? error,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -237,7 +278,8 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
                   fontWeight: FontWeight.w500,
                   fontSize: 14,
                 ),
-                Icon(Icons.arrow_forward_ios, color: Get.theme.secondaryHeaderColor),
+                Icon(Icons.arrow_forward_ios,
+                    color: Get.theme.secondaryHeaderColor),
               ],
             ),
           ),
@@ -251,7 +293,14 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
             color: Get.theme.hintColor,
             maxLines: 3,
           ),
-          const SizedBox(height: 20),
+        ],
+        if (error != null) ...[
+          const SizedBox(height: 8),
+          Poppins(
+            text: error,
+            color: Colors.red,
+            fontSize: 12,
+          ),
         ],
       ],
     );

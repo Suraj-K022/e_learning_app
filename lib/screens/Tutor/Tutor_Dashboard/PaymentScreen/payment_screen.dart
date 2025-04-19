@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import '../../../../customWidgets/customtext.dart';
 
-
 class PaymentScreen extends StatelessWidget {
   const PaymentScreen({super.key});
 
@@ -29,21 +28,42 @@ class PaymentScreen extends StatelessWidget {
             size: 24,
           ),
         ),
-
       ),
-      body:
-      ListView(padding: EdgeInsets.symmetric(horizontal: 24),
+      body: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 24),
         children: [
-          Poppins(text: '25 March',fontSize: 14,color: Get.theme.secondaryHeaderColor,),
-
-          ListTile(shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
-            title: Poppins(text: 'Java',fontSize: 16,color: Get.theme.secondaryHeaderColor,),
-            trailing: Poppins(text: '+249 Rs',fontSize: 14,color:Colors.green
-              ,),
-            subtitle: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+          Poppins(
+            text: '25 March',
+            fontSize: 14,
+            color: Get.theme.secondaryHeaderColor,
+          ),
+          ListTile(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8))),
+            title: Poppins(
+              text: 'Java',
+              fontSize: 16,
+              color: Get.theme.secondaryHeaderColor,
+            ),
+            trailing: Poppins(
+              text: '+249 Rs',
+              fontSize: 14,
+              color: Colors.green,
+            ),
+            subtitle: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Poppins(text: 'Pratham Goswami ',fontSize: 12,color: Get.theme.primaryColor,),
-                Poppins(text: 'By Credit card ',fontSize: 12,color: Get.theme.hintColor,),
+                Poppins(
+                  text: 'Pratham Goswami ',
+                  fontSize: 12,
+                  color: Get.theme.primaryColor,
+                ),
+                Poppins(
+                  text: 'By Credit card ',
+                  fontSize: 12,
+                  color: Get.theme.hintColor,
+                ),
               ],
             ),
             tileColor: Get.theme.cardColor,

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,9 +7,6 @@ import '../../customWidgets/custom_buttons.dart';
 import '../../customWidgets/customtext.dart';
 import '../../utils/images.dart';
 import '../splashscreen/entityScreen/entity_screen.dart';
-
-
-
 
 class OnboardScreen extends StatefulWidget {
   const OnboardScreen({super.key});
@@ -27,25 +23,25 @@ class _OnboardScreenState extends State<OnboardScreen> {
     {
       'title': 'Tailor-Make Professional Invoices',
       'subtitle':
-      'Choose from a wide range of customizable templates and create invoices that reflect your business.',
+          'Choose from a wide range of customizable templates and create invoices that reflect your business.',
       'image': Images.onboardimage1
     },
     {
       'title': 'Quick & Secure Payments',
       'subtitle':
-      'Set up online payment and allow your customers to choose from multiple payment options.',
+          'Set up online payment and allow your customers to choose from multiple payment options.',
       'image': Images.onboardimage2
     },
     {
       'title': 'Time Tracking',
       'subtitle':
-      'Track the time your users spend on tasks. You can later create timesheets for them and bill your customers.',
+          'Track the time your users spend on tasks. You can later create timesheets for them and bill your customers.',
       'image': Images.onboardimage3
     },
     {
       'title': 'Access Detailed Reports',
       'subtitle':
-      'Access in-depth reports and get a detailed overview of your business’s health.',
+          'Access in-depth reports and get a detailed overview of your business’s health.',
       'image': Images.onboardimage4
     },
   ];
@@ -84,18 +80,19 @@ class _OnboardScreenState extends State<OnboardScreen> {
       floatingActionButton: currentIndex == 0
           ? null
           : FloatingActionButton(
-        onPressed: () {
-          if (_pageController.page! > 0) {
-            _pageController.previousPage(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-          }
-        },
-        elevation: 0, // Optional: Remove shadow for a cleaner look
-        backgroundColor: Get.theme.scaffoldBackgroundColor,
-        child: Icon(Icons.arrow_back_ios_new_rounded, color: Get.theme.primaryColor, size: 24),
-      ),
+              onPressed: () {
+                if (_pageController.page! > 0) {
+                  _pageController.previousPage(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                }
+              },
+              elevation: 0, // Optional: Remove shadow for a cleaner look
+              backgroundColor: Get.theme.scaffoldBackgroundColor,
+              child: Icon(Icons.arrow_back_ios_new_rounded,
+                  color: Get.theme.primaryColor, size: 24),
+            ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       body: Column(
         children: [
@@ -128,7 +125,8 @@ class _OnboardScreenState extends State<OnboardScreen> {
                     ),
                     if (onboardData[index]['subtitle']!.isNotEmpty)
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 40, vertical: 10),
                         child: Poppins(
                           text: onboardData[index]['subtitle']!,
                           maxLines: 4,
@@ -157,7 +155,8 @@ class _OnboardScreenState extends State<OnboardScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Row(
               children: [
-                if (currentIndex < 3) // Show Skip button only if not on the last page
+                if (currentIndex <
+                    3) // Show Skip button only if not on the last page
                   Expanded(
                     flex: 1,
                     child: InkWell(
@@ -168,7 +167,8 @@ class _OnboardScreenState extends State<OnboardScreen> {
                         height: 48,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Get.theme.primaryColor, width: 1),
+                          border: Border.all(
+                              color: Get.theme.primaryColor, width: 1),
                         ),
                         child: Center(
                           child: Poppins(
@@ -181,13 +181,19 @@ class _OnboardScreenState extends State<OnboardScreen> {
                       ),
                     ),
                   ),
-                if (currentIndex < 3) const SizedBox(width: 20), // Add spacing only when Skip is visible
+                if (currentIndex < 3)
+                  const SizedBox(
+                      width: 20), // Add spacing only when Skip is visible
                 Expanded(
-                  flex: currentIndex == 3 ? 2 : 1, // Make "Get Started" full width when Skip is hidden
+                  flex: currentIndex == 3
+                      ? 2
+                      : 1, // Make "Get Started" full width when Skip is hidden
                   child: CustomButton(
                     onPressed: _nextPage,
                     child: Poppins(
-                      text: currentIndex == onboardData.length - 1 ? 'Get Started' : 'Next',
+                      text: currentIndex == onboardData.length - 1
+                          ? 'Get Started'
+                          : 'Next',
                       color: Get.theme.secondaryHeaderColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
@@ -197,7 +203,6 @@ class _OnboardScreenState extends State<OnboardScreen> {
               ],
             ),
           ),
-
           const SizedBox(height: 20),
         ],
       ),

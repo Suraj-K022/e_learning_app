@@ -13,7 +13,7 @@ class Poppins extends StatelessWidget {
   final TextDecoration? textDecoration;
 
   const Poppins({
-    Key? key,
+    super.key,
     required this.text,
     this.fontSize,
     this.color,
@@ -22,7 +22,7 @@ class Poppins extends StatelessWidget {
     this.maxLines, // New maxLines parameter
     this.overflow, // New overflow parameter
     this.textDecoration, // New textDecoration parameter
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,8 @@ class Poppins extends StatelessWidget {
         fontSize: fontSize ?? 12,
         color: color ?? Get.theme.primaryColor,
         fontWeight: fontWeight ?? FontWeight.normal,
-        decoration: textDecoration ?? TextDecoration.none, // Default to no decoration
+        decoration:
+            textDecoration ?? TextDecoration.none, // Default to no decoration
       ),
     );
   }

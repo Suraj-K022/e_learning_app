@@ -24,9 +24,8 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
     super.initState();
     Get.find<AuthController>().getProfile();
   }
+
   final TextEditingController reasonController = TextEditingController();
-
-
 
   final AuthController authController = Get.find<AuthController>();
 
@@ -46,7 +45,8 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
         ),
         leading: IconButton(
           onPressed: () => Get.back(),
-          icon: Icon(Icons.arrow_back_ios, color: Get.theme.secondaryHeaderColor, size: 24),
+          icon: Icon(Icons.arrow_back_ios,
+              color: Get.theme.secondaryHeaderColor, size: 24),
         ),
       ),
       body: GetBuilder<AuthController>(builder: (_) {
@@ -85,11 +85,13 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.note_alt_outlined, color: Get.theme.hintColor, size: 20),
+                  Icon(Icons.note_alt_outlined,
+                      color: Get.theme.hintColor, size: 20),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Poppins(
-                      text: 'Please note that this action is irreversible. You will not be able to use the app.',
+                      text:
+                          'Please note that this action is irreversible. You will not be able to use the app.',
                       maxLines: 4,
                       fontWeight: FontWeight.w400,
                       fontSize: 12,
@@ -104,7 +106,6 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomCheckBox(
-
                   value: isChecked,
                   onChanged: (value) {
                     setState(() {
@@ -115,7 +116,8 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Poppins(
-                    text: 'I understand that this action is irreversible and all my data will be permanently deleted.',
+                    text:
+                        'I understand that this action is irreversible and all my data will be permanently deleted.',
                     maxLines: 4,
                     fontWeight: FontWeight.w500,
                     fontSize: 12,
@@ -134,22 +136,19 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
               ),
               onPressed: () async {
                 if (!isChecked) {
-                  showCustomSnackBar("Please confirm before deleting your account.");
+                  showCustomSnackBar(
+                      "Please confirm before deleting your account.");
                   return;
                 }
 
-                int userId = int.parse(authController.profileModel!.id.toString());
+                int userId =
+                    int.parse(authController.profileModel!.id.toString());
                 await authController.deleteProfile(userId).then((value) {
-
                   if (value.status == 200) {
                     Get.offAll(EntityScreen());
-
-
                   } else {
                     showCustomSnackBar(value.message, isError: true);
                   }
-
-
                 });
               },
             ),

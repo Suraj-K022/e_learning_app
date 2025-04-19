@@ -6,10 +6,10 @@ class CustomCheckBox extends StatelessWidget {
   final ValueChanged<bool?> onChanged;
 
   const CustomCheckBox({
-    Key? key,
+    super.key,
     required this.value,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +30,10 @@ class CustomCheckBox extends StatelessWidget {
         ),
         child: value
             ? Icon(
-          Icons.check,
-          color: Get.theme.primaryColor,
-          size: 16,
-        )
+                Icons.check,
+                color: Get.theme.primaryColor,
+                size: 16,
+              )
             : null,
       ),
     );

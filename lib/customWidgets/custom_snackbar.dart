@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import '../utils/dimensions.dart';
 
-
 void showCustomSnackBar(String message, {bool isError = false}) {
   if (message.isNotEmpty) {
     Get.showSnackbar(GetSnackBar(

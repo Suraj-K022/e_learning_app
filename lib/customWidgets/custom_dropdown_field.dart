@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'customtext.dart';
 
-
 class CustomDropdownField extends StatefulWidget {
   final String hintText;
   final List<String> items;
@@ -70,7 +69,9 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
                   ),
                 ),
                 Icon(
-                  _isDropdownOpen ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+                  _isDropdownOpen
+                      ? Icons.keyboard_arrow_up_rounded
+                      : Icons.keyboard_arrow_down_rounded,
                   color: Get.theme.primaryColor,
                 ),
               ],
@@ -89,7 +90,8 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: List.generate(widget.items.length, (index) {
-                return Column(crossAxisAlignment: CrossAxisAlignment.start,
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GestureDetector(
                       onTap: () {
@@ -104,17 +106,18 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 12),
-                        child: Poppins(text:
-                          widget.items[index],
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Get.theme.secondaryHeaderColor,
-                          ),
+                        child: Poppins(
+                          text: widget.items[index],
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Get.theme.secondaryHeaderColor,
                         ),
-
+                      ),
                     ),
                     if (index != widget.items.length - 1)
-                       Divider(height: 1, color: Get.theme.hintColor.withOpacity(.4)),
+                      Divider(
+                          height: 1,
+                          color: Get.theme.hintColor.withOpacity(.4)),
                   ],
                 );
               }),

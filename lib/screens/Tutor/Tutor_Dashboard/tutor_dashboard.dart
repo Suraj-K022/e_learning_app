@@ -1,9 +1,10 @@
-
 import 'package:e_learning_app/controller/auth_controller.dart';
 import 'package:e_learning_app/screens/Student/Student_Dashboard/StudentProfile/SettingScreen/setting_screen.dart';
 import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/AddBannersScreen/add_banner_screen.dart';
 import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/AddTestScreen/add_test_screen.dart';
 import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/AddpdfScreen/add_pdf_screen.dart';
+import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/availableTestSeries/available_test_series.dart';
+import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/uploadedPdfsScreen/uploaded_pdfs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -35,33 +36,39 @@ class _TutorDashboardState extends State<TutorDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Get.theme.scaffoldBackgroundColor,
-        title:
-
-
-        GetBuilder<AuthController>(
+        title: GetBuilder<AuthController>(
           builder: (authController) {
             if (authController.isLoading) {
-              return Poppins(text: 'Loading...',color: Get.theme.primaryColor,fontWeight: FontWeight.w400,fontSize: 12,);
-            }
-
-            else if (authController.profileModel?.username?.isEmpty ?? true) {
-              return Column(crossAxisAlignment: CrossAxisAlignment.center,mainAxisAlignment: MainAxisAlignment.center,
+              return Poppins(
+                text: 'Loading...',
+                color: Get.theme.primaryColor,
+                fontWeight: FontWeight.w400,
+                fontSize: 12,
+              );
+            } else if (authController.profileModel?.username?.isEmpty ?? true) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: Get.height/3,),
-                  Center(child:
-                  Poppins(text: 'Hey User, ',fontSize: 16,fontWeight: FontWeight.w500,color: Get.theme.primaryColor,),
-
+                  SizedBox(
+                    height: Get.height / 3,
+                  ),
+                  Center(
+                    child: Poppins(
+                      text: 'Hey User, ',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Get.theme.primaryColor,
+                    ),
                   ),
                 ],
               );
             }
 
-            return
-
-
-            Row(
+            return Row(
               children: [
                 InkWell(
                   onTap: () => Get.to(ProfileScreen()),
@@ -76,91 +83,311 @@ class _TutorDashboardState extends State<TutorDashboard> {
                         : null,
                   ),
                 ),
-
-                SizedBox(width: 10,),
-                Poppins(text: 'Hey, ${authController.profileModel!.name.toString()} ',fontSize: 16,fontWeight: FontWeight.w500,color: Get.theme.primaryColor,),
+                SizedBox(
+                  width: 10,
+                ),
+                Poppins(
+                  text: 'Hey, ${authController.profileModel!.name.toString()} ',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Get.theme.primaryColor,
+                ),
               ],
-            )
-            ;
-
+            );
           },
         ),
-
-
-
-
         actions: [
-          InkWell(onTap: (){Get.to(NotificationScreen());},child: Icon(Icons.notifications_active_outlined,size: 24,color: Get.theme.secondaryHeaderColor,)),
-          SizedBox(width: 24,)],
+          InkWell(
+              onTap: () {
+                Get.to(NotificationScreen());
+              },
+              child: Icon(
+                Icons.notifications_active_outlined,
+                size: 24,
+                color: Get.theme.secondaryHeaderColor,
+              )),
+          SizedBox(
+            width: 12,
+          ),
+          InkWell(
+              onTap: () {
+                Get.to(SettingScreen());
+              },
+              child: Image.asset(
+                Images.settings,
+                height: 20,
+                width: 20,
+              )),
+          SizedBox(
+            width: 36,
+          ),
+        ],
       ),
-      body: GridView(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,mainAxisSpacing: 16,crossAxisSpacing: 16,childAspectRatio: 1/1),padding: EdgeInsets.symmetric(horizontal: 24,vertical: 24),children: [
-        InkWell(onTap: (){Get.to(CreateNewCourse(courseName: '',ScreenName: 'TutorDashboard',));},
-          child: Container(decoration: BoxDecoration(color: Get.theme.cardColor,borderRadius: BorderRadius.all(Radius.circular(12),),border: Border.all(color: Get.theme.primaryColor,width: 1)),child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(spacing: 5,mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,children: [
-              SizedBox(height: 30,width: 30,child: Image.asset(Images.add,fit: BoxFit.cover,color: Get.theme.secondaryHeaderColor,),),
-              Poppins(text: 'Create New Course',fontSize: 16,color: Get.theme.secondaryHeaderColor,fontWeight: FontWeight.w500,maxLines: 3,textAlign: TextAlign.center,)
-            ],),
-          ),),
-        ),
-        InkWell(onTap: (){Get.to(CoursesScreen());},
-          child: Container(decoration: BoxDecoration(color: Get.theme.cardColor,borderRadius: BorderRadius.all(Radius.circular(12),),border: Border.all(color: Get.theme.primaryColor,width: 1)),child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(spacing: 5,mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,children: [
-              SizedBox(height: 30,width: 30,child: Image.asset(Images.course,fit: BoxFit.cover,color: Get.theme.secondaryHeaderColor,),),
-              Poppins(text: 'Courses',fontSize: 16,color: Get.theme.secondaryHeaderColor,fontWeight: FontWeight.w500,maxLines: 3,textAlign: TextAlign.center,)
-            ],),
-          ),),
-        ),
+      body: GridView(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 16,
+            crossAxisSpacing: 16,
+            childAspectRatio: 1 / 1),
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        children: [
+          InkWell(
+            onTap: () {
+              Get.to(CreateNewCourse(
+                courseName: '',
+                ScreenName: 'TutorDashboard',
+              ));
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Get.theme.cardColor,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(12),
+                  ),
+                  border: Border.all(color: Get.theme.primaryColor, width: 1)),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  spacing: 5,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: Image.asset(
+                        Images.add,
+                        fit: BoxFit.cover,
+                        color: Get.theme.secondaryHeaderColor,
+                      ),
+                    ),
+                    Poppins(
+                      text: 'Create New Course',
+                      fontSize: 16,
+                      color: Get.theme.secondaryHeaderColor,
+                      fontWeight: FontWeight.w500,
+                      maxLines: 3,
+                      textAlign: TextAlign.center,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Get.to(CoursesScreen());
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Get.theme.cardColor,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(12),
+                  ),
+                  border: Border.all(color: Get.theme.primaryColor, width: 1)),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  spacing: 5,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: Image.asset(
+                        Images.course,
+                        fit: BoxFit.cover,
+                        color: Get.theme.secondaryHeaderColor,
+                      ),
+                    ),
+                    Poppins(
+                      text: 'Courses',
+                      fontSize: 16,
+                      color: Get.theme.secondaryHeaderColor,
+                      fontWeight: FontWeight.w500,
+                      maxLines: 3,
+                      textAlign: TextAlign.center,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
 
-        InkWell(onTap: (){Get.to(AddTestScreen());},
-          child: Container(decoration: BoxDecoration(color: Get.theme.cardColor,borderRadius: BorderRadius.all(Radius.circular(12),),border: Border.all(color: Get.theme.primaryColor,width: 1)),child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(spacing: 5,mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,children: [
-              SizedBox(height: 30,width: 30,child: Image.asset(Images.test,fit: BoxFit.cover,color: Get.theme.secondaryHeaderColor,),),
-              Poppins(text: 'Test',fontSize: 16,color: Get.theme.secondaryHeaderColor,fontWeight: FontWeight.w500,maxLines: 3,textAlign: TextAlign.center,)
-            ],),
-          ),),
-        ),
-        InkWell(onTap: (){Get.to(PaymentScreen());},
-          child: Container(decoration: BoxDecoration(color: Get.theme.cardColor,borderRadius: BorderRadius.all(Radius.circular(12),),border: Border.all(color: Get.theme.primaryColor,width: 1)),child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(spacing: 5,mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,children: [
-              SizedBox(height: 30,width: 30,child: Image.asset(Images.wallet,fit: BoxFit.cover,color: Get.theme.secondaryHeaderColor,),),
-              Poppins(text: 'Payments',fontSize: 16,color: Get.theme.secondaryHeaderColor,fontWeight: FontWeight.w500,maxLines: 3,textAlign: TextAlign.center,)
-            ],),
-          ),),
-        ),
+          InkWell(
+            onTap: () {
+              Get.to(AddTestScreen());
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Get.theme.cardColor,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(12),
+                  ),
+                  border: Border.all(color: Get.theme.primaryColor, width: 1)),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  spacing: 5,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: Image.asset(
+                        Images.test,
+                        fit: BoxFit.cover,
+                        color: Get.theme.secondaryHeaderColor,
+                      ),
+                    ),
+                    Poppins(
+                      text: 'Create Test',
+                      fontSize: 16,
+                      color: Get.theme.secondaryHeaderColor,
+                      fontWeight: FontWeight.w500,
+                      maxLines: 3,
+                      textAlign: TextAlign.center,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Get.to(AvailableTestSeries());
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Get.theme.cardColor,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(12),
+                  ),
+                  border: Border.all(color: Get.theme.primaryColor, width: 1)),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  spacing: 5,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: Image.asset(
+                        Images.test,
+                        fit: BoxFit.cover,
+                        color: Get.theme.secondaryHeaderColor,
+                      ),
+                    ),
+                    Poppins(
+                      text: 'Test Series',
+                      fontSize: 16,
+                      color: Get.theme.secondaryHeaderColor,
+                      fontWeight: FontWeight.w500,
+                      maxLines: 3,
+                      textAlign: TextAlign.center,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
 
-        InkWell(onTap: (){Get.to(AddPdfScreen());},
-          child: Container(decoration: BoxDecoration(color: Get.theme.cardColor,borderRadius: BorderRadius.all(Radius.circular(12),),border: Border.all(color: Get.theme.primaryColor,width: 1)),child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(spacing: 5,mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,children: [
-              SizedBox(height: 30,width: 30,child: Image.asset(Images.settings,fit: BoxFit.cover,color: Get.theme.secondaryHeaderColor,),),
-              Poppins(text: 'Add Pdfs',fontSize: 16,color: Get.theme.secondaryHeaderColor,fontWeight: FontWeight.w500,maxLines: 3,textAlign: TextAlign.center,)
-            ],),
-          ),),
-        ),
-        // InkWell(onTap: (){Get.to(AddBannerScreen());},
-        //   child: Container(decoration: BoxDecoration(color: Get.theme.cardColor,borderRadius: BorderRadius.all(Radius.circular(12),),border: Border.all(color: Get.theme.primaryColor,width: 1)),child: Padding(
-        //     padding: const EdgeInsets.all(20),
-        //     child: Column(spacing: 5,mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,children: [
-        //       SizedBox(height: 30,width: 30,child: Image.asset(Images.settings,fit: BoxFit.cover,color: Get.theme.secondaryHeaderColor,),),
-        //       Poppins(text: 'Add Banners',fontSize: 16,color: Get.theme.secondaryHeaderColor,fontWeight: FontWeight.w500,maxLines: 3,textAlign: TextAlign.center,)
-        //     ],),
-        //   ),),
-        // ),
-        InkWell(onTap: (){Get.to(SettingScreen());},
-          child: Container(decoration: BoxDecoration(color: Get.theme.cardColor,borderRadius: BorderRadius.all(Radius.circular(12),),border: Border.all(color: Get.theme.primaryColor,width: 1)),child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(spacing: 5,mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,children: [
-              SizedBox(height: 30,width: 30,child: Image.asset(Images.settings,fit: BoxFit.cover,color: Get.theme.secondaryHeaderColor,),),
-              Poppins(text: 'Settings',fontSize: 16,color: Get.theme.secondaryHeaderColor,fontWeight: FontWeight.w500,maxLines: 3,textAlign: TextAlign.center,)
-            ],),
-          ),),
-        ),
+          InkWell(
+            onTap: () {
+              Get.to(UploadedPdfsScreen());
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Get.theme.cardColor,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(12),
+                  ),
+                  border: Border.all(color: Get.theme.primaryColor, width: 1)),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  spacing: 5,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: Image.asset(
+                        Images.i5,
+                        fit: BoxFit.cover,
+                        color: Get.theme.secondaryHeaderColor,
+                      ),
+                    ),
+                    Poppins(
+                      text: 'Uploaded Pdfs',
+                      fontSize: 16,
+                      color: Get.theme.secondaryHeaderColor,
+                      fontWeight: FontWeight.w500,
+                      maxLines: 3,
+                      textAlign: TextAlign.center,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Get.to(PaymentScreen());
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Get.theme.cardColor,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(12),
+                  ),
+                  border: Border.all(color: Get.theme.primaryColor, width: 1)),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  spacing: 5,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: Image.asset(
+                        Images.wallet,
+                        fit: BoxFit.cover,
+                        color: Get.theme.secondaryHeaderColor,
+                      ),
+                    ),
+                    Poppins(
+                      text: 'Payments',
+                      fontSize: 16,
+                      color: Get.theme.secondaryHeaderColor,
+                      fontWeight: FontWeight.w500,
+                      maxLines: 3,
+                      textAlign: TextAlign.center,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
 
-      ],),
+          // InkWell(onTap: (){Get.to(AddBannerScreen());},
+          //   child: Container(decoration: BoxDecoration(color: Get.theme.cardColor,borderRadius: BorderRadius.all(Radius.circular(12),),border: Border.all(color: Get.theme.primaryColor,width: 1)),child: Padding(
+          //     padding: const EdgeInsets.all(20),
+          //     child: Column(spacing: 5,mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,children: [
+          //       SizedBox(height: 30,width: 30,child: Image.asset(Images.settings,fit: BoxFit.cover,color: Get.theme.secondaryHeaderColor,),),
+          //       Poppins(text: 'Add Banners',fontSize: 16,color: Get.theme.secondaryHeaderColor,fontWeight: FontWeight.w500,maxLines: 3,textAlign: TextAlign.center,)
+          //     ],),
+          //   ),),
+          // ),
+        ],
+      ),
     );
   }
 }

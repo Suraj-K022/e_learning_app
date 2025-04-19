@@ -1,11 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../../customWidgets/course_card_widget.dart';
 import '../../../../../customWidgets/customtext.dart';
 import '../../../../../utils/images.dart';
-
 
 class DownloadScreen extends StatelessWidget {
   const DownloadScreen({super.key});
@@ -33,12 +31,40 @@ class DownloadScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: GridView(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,crossAxisSpacing: 16,mainAxisSpacing: 16,),padding: EdgeInsets.symmetric(horizontal: 24),children: [
-        CourseCard(count: '',imageUrl: Images.dummyimg,title: 'title', description: 'description', ),
-        CourseCard(count: '',imageUrl: Images.dummyimg,title: 'title', description: 'description', ),
-        CourseCard(count: '',imageUrl: Images.dummyimg,title: 'title', description: 'description', ),
-        CourseCard(count: '',imageUrl: Images.dummyimg,title: 'title', description: 'description',),
-      ],),
+      body: GridView(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 24),
+        children: [
+          CourseCard(
+            count: '',
+            imageUrl: Images.dummyimg,
+            title: 'title',
+            description: 'description',
+          ),
+          CourseCard(
+            count: '',
+            imageUrl: Images.dummyimg,
+            title: 'title',
+            description: 'description',
+          ),
+          CourseCard(
+            count: '',
+            imageUrl: Images.dummyimg,
+            title: 'title',
+            description: 'description',
+          ),
+          CourseCard(
+            count: '',
+            imageUrl: Images.dummyimg,
+            title: 'title',
+            description: 'description',
+          ),
+        ],
+      ),
     );
   }
 }

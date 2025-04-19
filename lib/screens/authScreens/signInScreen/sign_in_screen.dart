@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_learning_app/customWidgets/customtext.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../controller/auth_controller.dart';
 import '../../../customWidgets/Custom_input_text_field.dart';
@@ -22,6 +25,50 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  // Future<void> handleGoogleSignIn() async {
+  //   try {
+  //     final googleUser = await GoogleSignIn().signIn();
+  //     if (googleUser == null) return;
+  //
+  //     final googleAuth = await googleUser.authentication;
+  //     final credential = GoogleAuthProvider.credential(
+  //       accessToken: googleAuth.accessToken,
+  //       idToken: googleAuth.idToken,
+  //     );
+  //
+  //     final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+  //     final user = userCredential.user;
+  //
+  //     if (user != null) {
+  //       final userDocRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+  //       final userDoc = await userDocRef.get();
+  //
+  //       if (!userDoc.exists || !(userDoc.data()?.containsKey('type') ?? false)) {
+  //         // Save type and email if new or missing
+  //         await userDocRef.set({
+  //           'email': user.email,
+  //           'type': widget.type,
+  //         }, SetOptions(merge: true));
+  //       }
+  //
+  //       // Get the type from Firestore (fallback to widget.type)
+  //       final userData = (await userDocRef.get()).data();
+  //       final type = userData?['type'] ?? widget.type;
+  //
+  //       if (type == "Student") {
+  //         Get.off(() => StudentDashboard(index: 0));
+  //       } else if (type == "Teacher" || type == "Tutor") {
+  //         Get.off(() => TutorDashboard());
+  //       } else {
+  //         // Optional fallback or error handling
+  //         print("Unknown user type: $type");
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print('Google Sign-In failed: $e');
+  //   }
+  // }
+
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailphoneController = TextEditingController();
   bool isPasswordVisible = false;
@@ -144,8 +191,9 @@ class _SignInScreenState extends State<SignInScreen> {
                 CustomTextField(
                   hintText: 'Enter Password',
                   controller: passwordController,
-                  suffixIcon:
-                  isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  suffixIcon: isPasswordVisible
+                      ? Icons.visibility
+                      : Icons.visibility_off,
                   obscureText: !isPasswordVisible,
                   onSuffixTap: () {
                     setState(() {
@@ -172,6 +220,19 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: 20,
+                ),
+
+                // Align(alignment: Alignment.center,
+                //   child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8),),color: Get.theme.cardColor),padding: EdgeInsets.symmetric(horizontal: 12,vertical: 12),
+                //     child: IconButton(
+                //       icon: Image.asset('assets/icons/google.png', width: 40, height: 40),
+                //       onPressed: handleGoogleSignIn,
+                //     ),
+                //   ),
+                // ),
+                const SizedBox(width: 20),
               ],
             ),
           ),
@@ -181,9 +242,7 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void save() {
-    if (emailphoneController.text.isEmpty ||
-        passwordController.text.isEmpty) {
-
+    if (emailphoneController.text.isEmpty || passwordController.text.isEmpty) {
       return;
     }
 

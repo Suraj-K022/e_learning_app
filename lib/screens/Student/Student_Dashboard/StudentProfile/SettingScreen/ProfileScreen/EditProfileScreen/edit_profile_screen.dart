@@ -55,7 +55,8 @@ class _EditScreenState extends State<EditScreen> {
               color: Get.theme.secondaryHeaderColor, size: 24),
         ),
       ),
-      bottomNavigationBar: GetBuilder<AuthController>(builder: (authController) {
+      bottomNavigationBar:
+          GetBuilder<AuthController>(builder: (authController) {
         return Padding(
           padding: const EdgeInsets.all(24),
           child: CustomButton(
@@ -78,7 +79,8 @@ class _EditScreenState extends State<EditScreen> {
               if (name == widget.profileName &&
                   email == widget.email &&
                   mobile == widget.mobile) {
-                showCustomSnackBar('You haven\'t made any changes.', isError: true);
+                showCustomSnackBar('You haven\'t made any changes.',
+                    isError: true);
                 return;
               }
 

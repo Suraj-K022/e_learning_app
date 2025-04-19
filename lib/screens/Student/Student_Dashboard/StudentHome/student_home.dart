@@ -90,7 +90,8 @@ class _StudentHomeState extends State<StudentHome> {
                       child: Image.network(
                         profile.image ?? '',
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Icon(Icons.person, size: 30),
+                        errorBuilder: (_, __, ___) =>
+                            Icon(Icons.person, size: 30),
                       ),
                     ),
                   ),
@@ -147,13 +148,14 @@ class _StudentHomeState extends State<StudentHome> {
                       builder: (context, child) {
                         double value = 1.0;
                         if (_pageController.position.haveDimensions) {
-                          double? page = _pageController.hasClients ? _pageController.page : null;
-
+                          double? page = _pageController.hasClients
+                              ? _pageController.page
+                              : null;
 
                           if (page != null) {
-                            value = (1 - ((page - index).abs() * 0.4)).clamp(0.8, 1.0);
+                            value = (1 - ((page - index).abs() * 0.4))
+                                .clamp(0.8, 1.0);
                           }
-
                         }
 
                         return Center(
@@ -186,8 +188,6 @@ class _StudentHomeState extends State<StudentHome> {
                 ),
               ),
 
-
-
               const SizedBox(height: 10),
               Divider(),
               Align(
@@ -200,9 +200,17 @@ class _StudentHomeState extends State<StudentHome> {
                     dotWidth: 8,
                     activeDotColor: Colors.blue,
                   ),
+                  onDotClicked: (index) {
+                    if (_pageController.hasClients) {
+                      _pageController.animateToPage(
+                        index,
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
                 ),
               ),
-
 
               const SizedBox(height: 20),
 
@@ -213,9 +221,11 @@ class _StudentHomeState extends State<StudentHome> {
               buildCourseGrid(courseController),
               SizedBox(height: 20),
               buildSectionHeader('PDF Notes', 'PDF NOTES'),
-                SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
 
-                buildHorizontalPdfGrid(courseController),
+              buildHorizontalPdfGrid(courseController),
               SizedBox(height: 20),
               buildSectionHeader('Test Series', 'Test Series'),
               SizedBox(height: 10),
@@ -255,16 +265,19 @@ class _StudentHomeState extends State<StudentHome> {
     final courseList = courseController.getCourseList;
 
     if (courseList.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: Colors.blue));
+      return Center(
+          child: CircularProgressIndicator(
+        color: Get.theme.primaryColor,
+      ));
     }
 
     int itemCount = courseList.length >= 4
         ? 4
         : courseList.length >= 2
-        ? 2
-        : courseList.length == 1
-        ? 1
-        : 0;
+            ? 2
+            : courseList.length == 1
+                ? 1
+                : 0;
 
     // Determine screen width and calculate crossAxisCount dynamically
     final screenWidth = MediaQuery.of(context).size.width;
@@ -292,15 +305,17 @@ class _StudentHomeState extends State<StudentHome> {
             courseController.allContentList!.length > index;
 
         final pdfUrl = hasContent
-            ? courseController.allContentList![index].pdfUpload?.toString() ?? ''
+            ? courseController.allContentList![index].pdfUpload?.toString() ??
+                ''
             : '';
         final imgUrl = hasContent
-            ? courseController.allContentList![index].contentImage?.toString() ??
-            ''
+            ? courseController.allContentList![index].contentImage
+                    ?.toString() ??
+                ''
             : '';
         final videoUrl = hasContent
             ? courseController.allContentList![index].vedioUpload?.toString() ??
-            ''
+                ''
             : '';
 
         return Container(
@@ -331,10 +346,12 @@ class _StudentHomeState extends State<StudentHome> {
     );
   }
 
-
   Widget buildHorizontalPdfGrid(CourseController courseController) {
     if (courseController.getpdfNotes.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: Colors.blue));
+      return Center(
+          child: CircularProgressIndicator(
+        color: Get.theme.primaryColor,
+      ));
     }
     return SizedBox(
       height: 180,
@@ -368,7 +385,10 @@ class _StudentHomeState extends State<StudentHome> {
 
   Widget buildHorizontalTestSeriesGrid(CourseController courseController) {
     if (courseController.allTestSeries.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: Colors.blue));
+      return Center(
+          child: CircularProgressIndicator(
+        color: Get.theme.primaryColor,
+      ));
     }
 
     return SizedBox(
@@ -384,10 +404,12 @@ class _StudentHomeState extends State<StudentHome> {
         itemBuilder: (context, index) {
           final test = courseController.allTestSeries[index];
           return InkWell(
-            onTap: () => Get.to(TestSeriesScreen()),
+            onTap: () => Get.to(TestSeriesScreen(
+              testId: courseController.allTestSeries[index].id.toString(),
+            )),
             child: TestSeriesWidget(
               title: test.title.toString(),
-              image: test.imageUrl.toString(),
+              image: test.thumbnail.toString(),
             ),
           );
         },

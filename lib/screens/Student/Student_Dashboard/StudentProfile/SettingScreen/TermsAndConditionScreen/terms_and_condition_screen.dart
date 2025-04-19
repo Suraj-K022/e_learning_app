@@ -4,21 +4,21 @@ import 'package:get/get.dart';
 
 import '../../../../../../customWidgets/customtext.dart';
 
-
 class TermsAndConditionScreen extends StatefulWidget {
   const TermsAndConditionScreen({super.key});
 
   @override
-  State<TermsAndConditionScreen> createState() => _TermsAndConditionScreenState();
+  State<TermsAndConditionScreen> createState() =>
+      _TermsAndConditionScreenState();
 }
 
 class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
   @override
   void initState() {
-
     super.initState();
     Get.find<CourseController>().getTermsAndCondition();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,12 +41,14 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
             size: 24,
           ),
         ),
-
       ),
       body: GetBuilder<CourseController>(
         builder: (courseController) {
           if (courseController.getTermsCondition.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+                child: CircularProgressIndicator(
+              color: Get.theme.primaryColor,
+            ));
           }
           return ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
@@ -64,7 +66,6 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
           );
         },
       ),
-
     );
   }
 }

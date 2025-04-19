@@ -41,9 +41,18 @@ class CourseRepo {
     }
   }
 
-  Future getMcqQuestions() async {
+  Future getPrivacyPolicy() async {
     try {
-      return await apiClient.getData(AppConstants.questions);
+      return await apiClient.getData(AppConstants.getpolicy);
+    } catch (e, straktrace) {
+      debugPrint("Error fetching Terms And Conditions: $e $straktrace");
+      rethrow;
+    }
+  }
+
+  Future getMcqQuestions({required String id}) async {
+    try {
+      return await apiClient.getData("${AppConstants.getQuestionsofTest}/$id}");
     } catch (e, straktrace) {
       debugPrint("Error fetching All Courses: $e $straktrace");
       rethrow;
@@ -77,17 +86,39 @@ class CourseRepo {
     }
   }
 
+  Future<Response> postQuestions(
+      int testSeriesId,
+      String question,
+      String optionA,
+      String optionB,
+      String optionC,
+      String optionD,
+      String answer) async {
+    try {
+      return await apiClient.postData(AppConstants.postQuestions, {
+        "test_series_id": testSeriesId,
+        "question_text": question,
+        "option_a": optionA,
+        "option_b": optionB,
+        "option_c": optionC,
+        "option_d": optionD,
+        "correct_option": answer
+      });
+    } catch (e) {
+      debugPrint("Error sending phone number & pass: $e");
+      rethrow;
+    }
+  }
+
   Future<Response> addCourse(
     String coursename,
     List thumbnailImg,
   ) async {
     List<MultipartBody> collection = [];
-
     for (var item in thumbnailImg) {
       collection.add(
           MultipartBody("course_image", item)); // Do something with each item
     }
-
     try {
       return await apiClient.postMultipartData(AppConstants.addcourse,
           body: {"course_name": coursename}, multipartBody: collection);
@@ -215,6 +246,16 @@ class CourseRepo {
           .deleteData("${AppConstants.deletecontent}$contentId");
     } catch (e, straktrace) {
       debugPrint("Error fetching Profile: $e $straktrace");
+      rethrow;
+    }
+  }
+
+  Future deleteProfile(int questionId) async {
+    try {
+      return await apiClient
+          .deleteData("${AppConstants.deleteQuestion}$questionId");
+    } catch (e, straktrace) {
+      debugPrint("Error deleting question: $e $straktrace");
       rethrow;
     }
   }

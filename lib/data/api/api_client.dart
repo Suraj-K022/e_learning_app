@@ -26,7 +26,9 @@ class ApiClient extends GetxService {
 
   String? token;
 
-  ApiClient({required this.sharedPreferences}) {  updateHeader(sharedPreferences.getString(AppConstants.token) ?? '');}
+  ApiClient({required this.sharedPreferences}) {
+    updateHeader(sharedPreferences.getString(AppConstants.token) ?? '');
+  }
 
   Future<void> updateHeader(String? token) async {
     _mainHeaders = {
@@ -43,9 +45,9 @@ class ApiClient extends GetxService {
       log('====> API Call: Url: ${AppConstants.baseUrl}$uri');
       http.Response response = await http
           .get(
-        Uri.parse(AppConstants.baseUrl + uri),
-        headers: headers ?? _mainHeaders,
-      )
+            Uri.parse(AppConstants.baseUrl + uri),
+            headers: headers ?? _mainHeaders,
+          )
           .timeout(Duration(seconds: timeoutInSeconds));
       return handleResponse(response, uri);
     } catch (e) {
@@ -61,10 +63,10 @@ class ApiClient extends GetxService {
       log('====> API Body: ${jsonEncode(body)}');
       http.Response response = await http
           .post(
-        Uri.parse(AppConstants.baseUrl + uri),
-        body: jsonEncode(body),
-        headers: headers ?? _mainHeaders,
-      )
+            Uri.parse(AppConstants.baseUrl + uri),
+            body: jsonEncode(body),
+            headers: headers ?? _mainHeaders,
+          )
           .timeout(Duration(seconds: timeoutInSeconds));
       return handleResponse(response, uri);
     } catch (e) {
@@ -72,14 +74,12 @@ class ApiClient extends GetxService {
     }
   }
 
-
-
   Future<Response> postMultipartData(
-      String uri, {
-        Map<String, String>? body,
-        Map<String, String>? headers,
-        List<MultipartBody>? multipartBody,
-      }) async {
+    String uri, {
+    Map<String, String>? body,
+    Map<String, String>? headers,
+    List<MultipartBody>? multipartBody,
+  }) async {
     try {
       log('====> API Call: Header: $_mainHeaders');
       log('====> API Call: Url: ${AppConstants.baseUrl}$uri');
@@ -125,9 +125,6 @@ class ApiClient extends GetxService {
     }
   }
 
-
-
-
   Future<Response> putData(String uri, dynamic body,
       {Map<String, String>? headers}) async {
     try {
@@ -136,10 +133,10 @@ class ApiClient extends GetxService {
       log('====> API Body: $body');
       http.Response response = await http
           .put(
-        Uri.parse(AppConstants.baseUrl + uri),
-        body: jsonEncode(body),
-        headers: headers ?? _mainHeaders,
-      )
+            Uri.parse(AppConstants.baseUrl + uri),
+            body: jsonEncode(body),
+            headers: headers ?? _mainHeaders,
+          )
           .timeout(Duration(seconds: timeoutInSeconds));
       return handleResponse(response, uri);
     } catch (e) {
@@ -153,9 +150,9 @@ class ApiClient extends GetxService {
       log('====> API Call: $uri\nHeader: $_mainHeaders');
       http.Response response = await http
           .delete(
-        Uri.parse(AppConstants.baseUrl + uri),
-        headers: headers ?? _mainHeaders,
-      )
+            Uri.parse(AppConstants.baseUrl + uri),
+            headers: headers ?? _mainHeaders,
+          )
           .timeout(Duration(seconds: timeoutInSeconds));
       return handleResponse(response, uri);
     } catch (e) {

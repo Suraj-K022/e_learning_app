@@ -9,7 +9,6 @@ import '../../../../../../customWidgets/custom_buttons.dart';
 import '../../../../../../customWidgets/custom_check_box.dart';
 import '../../../../../../customWidgets/customtext.dart';
 
-
 class ReportProblemScreen extends StatefulWidget {
   const ReportProblemScreen({super.key});
 
@@ -28,12 +27,15 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
   };
 
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       final fileSize = await pickedFile.length(); // Get file size in bytes
-      if (fileSize > 3 * 1024 * 1024) { // 3MB limit
-        Get.snackbar("Error", "Image size exceeds 3MB limit", backgroundColor: Colors.red, colorText: Colors.white);
+      if (fileSize > 3 * 1024 * 1024) {
+        // 3MB limit
+        Get.snackbar("Error", "Image size exceeds 3MB limit",
+            backgroundColor: Colors.red, colorText: Colors.white);
         return;
       }
       setState(() {
@@ -48,7 +50,11 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(24),
         child: CustomButton(
-          child: Poppins(text: 'Submit', fontWeight: FontWeight.w500, fontSize: 16, color: Get.theme.secondaryHeaderColor),
+          child: Poppins(
+              text: 'Submit',
+              fontWeight: FontWeight.w500,
+              fontSize: 16,
+              color: Get.theme.secondaryHeaderColor),
           onPressed: () {
             Get.back(canPop: true);
           },
@@ -65,7 +71,8 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
         ),
         leading: IconButton(
           onPressed: () => Get.back(),
-          icon: Icon(Icons.arrow_back_ios, color: Get.theme.secondaryHeaderColor, size: 24),
+          icon: Icon(Icons.arrow_back_ios,
+              color: Get.theme.secondaryHeaderColor, size: 24),
         ),
       ),
       body: ListView(
@@ -88,7 +95,8 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
             ],
           ),
           SizedBox(height: 20),
-          CustomTextField(hintText: 'Please describe the problem you faced', maxLines: 10),
+          CustomTextField(
+              hintText: 'Please describe the problem you faced', maxLines: 10),
           SizedBox(height: 20),
           Poppins(
             text: 'Supporting screenshot (optional)',
@@ -102,7 +110,8 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
-                border: Border.all(color: Get.theme.secondaryHeaderColor, width: 1),
+                border:
+                    Border.all(color: Get.theme.secondaryHeaderColor, width: 1),
               ),
               padding: EdgeInsets.symmetric(vertical: 6),
               child: Column(
@@ -111,7 +120,8 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
                   if (_image != null)
                     Stack(
                       children: [
-                        Image.file(_image!, height: 100, width: 100, fit: BoxFit.cover),
+                        Image.file(_image!,
+                            height: 100, width: 100, fit: BoxFit.cover),
                         Positioned(
                           right: 0,
                           top: 0,
@@ -120,7 +130,8 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
                             child: CircleAvatar(
                               radius: 12,
                               backgroundColor: Colors.red,
-                              child: Icon(Icons.close, size: 16, color: Colors.white),
+                              child: Icon(Icons.close,
+                                  size: 16, color: Colors.white),
                             ),
                           ),
                         ),
@@ -130,7 +141,8 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.photo, color: Get.theme.secondaryHeaderColor, size: 24),
+                        Icon(Icons.photo,
+                            color: Get.theme.secondaryHeaderColor, size: 24),
                         SizedBox(width: 10),
                         Text(
                           'Upload image up to Max 3 MB',
@@ -165,10 +177,13 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
             value: _checkboxValues[label]!,
           ),
           SizedBox(width: 10),
-          Poppins(text: label, fontSize: 14, fontWeight: FontWeight.w500, color: Get.theme.secondaryHeaderColor),
+          Poppins(
+              text: label,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Get.theme.secondaryHeaderColor),
         ],
       ),
     );
   }
 }
-

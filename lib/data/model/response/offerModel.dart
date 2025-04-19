@@ -4,9 +4,11 @@
 
 import 'dart:convert';
 
-List<OfferModel> offerModelFromJson(String str) => List<OfferModel>.from(json.decode(str).map((x) => OfferModel.fromJson(x)));
+List<OfferModel> offerModelFromJson(String str) =>
+    List<OfferModel>.from(json.decode(str).map((x) => OfferModel.fromJson(x)));
 
-String offerModelToJson(List<OfferModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String offerModelToJson(List<OfferModel> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class OfferModel {
   int? id;
@@ -30,24 +32,28 @@ class OfferModel {
   });
 
   factory OfferModel.fromJson(Map<String, dynamic> json) => OfferModel(
-    id: json["id"],
-    tittle: json["tittle"],
-    description: json["description"],
-    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
-    status: json["status"],
-    amount: json["amount"],
-    code: json["code"],
-  );
+        id: json["id"],
+        tittle: json["tittle"],
+        description: json["description"],
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+        status: json["status"],
+        amount: json["amount"],
+        code: json["code"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "tittle": tittle,
-    "description": description,
-    "created_at": createdAt?.toIso8601String(),
-    "updated_at": updatedAt?.toIso8601String(),
-    "status": status,
-    "amount": amount,
-    "code": code,
-  };
+        "id": id,
+        "tittle": tittle,
+        "description": description,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "status": status,
+        "amount": amount,
+        "code": code,
+      };
 }

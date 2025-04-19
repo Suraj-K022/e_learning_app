@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:e_learning_app/customWidgets/Custom_input_text_field.dart';
 import 'package:e_learning_app/customWidgets/custom_buttons.dart';
 import 'package:e_learning_app/customWidgets/customtext.dart';
+import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/availableTestSeries/available_test_series.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,7 +23,8 @@ class _AddTestScreenState extends State<AddTestScreen> {
   String? _thumbnailPath;
 
   Future<void> _pickThumbnail() async {
-    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _thumbnailFile = File(pickedFile.path);
@@ -39,17 +41,10 @@ class _AddTestScreenState extends State<AddTestScreen> {
       return;
     }
 
-    Get.find<CourseController>()
-        .addTest(testName: testName, thumbnailImg: [_thumbnailPath!])
-        .then((response) {
+    Get.find<CourseController>().addTest(
+        testName: testName, thumbnailImg: [_thumbnailPath!]).then((response) {
       if (response.status == 200) {
-
-
-
-
-
-        Get.close(1);
-
+        Get.to(AvailableTestSeries());
       } else {
         Get.snackbar('Error', response.message);
       }
@@ -57,7 +52,6 @@ class _AddTestScreenState extends State<AddTestScreen> {
       Get.snackbar('Error', 'Failed to add course: $error');
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -78,17 +72,25 @@ class _AddTestScreenState extends State<AddTestScreen> {
         backgroundColor: Get.theme.scaffoldBackgroundColor,
         leading: InkWell(
           onTap: () => Get.back(),
-          child: Icon(Icons.arrow_back_ios_new, size: 24, color: Get.theme.secondaryHeaderColor),
+          child: Icon(Icons.arrow_back_ios_new,
+              size: 24, color: Get.theme.secondaryHeaderColor),
         ),
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         children: [
-          Poppins(text: 'Test Name ', fontSize: 16, color: Get.theme.secondaryHeaderColor),
+          Poppins(
+              text: 'Test Name ',
+              fontSize: 16,
+              color: Get.theme.secondaryHeaderColor),
           const SizedBox(height: 8),
-          CustomTextField(hintText: 'Enter Test Name', controller: _testController),
+          CustomTextField(
+              hintText: 'Enter Test Name', controller: _testController),
           const SizedBox(height: 20),
-          Poppins(text: 'Add Thumbnail', fontSize: 16, color: Get.theme.secondaryHeaderColor),
+          Poppins(
+              text: 'Add Thumbnail',
+              fontSize: 16,
+              color: Get.theme.secondaryHeaderColor),
           const SizedBox(height: 8),
           InkWell(
             onTap: _pickThumbnail,
@@ -107,7 +109,8 @@ class _AddTestScreenState extends State<AddTestScreen> {
                     fontWeight: FontWeight.w500,
                     fontSize: 14,
                   ),
-                  Icon(Icons.arrow_forward_ios, size: 20, color: Get.theme.secondaryHeaderColor),
+                  Icon(Icons.arrow_forward_ios,
+                      size: 20, color: Get.theme.secondaryHeaderColor),
                 ],
               ),
             ),
@@ -124,7 +127,8 @@ class _AddTestScreenState extends State<AddTestScreen> {
             const SizedBox(height: 10),
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.file(_thumbnailFile!, height: 160, fit: BoxFit.cover),
+              child:
+                  Image.file(_thumbnailFile!, height: 160, fit: BoxFit.cover),
             ),
           ],
         ],

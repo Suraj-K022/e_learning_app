@@ -9,7 +9,6 @@ import '../../../../controller/course_Controller.dart';
 import '../../../../customWidgets/custom_buttons.dart';
 import '../../../../customWidgets/customtext.dart';
 
-
 class AddBannerScreen extends StatefulWidget {
   const AddBannerScreen({super.key});
 
@@ -102,25 +101,21 @@ class _AddBannerScreenState extends State<AddBannerScreen> {
         ),
         leading: InkWell(
           onTap: () => Get.back(),
-          child: Icon(Icons.arrow_back_ios, color: Get.theme.secondaryHeaderColor),
+          child:
+              Icon(Icons.arrow_back_ios, color: Get.theme.secondaryHeaderColor),
         ),
       ),
-      body:
-
-
-
-      ListView(
+      body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         children: [
           _buildFilePicker("Pick Banner", _pickThumbnail, _thumbnailFile),
-
-
         ],
       ),
     );
   }
 
-  Widget _buildFilePicker(String label, VoidCallback onTap, File? selectedFile) {
+  Widget _buildFilePicker(
+      String label, VoidCallback onTap, File? selectedFile) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -142,14 +137,16 @@ class _AddBannerScreenState extends State<AddBannerScreen> {
                   fontWeight: FontWeight.w500,
                   fontSize: 14,
                 ),
-                Icon(Icons.arrow_forward_ios, color: Get.theme.secondaryHeaderColor),
+                Icon(Icons.arrow_forward_ios,
+                    color: Get.theme.secondaryHeaderColor),
               ],
             ),
           ),
         ),
         if (selectedFile != null) ...[
           const SizedBox(height: 8),
-          Image.file(selectedFile, height: 150, width: double.infinity, fit: BoxFit.cover),
+          Image.file(selectedFile,
+              height: 150, width: double.infinity, fit: BoxFit.cover),
           const SizedBox(height: 8),
           Poppins(
             text: 'Selected: ${selectedFile.path.split('/').last}',

@@ -1,6 +1,7 @@
 class Images {
   static const String logo = 'assets/icons/logo.jpg';
-  static const String samplepdfpath = 'https://www.sharedfilespro.com/shared-files/38/?10-page-sample.pdf';
+  static const String samplepdfpath =
+      'https://www.sharedfilespro.com/shared-files/38/?10-page-sample.pdf';
   static const String smalllogo = 'assets/icons/smalllogo.png';
   static const String logout = 'assets/icons/logout.png';
   static const String profilepic = 'assets/icons/profilepic.jpg';
@@ -22,8 +23,6 @@ class Images {
   static const String check = 'assets/icons/check.png';
   static const String i5 = 'assets/icons/i5.png';
 
-
-
   static const String dashboard = 'assets/icons/dashboard.png';
   static const String dashboarddark = 'assets/icons/dashboarddark.png';
   static const String customerdark = 'assets/icons/customerdark.png';
@@ -31,8 +30,6 @@ class Images {
   static const String mycourse = 'assets/icons/mycourse.png';
   static const String settings = 'assets/icons/settings.png';
   static const String test = 'assets/icons/test.png';
-
-
 
   static const String onboardimage1 = 'assets/images/onboardimg1.png';
   static const String onboardimage2 = 'assets/images/onboardimg2.png';
@@ -48,5 +45,5 @@ class Images {
   static const String b3 = 'assets/images/b3.jpg';
   static const String b4 = 'assets/images/b4.jpg';
   static const String dummyimg = 'assets/images/ptg2.png';
-
+  static const String google = 'assets/icons/google.png';
 }

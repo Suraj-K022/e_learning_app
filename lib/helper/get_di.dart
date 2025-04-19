@@ -1,6 +1,3 @@
-
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,8 +17,11 @@ Future<void> init() async {
   Get.lazyPut(() => ApiClient(sharedPreferences: Get.find()));
 
   // Repository dependencies
-  Get.lazyPut(() => AuthRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(() => CourseRepo(apiClient: Get.find(),));
+  Get.lazyPut(
+      () => AuthRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
+  Get.lazyPut(() => CourseRepo(
+        apiClient: Get.find(),
+      ));
   Get.lazyPut(() => ApiClient(sharedPreferences: Get.find()));
 
   // Get.lazyPut(() => VehicleRepo(apiClient: Get.find(), sharedPreferences: Get.find()));

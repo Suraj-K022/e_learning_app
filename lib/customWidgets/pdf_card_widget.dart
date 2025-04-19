@@ -9,14 +9,15 @@ import 'customtext.dart';
 class PdfCard extends StatelessWidget {
   final String title;
   final String description;
-  final String imgUrl ;
+  final String imgUrl;
   final Color color;
 
   const PdfCard({
     super.key,
     required this.title,
     required this.description,
-    required this.color, required this.imgUrl,
+    required this.color,
+    required this.imgUrl,
   });
 
   @override
@@ -28,7 +29,8 @@ class PdfCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         color: Get.theme.cardColor,
       ),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
@@ -37,7 +39,8 @@ class PdfCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               // color: color,
             ),
-            child: ClipRRect(borderRadius: BorderRadius.circular(8),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
               child: Image.network(
                 imgUrl,
                 width: Get.width,

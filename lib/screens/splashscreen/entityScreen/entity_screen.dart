@@ -1,11 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../customWidgets/customtext.dart';
 import '../../../utils/images.dart';
 import '../../AuthScreens/SignInScreen/sign_in_screen.dart';
-
 
 class EntityScreen extends StatefulWidget {
   const EntityScreen({super.key});
@@ -36,8 +34,8 @@ class _EntityScreenState extends State<EntityScreen> {
           SizedBox(
             height: 40,
           ),
-          Poppins(text:
-            'Join as a',
+          Poppins(
+            text: 'Join as a',
             color: Get.theme.secondaryHeaderColor,
             fontSize: 24,
             fontWeight: FontWeight.w600,
@@ -49,7 +47,8 @@ class _EntityScreenState extends State<EntityScreen> {
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(8)),
-                border: Border.all(width: 1, color: Get.theme.hintColor.withOpacity(0.2))),
+                border: Border.all(
+                    width: 1, color: Get.theme.hintColor.withOpacity(0.2))),
             child: Column(
               spacing: 16,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -58,12 +57,12 @@ class _EntityScreenState extends State<EntityScreen> {
                 InkWell(
                     onTap: () {
                       setState(() {
-                        type="Student";
-
+                        type = "Student";
                       });
 
-                      Get.to(()=>SignInScreen(type: type.toString(),));
-
+                      Get.to(() => SignInScreen(
+                            type: type.toString(),
+                          ));
                     },
                     child: Container(
                       height: 56,
@@ -71,8 +70,8 @@ class _EntityScreenState extends State<EntityScreen> {
                           color: Get.theme.primaryColor,
                           borderRadius: BorderRadius.all(Radius.circular(8))),
                       child: Center(
-                        child: Poppins(text:
-                          'Student',
+                        child: Poppins(
+                          text: 'Student',
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
@@ -81,16 +80,12 @@ class _EntityScreenState extends State<EntityScreen> {
                     )),
                 InkWell(
                     onTap: () {
-
-
                       setState(() {
-                        type="Tutor";
-
+                        type = "Tutor";
                       });
-                      Get.to(()=>SignInScreen(type: type.toString(),));
-
-
-
+                      Get.to(() => SignInScreen(
+                            type: type.toString(),
+                          ));
                     },
                     child: Container(
                       height: 56,
@@ -98,15 +93,14 @@ class _EntityScreenState extends State<EntityScreen> {
                           color: Get.theme.primaryColor,
                           borderRadius: BorderRadius.all(Radius.circular(8))),
                       child: Center(
-                        child: Poppins(text:
-                          'Tutor ',
+                        child: Poppins(
+                          text: 'Tutor ',
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
                         ),
                       ),
                     )),
-
               ],
             ),
           )
