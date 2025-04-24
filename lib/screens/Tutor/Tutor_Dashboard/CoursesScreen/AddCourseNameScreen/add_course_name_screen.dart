@@ -23,13 +23,27 @@ class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
   File? _thumbnailFile;
   String? _thumbnailPath;
 
+  String? _courseNameError;
+  String? _thumbnailError;
+
+  bool _isLoading = false;
+
   Future<void> _pickThumbnail() async {
-    final XFile? pickedFile =
-        await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
+      final file = File(pickedFile.path);
+      final bytes = file.lengthSync();
+      final sizeInMB = bytes / (1024 * 1024);
+
+      if (sizeInMB > 2) {
+        Get.snackbar("File Too Large", "Thumbnail image must be less than 2MB.");
+        return;
+      }
+
       setState(() {
-        _thumbnailFile = File(pickedFile.path);
+        _thumbnailFile = file;
         _thumbnailPath = pickedFile.path;
+        _thumbnailError = null;
       });
     }
   }
@@ -37,21 +51,35 @@ class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
   void _saveCourse() {
     final courseName = _courseNameController.text.trim();
 
-    if (courseName.isEmpty || _thumbnailPath == null) {
-      Get.snackbar('Error', 'Please provide course name and thumbnail');
+    setState(() {
+      _courseNameError = courseName.isEmpty ? 'Course name is required' : null;
+      _thumbnailError = _thumbnailPath == null ? 'Thumbnail is required' : null;
+    });
+
+    if (_courseNameError != null || _thumbnailError != null) {
       return;
     }
 
+    setState(() {
+      _isLoading = true;
+    });
+
     Get.find<CourseController>().addCourse(
-        coursename: courseName,
-        thumbnailImg: [_thumbnailPath!]).then((response) {
+      coursename: courseName,
+      thumbnailImg: [_thumbnailPath!],
+    ).then((response) {
       if (response.status == 200) {
+        Get.find<CourseController>().getAllCourses();
         Get.close(1);
       } else {
         Get.snackbar('Error', response.message);
       }
     }).catchError((error) {
       Get.snackbar('Error', 'Failed to add course: $error');
+    }).whenComplete(() {
+      setState(() {
+        _isLoading = false;
+      });
     });
   }
 
@@ -61,10 +89,19 @@ class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(24),
         child: CustomButton(
-          onPressed: _saveCourse,
-          child: Poppins(
+          onPressed: _isLoading ? null : _saveCourse,
+          child: _isLoading
+              ?  SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(color: Get.theme.scaffoldBackgroundColor,
+              strokeWidth: 2.5,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+          )
+              : Poppins(
             text: 'Add Course',
-            color: Get.theme.secondaryHeaderColor,
+            color: Get.theme.scaffoldBackgroundColor,
             fontWeight: FontWeight.w500,
             fontSize: 16,
           ),
@@ -87,7 +124,10 @@ class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
               color: Get.theme.secondaryHeaderColor),
           const SizedBox(height: 8),
           CustomTextField(
-              hintText: 'Add Course', controller: _courseNameController),
+            hintText: 'Add Course',
+            controller: _courseNameController,
+            errorText: _courseNameError,
+          ),
           const SizedBox(height: 20),
           Poppins(
               text: 'Add Thumbnail',
@@ -117,6 +157,14 @@ class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
               ),
             ),
           ),
+          if (_thumbnailError != null) ...[
+            const SizedBox(height: 8),
+            Poppins(
+              text: _thumbnailError!,
+              color: Colors.red,
+              fontSize: 12,
+            ),
+          ],
           if (_thumbnailFile != null) ...[
             const SizedBox(height: 8),
             Poppins(
@@ -129,8 +177,11 @@ class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
             const SizedBox(height: 10),
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child:
-                  Image.file(_thumbnailFile!, height: 160, fit: BoxFit.cover),
+              child: Image.file(
+                _thumbnailFile!,
+                height: 160,
+                fit: BoxFit.cover,
+              ),
             ),
           ],
         ],

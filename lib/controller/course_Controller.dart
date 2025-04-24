@@ -47,10 +47,10 @@ class CourseController extends GetxController with GetxServiceMixin {
     Response response = await courseRepo.getAllCourse();
     ResponseModel responseModel = await checkResponseModel(response);
 
-    showCustomSnackBar(
-      responseModel.message,
-      isError: responseModel.status == 200 ? false : true,
-    );
+    // showCustomSnackBar(
+    //   responseModel.message,
+    //   isError: responseModel.status == 200 ? false : true,
+    // );
 
     if (responseModel.status == 200) {
       _allCourses = allCoursesFromJson(jsonEncode(responseModel.data));
@@ -70,10 +70,10 @@ class CourseController extends GetxController with GetxServiceMixin {
     Response response = await courseRepo.getAllTestSeries();
     ResponseModel responseModel = await checkResponseModel(response);
 
-    showCustomSnackBar(
-      responseModel.message,
-      isError: responseModel.status == 200 ? false : true,
-    );
+    // showCustomSnackBar(
+    //   responseModel.message,
+    //   isError: responseModel.status == 200 ? false : true,
+    // );
 
     if (responseModel.status == 200) {
       allTestSeries = testSeriesModelFromJson(jsonEncode(responseModel.data));
@@ -91,10 +91,10 @@ class CourseController extends GetxController with GetxServiceMixin {
     Response response = await courseRepo.getTermsCondition();
     ResponseModel responseModel = await checkResponseModel(response);
 
-    showCustomSnackBar(
-      responseModel.message,
-      isError: responseModel.status == 200 ? false : true,
-    );
+    // showCustomSnackBar(
+    //   responseModel.message,
+    //   isError: responseModel.status == 200 ? false : true,
+    // );
 
     if (responseModel.status == 200) {
       getTermsCondition =
@@ -113,10 +113,10 @@ class CourseController extends GetxController with GetxServiceMixin {
     Response response = await courseRepo.getPrivacyPolicy();
     ResponseModel responseModel = await checkResponseModel(response);
 
-    showCustomSnackBar(
-      responseModel.message,
-      isError: responseModel.status == 200 ? false : true,
-    );
+    // showCustomSnackBar(
+    //   responseModel.message,
+    //   isError: responseModel.status == 200 ? false : true,
+    // );
 
     if (responseModel.status == 200) {
       getPrivacyPolicy =
@@ -135,10 +135,10 @@ class CourseController extends GetxController with GetxServiceMixin {
     Response response = await courseRepo.getPdfNotes();
     ResponseModel responseModel = await checkResponseModel(response);
 
-    showCustomSnackBar(
-      responseModel.message,
-      isError: responseModel.status == 200 ? false : true,
-    );
+    // showCustomSnackBar(
+    //   responseModel.message,
+    //   isError: responseModel.status == 200 ? false : true,
+    // );
 
     if (responseModel.status == 200) {
       getpdfNotes = pdfNotesModelFromJson(jsonEncode(responseModel.data));
@@ -154,10 +154,10 @@ class CourseController extends GetxController with GetxServiceMixin {
     update();
     Response response = await courseRepo.getMcqQuestions(id: id);
     ResponseModel responseModel = await checkResponseModel(response);
-    showCustomSnackBar(
-      responseModel.message,
-      isError: responseModel.status == 200 ? false : true,
-    );
+    // showCustomSnackBar(
+    //   responseModel.message,
+    //   isError: responseModel.status == 200 ? false : true,
+    // );
     if (responseModel.status == 200) {
       getQuestions = mcqModelFromJson(jsonEncode(responseModel.data));
     }
@@ -172,11 +172,11 @@ class CourseController extends GetxController with GetxServiceMixin {
 
     Response response = await courseRepo.getAllContent(id: id);
     ResponseModel responseModel = await checkResponseModel(response);
-
-    showCustomSnackBar(
-      responseModel.message,
-      isError: responseModel.status != 200,
-    );
+    //
+    // showCustomSnackBar(
+    //   responseModel.message,
+    //   isError: responseModel.status != 200,
+    // );
 
     if (responseModel.status == 200) {
       // Make sure responseModel.data is a List
@@ -197,10 +197,10 @@ class CourseController extends GetxController with GetxServiceMixin {
     Response response = await courseRepo.getBanner();
     ResponseModel responseModel = await checkResponseModel(response);
 
-    showCustomSnackBar(
-      responseModel.message,
-      isError: responseModel.status != 200,
-    );
+    // showCustomSnackBar(
+    //   responseModel.message,
+    //   isError: responseModel.status != 200,
+    // );
 
     if (responseModel.status == 200) {
       getBannerList = responseModel.data;
@@ -232,9 +232,9 @@ class CourseController extends GetxController with GetxServiceMixin {
     log("AddCourse Response: ${jsonEncode(response.body)}");
 
     ResponseModel responseModel = await checkResponseModel(response);
-
-    showCustomSnackBar(responseModel.message,
-        isError: responseModel.status == 200 ? false : true);
+    //
+    // showCustomSnackBar(responseModel.message,
+    //     isError: responseModel.status == 200 ? false : true);
 
     if (responseModel.status == 200) {}
 
@@ -247,12 +247,12 @@ class CourseController extends GetxController with GetxServiceMixin {
     update();
     Response response = await courseRepo.addTest(testName, thumbnailImg);
 
-    log("AddCourse Response: ${jsonEncode(response.body)}");
+    log("AddTest Response: ${jsonEncode(response.body)}");
 
     ResponseModel responseModel = await checkResponseModel(response);
-
-    showCustomSnackBar(responseModel.message,
-        isError: responseModel.status == 200 ? false : true);
+    //
+    // showCustomSnackBar(responseModel.message,
+    //     isError: responseModel.status == 200 ? false : true);
 
     if (responseModel.status == 200) {}
 
@@ -276,8 +276,8 @@ class CourseController extends GetxController with GetxServiceMixin {
 
     ResponseModel responseModel = await checkResponseModel(response);
 
-    showCustomSnackBar(responseModel.message,
-        isError: responseModel.status == 200 ? false : true);
+    // showCustomSnackBar(responseModel.message,
+    //     isError: responseModel.status == 200 ? false : true);
 
     if (responseModel.status == 200) {}
 
@@ -297,9 +297,9 @@ class CourseController extends GetxController with GetxServiceMixin {
     log("AddCourse Response: ${jsonEncode(response.body)}");
 
     ResponseModel responseModel = await checkResponseModel(response);
-
-    showCustomSnackBar(responseModel.message,
-        isError: responseModel.status == 200 ? false : true);
+    //
+    // showCustomSnackBar(responseModel.message,
+    //     isError: responseModel.status == 200 ? false : true);
 
     if (responseModel.status == 200) {}
 
@@ -315,8 +315,8 @@ class CourseController extends GetxController with GetxServiceMixin {
 
     ResponseModel responseModel = await checkResponseModel(response);
 
-    showCustomSnackBar(responseModel.message,
-        isError: responseModel.status == 200 ? false : true);
+    // showCustomSnackBar(responseModel.message,
+    //     isError: responseModel.status == 200 ? false : true);
 
     if (responseModel.status == 200) {}
 
@@ -331,14 +331,14 @@ class CourseController extends GetxController with GetxServiceMixin {
 
       ResponseModel responseModel = await checkResponseModel(response);
 
-      showCustomSnackBar(
-        responseModel.message,
-        isError: responseModel.status != 200,
-      );
+      // showCustomSnackBar(
+      //   responseModel.message,
+      //   isError: responseModel.status != 200,
+      // );
 
       return responseModel;
     } catch (e) {
-      showCustomSnackBar("Something went wrong", isError: true);
+      // showCustomSnackBar("Something went wrong", isError: true);
       rethrow;
     }
   }
@@ -358,9 +358,9 @@ class CourseController extends GetxController with GetxServiceMixin {
     log("jjoj" + jsonEncode(response.statusCode)); // Logs response status code
 
     ResponseModel responseModel = await checkResponseModel(response);
-
-    showCustomSnackBar(responseModel.message,
-        isError: responseModel.status == 200 ? false : true);
+    //
+    // showCustomSnackBar(responseModel.message,
+    //     isError: responseModel.status == 200 ? false : true);
 
     if (responseModel.status == 200) {}
 
@@ -375,15 +375,104 @@ class CourseController extends GetxController with GetxServiceMixin {
 
       ResponseModel responseModel = await checkResponseModel(response);
 
-      showCustomSnackBar(
-        responseModel.message,
-        isError: responseModel.status != 200,
-      );
+      // showCustomSnackBar(
+      //   responseModel.message,
+      //   isError: responseModel.status != 200,
+      // );
 
       return responseModel;
     } catch (e) {
-      showCustomSnackBar("Something went wrong", isError: true);
+      // showCustomSnackBar("Something went wrong", isError: true);
       rethrow;
     }
+  }
+  Future<ResponseModel> deletePdfs(int pdfId) async {
+    try {
+      Response response = await courseRepo.apiClient
+          .deleteData("${AppConstants.deletepdf}$pdfId");
+
+      ResponseModel responseModel = await checkResponseModel(response);
+      //
+      // showCustomSnackBar(
+      //   responseModel.message,
+      //   isError: responseModel.status != 200,
+      // );
+
+      return responseModel;
+    } catch (e) {
+      // showCustomSnackBar("Something went wrong", isError: true);
+      rethrow;
+    }
+  }
+  Future<ResponseModel> deleteCourse(int courseId) async {
+    try {
+      Response response = await courseRepo.apiClient
+          .deleteData("${AppConstants.deletecourse}$courseId");
+
+      ResponseModel responseModel = await checkResponseModel(response);
+
+      // showCustomSnackBar(
+      //   responseModel.message,
+      //   isError: responseModel.status != 200,
+      // );
+
+      return responseModel;
+    } catch (e) {
+      // showCustomSnackBar("Something went wrong", isError: true);
+      rethrow;
+    }
+  }
+  Future<ResponseModel> deleteTest(int testId) async {
+    try {
+      Response response = await courseRepo.apiClient
+          .deleteData("${AppConstants.deleteTestSeries}$testId");
+
+      ResponseModel responseModel = await checkResponseModel(response);
+
+      // showCustomSnackBar(
+      //   responseModel.message,
+      //   isError: responseModel.status != 200,
+      // );
+
+      return responseModel;
+    } catch (e) {
+      // showCustomSnackBar("Something went wrong", isError: true);
+      rethrow;
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+  Future<ResponseModel> reportProblem(
+      {
+        required String type,
+        required String description,
+        required File image,
+        }) async {
+    update();
+    isLoading = true;
+    Response response = await courseRepo.postProblem(
+         type,description, image);
+
+    log("problem Response: ${jsonEncode(response.body)}");
+
+    ResponseModel responseModel = await checkResponseModel(response);
+
+    // showCustomSnackBar(responseModel.message,
+    //     isError: responseModel.status == 200 ? false : true);
+
+    if (responseModel.status == 200) {}
+
+    update();
+    isLoading = false;
+    return responseModel;
   }
 }

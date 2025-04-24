@@ -15,7 +15,10 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
   @override
   void initState() {
     super.initState();
-    Get.find<CourseController>().getPolicy();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Get.find<CourseController>().getPolicy();
+
+    },);
   }
 
   @override

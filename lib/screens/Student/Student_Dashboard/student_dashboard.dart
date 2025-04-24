@@ -65,7 +65,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                 _buildNavItem(
                     1, Images.mycourse, Images.mycoursedark, 'My Courses'),
                 _buildNavItem(
-                    2, Images.customer, Images.customerdark, 'Profile'),
+                    2, Images.customer, Images.customerdark, 'User'),
               ],
             ),
           )),

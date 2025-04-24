@@ -135,7 +135,7 @@ class CourseRepo {
     List<MultipartBody> collection = [];
     for (var item in thumbnailImg) {
       collection
-          .add(MultipartBody("image", item)); // Do something with each item
+          .add(MultipartBody("thumbnail", item)); // Do something with each item
     }
     try {
       return await apiClient.postMultipartData(AppConstants.testseries,
@@ -250,7 +250,7 @@ class CourseRepo {
     }
   }
 
-  Future deleteProfile(int questionId) async {
+  Future deleteQuestions(int questionId) async {
     try {
       return await apiClient
           .deleteData("${AppConstants.deleteQuestion}$questionId");
@@ -259,4 +259,71 @@ class CourseRepo {
       rethrow;
     }
   }
+
+  Future deletePdfs(int pdfId) async {
+    try {
+      return await apiClient
+          .deleteData("${AppConstants.deletepdf}$pdfId");
+    } catch (e, straktrace) {
+      debugPrint("Error deleting Pdfs: $e $straktrace");
+      rethrow;
+    }
+  }
+  Future deleteCourse(int courseId) async {
+    try {
+      return await apiClient
+          .deleteData("${AppConstants.deletecourse}$courseId");
+    } catch (e, straktrace) {
+      debugPrint("Error deleting Pdfs: $e $straktrace");
+      rethrow;
+    }
+  }
+  Future deleteTest(int testId) async {
+    try {
+      return await apiClient
+          .deleteData("${AppConstants.deletecourse}$testId");
+    } catch (e, straktrace) {
+      debugPrint("Error deleting Test: $e $straktrace");
+      rethrow;
+    }
+  }
+
+
+
+
+  Future<Response> postProblem(
+      String type,
+      String description,
+      File? image,
+
+      ) async {
+    try {
+      List<MultipartBody> multipartBody = [];
+
+      if (image != null && await image.exists()) {
+        multipartBody.add(MultipartBody('image', image.path));
+      }
+      log("Prepared Multipart Files: $multipartBody");
+
+      return await apiClient.postMultipartData(
+        AppConstants.reportProblem,
+        body: {
+          "type": type,
+          "description": description,
+        },
+        multipartBody: multipartBody,
+      );
+    } catch (e) {
+      debugPrint("Error adding content: $e");
+      rethrow;
+    }
+  }
+
+
+
+
+
+
+
+
 }

@@ -16,7 +16,7 @@ class CustomTextField extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final int? maxDigits;
   final TextInputType? keyboardType;
-  final String? errorText; // ✅ Added errorText field
+  final String? errorText;
 
   const CustomTextField({
     super.key,
@@ -32,7 +32,7 @@ class CustomTextField extends StatefulWidget {
     this.readOnly = false,
     this.maxDigits,
     this.keyboardType,
-    this.errorText, // ✅ Include in constructor
+    this.errorText,
   });
 
   @override
@@ -40,29 +40,31 @@ class CustomTextField extends StatefulWidget {
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
-  late TextEditingController _controller;
+  late TextEditingController _internalController;
 
   @override
   void initState() {
     super.initState();
-    _controller = widget.controller ?? TextEditingController();
+    _internalController = TextEditingController();
   }
 
   @override
   void dispose() {
     if (widget.controller == null) {
-      _controller.dispose();
+      _internalController.dispose();
     }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final controller = widget.controller ?? _internalController;
+
     return SizedBox(
       height: widget.maxLines! > 1 ? 100 : widget.height,
       child: TextFormField(
         cursorColor: Get.theme.primaryColor,
-        controller: _controller,
+        controller: controller,
         obscureText: widget.obscureText,
         maxLines: widget.maxLines,
         readOnly: widget.readOnly,
@@ -82,7 +84,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         decoration: InputDecoration(
           hintText: widget.hintText,
           hintStyle: GoogleFonts.poppins(color: Colors.grey),
-          errorText: widget.errorText, // ✅ Show error message if not null
+          errorText: widget.errorText,
           filled: true,
           fillColor: Colors.transparent,
           border: OutlineInputBorder(
@@ -98,15 +100,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
             borderSide: BorderSide(color: Get.theme.primaryColor),
           ),
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           prefixIcon: widget.prefixIcon != null
               ? Icon(widget.prefixIcon, color: Get.theme.primaryColor)
               : null,
           suffixIcon: widget.suffixIcon != null
               ? GestureDetector(
-                  onTap: widget.onSuffixTap,
-                  child: Icon(widget.suffixIcon, color: Colors.grey),
-                )
+            onTap: widget.onSuffixTap,
+            child: Icon(widget.suffixIcon, color: Colors.grey),
+          )
               : null,
         ),
       ),

@@ -16,7 +16,9 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
   @override
   void initState() {
     super.initState();
-    Get.find<CourseController>().getTermsAndCondition();
+   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+     Get.find<CourseController>().getTermsAndCondition();
+   },);
   }
 
   @override

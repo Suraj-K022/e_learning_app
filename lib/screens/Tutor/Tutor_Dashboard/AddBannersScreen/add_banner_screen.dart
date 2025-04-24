@@ -22,7 +22,10 @@ class _AddBannerScreenState extends State<AddBannerScreen> {
   @override
   void initState() {
     super.initState();
-    Get.find<CourseController>().getBanner();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Get.find<CourseController>().getBanner();
+
+    },);
   }
 
   final List<File> collection = [];

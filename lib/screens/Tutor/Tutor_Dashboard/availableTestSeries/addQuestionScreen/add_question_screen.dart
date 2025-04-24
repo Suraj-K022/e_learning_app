@@ -49,7 +49,7 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
             text: 'Add More Questions',
             fontSize: 16,
             fontWeight: FontWeight.w500,
-            color: Get.theme.secondaryHeaderColor,
+            color: Get.theme.scaffoldBackgroundColor,
           ),
           onPressed: () async {
             await Get.to(PostQuestionScreen(testId: widget.testSeriesId));

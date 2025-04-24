@@ -4,33 +4,34 @@
 
 import 'dart:convert';
 
-List<PdfNotesModel> pdfNotesModelFromJson(String str) =>
-    List<PdfNotesModel>.from(
-        json.decode(str).map((x) => PdfNotesModel.fromJson(x)));
+List<PdfNotesModel> pdfNotesModelFromJson(String str) => List<PdfNotesModel>.from(json.decode(str).map((x) => PdfNotesModel.fromJson(x)));
 
-String pdfNotesModelToJson(List<PdfNotesModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String pdfNotesModelToJson(List<PdfNotesModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class PdfNotesModel {
+  int? id;
   String? name;
   String? pdfUrl;
   String? imageUrl;
 
   PdfNotesModel({
+    this.id,
     this.name,
     this.pdfUrl,
     this.imageUrl,
   });
 
   factory PdfNotesModel.fromJson(Map<String, dynamic> json) => PdfNotesModel(
-        name: json["name"],
-        pdfUrl: json["pdf_url"],
-        imageUrl: json["image_url"],
-      );
+    id: json["id"],
+    name: json["name"],
+    pdfUrl: json["pdf_url"],
+    imageUrl: json["image_url"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "name": name,
-        "pdf_url": pdfUrl,
-        "image_url": imageUrl,
-      };
+    "id": id,
+    "name": name,
+    "pdf_url": pdfUrl,
+    "image_url": imageUrl,
+  };
 }

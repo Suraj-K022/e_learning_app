@@ -22,12 +22,34 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController fullnameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
 
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+
+  String? _nameError;
+  String? _emailError;
+  String? _passwordError;
+  String? _phoneError;
+
   void save() {
+    setState(() {
+      _nameError = fullnameController.text.isEmpty ? 'Name is required' : null;
+      _emailError = emailController.text.isEmpty
+          ? 'Email is required'
+          : (!RegExp(r'^[\w-\.]+@gmail\.com$').hasMatch(emailController.text)
+          ? 'Only Gmail addresses are allowed'
+          : null);
+      _phoneError = phoneController.text.isEmpty ? 'Phone number is required' : null;
+      _passwordError = _passwordController.text != _confirmPasswordController.text
+          ? 'Passwords do not match'
+          : null;
+    });
+
+    if (_nameError != null || _emailError != null || _passwordError != null || _phoneError != null) return;
+
     final registerUserBody = RegisterUserBody(
       name: fullnameController.text,
       email: emailController.text,
@@ -37,20 +59,15 @@ class _SignupScreenState extends State<SignupScreen> {
       type: widget.type,
     );
 
-    Get.find<AuthController>()
-        .signUp(registerUserBody: registerUserBody)
-        .then((value) {
+    Get.find<AuthController>().signUp(registerUserBody: registerUserBody).then((value) {
       if (value.status == 200) {
-        if (widget.type == "Student") {
-          Get.off(() => SignInScreen(type: widget.type));
-        } else {
-          Get.off(() => SignInScreen(type: widget.type));
-        }
+        Get.off(() => SignInScreen(type: widget.type));
       } else {
         showCustomSnackBar(value.message, isError: true);
       }
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +105,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 text: 'Sign Up',
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: Get.theme.secondaryHeaderColor,
+                color: Get.theme.scaffoldBackgroundColor,
               ),
             ),
           ],
@@ -103,14 +120,12 @@ class _SignupScreenState extends State<SignupScreen> {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.vertical(bottom: Radius.circular(30)),
+                    borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
                     color: Get.theme.primaryColor,
                   ),
                   height: Get.height * 0.4,
                 ),
-                Image.asset(Images.bglayer,
-                    width: Get.width, fit: BoxFit.cover),
+                Image.asset(Images.bglayer, width: Get.width, fit: BoxFit.cover),
                 Column(
                   children: [
                     SizedBox(height: 60),
@@ -152,6 +167,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   CustomTextField(
                     hintText: 'Enter your full name',
                     controller: fullnameController,
+                    maxDigits: 30,
+                    errorText: _nameError,
                   ),
                   SizedBox(height: 20),
                   buildLabel('Mobile Number'),
@@ -160,24 +177,41 @@ class _SignupScreenState extends State<SignupScreen> {
                     controller: phoneController,
                     keyboardType: TextInputType.number,
                     maxDigits: 10,
+                    errorText: _phoneError,
                   ),
                   SizedBox(height: 20),
                   buildLabel('Email Address'),
                   CustomTextField(
                     hintText: 'Enter Email Address',
                     controller: emailController,
+                    errorText: _emailError,
                   ),
                   SizedBox(height: 20),
                   buildLabel('Password'),
                   CustomTextField(
                     hintText: 'Enter Password',
                     controller: _passwordController,
+                    obscureText: _obscurePassword,
+                    errorText: _passwordError,
+                    suffixIcon: _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                    onSuffixTap: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
                   ),
                   SizedBox(height: 20),
                   buildLabel('Confirm Password'),
                   CustomTextField(
                     hintText: 'Confirm Password',
                     controller: _confirmPasswordController,
+                    obscureText: _obscureConfirmPassword,
+                    suffixIcon: _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                    onSuffixTap: () {
+                      setState(() {
+                        _obscureConfirmPassword = !_obscureConfirmPassword;
+                      });
+                    },
                   ),
                   SizedBox(height: Get.height * 0.04),
                   Text.rich(
@@ -228,3 +262,5 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 }
+
+

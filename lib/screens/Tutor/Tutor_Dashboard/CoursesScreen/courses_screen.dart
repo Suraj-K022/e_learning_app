@@ -1,4 +1,5 @@
 import 'package:e_learning_app/controller/course_Controller.dart';
+import 'package:e_learning_app/customWidgets/custom_buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,26 +20,20 @@ class _CoursesScreenState extends State<CoursesScreen> {
   @override
   void initState() {
     super.initState();
-    Get.find<CourseController>().getAllCourses();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<CourseController>().getAllCourses();
+    });
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: Padding(padding: EdgeInsets.all(24),child: 
+        CustomButton(child: Poppins(text: 'Add New Course',fontSize: 16,fontWeight: FontWeight.w500,color: Get.theme.scaffoldBackgroundColor,), onPressed: (){Get.to(AddCourseNameScreen());}),),
       appBar: AppBar(
-        actions: [
-          InkWell(
-            onTap: () {
-              Get.to(AddCourseNameScreen());
-            },
-            child: Icon(
-              CupertinoIcons.plus_app,
-              color: Get.theme.primaryColor,
-              size: 24,
-            ),
-          ),
-          SizedBox(width: 24),
-        ],
+        
+
         centerTitle: true,
         backgroundColor: Get.theme.scaffoldBackgroundColor,
         title: Poppins(
@@ -154,7 +149,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
                                         icon: Icon(Icons.delete,
                                             color: Colors.red),
                                         onPressed: () async {
-                                          // await courseController.deleteCourse(course.id); // Make sure you have this method
+                                          await courseController.deleteCourse(int.parse(courseController.getCourseList[index].id.toString())); // Make sure you have this method
                                           await courseController
                                               .getAllCourses(); // Refresh after deletion
                                           setState(() {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:e_learning_app/screens/AuthScreens/SignInScreen/sign_in_screen.dart';
 import 'package:e_learning_app/screens/Student/Student_Dashboard/student_dashboard.dart';
 import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/tutor_dashboard.dart';
+import 'package:e_learning_app/screens/splashscreen/entityScreen/entity_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -36,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
           } else if (userType == "Teacher" || userType == "Tutor") {
             Get.offAll(() => TutorDashboard());
           } else {
-            Get.offAll(() => SignInScreen(type: "Unknown"));
+            Get.offAll(() => EntityScreen());
           }
         } catch (e) {
           print("Error fetching profile: $e");
@@ -61,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
               text: 'E-Learning',
               fontSize: 30,
               fontWeight: FontWeight.w700,
-              color: Get.theme.secondaryHeaderColor,
+              color: Get.theme.scaffoldBackgroundColor,
             ),
           ],
         ),

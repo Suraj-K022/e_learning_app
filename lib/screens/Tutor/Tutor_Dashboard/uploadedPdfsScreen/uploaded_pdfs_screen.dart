@@ -20,7 +20,10 @@ class _UploadedPdfsScreenState extends State<UploadedPdfsScreen> {
   @override
   void initState() {
     super.initState();
-    Get.find<CourseController>().getPdfNotes();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Get.find<CourseController>().getPdfNotes();
+
+    },);
   }
 
   @override
@@ -118,7 +121,7 @@ class _UploadedPdfsScreenState extends State<UploadedPdfsScreen> {
                             ? IconButton(
                                 icon: Icon(Icons.delete, color: Colors.red),
                                 onPressed: () async {
-                                  // await courseController.deletePdf(pdf.id); // Make sure you have this method
+                                  await courseController.deletePdfs(int.parse(courseController.getpdfNotes[index].id.toString())); // Make sure you have this method
                                   await courseController
                                       .getPdfNotes(); // Refresh after deletion
                                   setState(() {

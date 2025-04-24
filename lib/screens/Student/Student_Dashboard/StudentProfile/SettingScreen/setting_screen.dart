@@ -216,6 +216,7 @@ class SettingScreen extends StatelessWidget {
           SizedBox(
             height: 8,
           ),
+
           ListTile(
             onTap: () {
               Get.bottomSheet(

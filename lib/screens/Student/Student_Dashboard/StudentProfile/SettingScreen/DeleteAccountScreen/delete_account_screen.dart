@@ -20,9 +20,12 @@ class DeleteAccountScreen extends StatefulWidget {
 class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
-    Get.find<AuthController>().getProfile();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Get.find<AuthController>().getProfile();
+
+    },);
   }
 
   final TextEditingController reasonController = TextEditingController();

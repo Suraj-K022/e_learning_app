@@ -66,6 +66,23 @@ class AuthRepo {
       debugPrint("Error sending phone number & pass: $e");
       rethrow;
     }
+  }  Future<Response> resetPassword(
+      String email, String password, String confirmPassword,String token) async {
+    try {
+      return await apiClient.postData(AppConstants.resetPassword, {"email": email, "password": password,"password_confirmation":confirmPassword ,"token": token,});
+    } catch (e) {
+      debugPrint("Error sending phone number & pass: $e");
+      rethrow;
+    }
+  }
+  Future<Response> forgotPassword(
+      String email) async {
+    try {
+      return await apiClient.postData(AppConstants.forgotPassword, {"email": email});
+    } catch (e) {
+      debugPrint("Error sending Token to email: $e");
+      rethrow;
+    }
   }
 
 //sign up data

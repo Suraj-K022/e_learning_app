@@ -21,13 +21,19 @@ class AppConstants {
   static final String login = 'login';
   static final String deleteUser = 'user/delete/';
   static final String deleteQuestion = 'questions/';
+  static final String deletepdf = 'deletepdf/';
+  static final String deletecourse = 'deletecourse/';
+  static final String deleteTestSeries = 'deleteTestSeries/';
   static final String addcontent = 'add-content';
   static final String addcourse = 'add-course';
   static final String addpdfnote = 'pdfnotes';
   static final String uploadprofileimage = 'upload-profile-image';
   static final String deletecontent = 'destroy/';
   static final String updateprofile = 'update-profile';
-  static final String testseries = 'testseries';
+  static final String testseries = 'test-series';
   static final String uploadbanner = 'upload-banner';
   static final String postQuestions = 'qustions-series';
+  static final String reportProblem = 'report-problem';
+  static final String forgotPassword = 'forgot-password';
+  static final String resetPassword = 'reset-password';
 }

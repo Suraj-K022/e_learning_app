@@ -1,20 +1,17 @@
 import 'package:e_learning_app/controller/auth_controller.dart';
+import 'package:e_learning_app/controller/course_Controller.dart';
 import 'package:e_learning_app/screens/Student/Student_Dashboard/StudentProfile/SettingScreen/setting_screen.dart';
-import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/AddBannersScreen/add_banner_screen.dart';
 import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/AddTestScreen/add_test_screen.dart';
-import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/AddpdfScreen/add_pdf_screen.dart';
 import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/availableTestSeries/available_test_series.dart';
 import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/uploadedPdfsScreen/uploaded_pdfs_screen.dart';
+import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/CoursesScreen/courses_screen.dart';
+import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/PaymentScreen/payment_screen.dart';
+import 'package:e_learning_app/screens/Student/Student_Dashboard/StudentHome/NotificationScreen/notification_screen.dart';
+import 'package:e_learning_app/screens/Student/Student_Dashboard/StudentProfile/SettingScreen/ProfileScreen/profile_screen.dart';
+import 'package:e_learning_app/utils/images.dart';
+import 'package:e_learning_app/customWidgets/customtext.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../customWidgets/customtext.dart';
-import '../../../utils/images.dart';
-import '../../Student/Student_Dashboard/StudentHome/NotificationScreen/notification_screen.dart';
-import '../../Student/Student_Dashboard/StudentProfile/SettingScreen/ProfileScreen/profile_screen.dart';
-import 'CoursesScreen/courses_screen.dart';
-import 'CreateNewCourses/create_new_course.dart';
-import 'PaymentScreen/payment_screen.dart';
 
 class TutorDashboard extends StatefulWidget {
   const TutorDashboard({super.key});
@@ -26,16 +23,53 @@ class TutorDashboard extends StatefulWidget {
 class _TutorDashboardState extends State<TutorDashboard> {
   @override
   void initState() {
-    super.initState(); // Move this here
-
+    super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<AuthController>().getProfile();
+      Get.find<CourseController>().getAllCourses();
     });
+  }
+
+  Widget dashboardTile({
+    required String title,
+    required String iconPath,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Get.theme.cardColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Get.theme.primaryColor),
+        ),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 30,
+              width: 30,
+              child: Image.asset(iconPath, color: Get.theme.secondaryHeaderColor),
+            ),
+            const SizedBox(height: 8),
+            Poppins(
+              text: title,
+              fontSize: 16,
+              maxLines: 3,
+              color: Get.theme.secondaryHeaderColor,
+              fontWeight: FontWeight.w500,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(backgroundColor: Get.theme.scaffoldBackgroundColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Get.theme.scaffoldBackgroundColor,
@@ -48,26 +82,7 @@ class _TutorDashboardState extends State<TutorDashboard> {
                 fontWeight: FontWeight.w400,
                 fontSize: 12,
               );
-            } else if (authController.profileModel?.username?.isEmpty ?? true) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: Get.height / 3,
-                  ),
-                  Center(
-                    child: Poppins(
-                      text: 'Hey User, ',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Get.theme.primaryColor,
-                    ),
-                  ),
-                ],
-              );
             }
-
             return Row(
               children: [
                 InkWell(
@@ -75,19 +90,17 @@ class _TutorDashboardState extends State<TutorDashboard> {
                   child: CircleAvatar(
                     backgroundColor: Get.theme.secondaryHeaderColor,
                     radius: 20,
-                    backgroundImage: authController.profileModel?.image != null
+                    backgroundImage: (authController.profileModel?.image?.isNotEmpty ?? false)
                         ? NetworkImage(authController.profileModel!.image!)
                         : null,
-                    child: authController.profileModel?.image == null
+                    child: (authController.profileModel?.image?.isEmpty ?? true)
                         ? Icon(Icons.person, color: Colors.white)
                         : null,
                   ),
                 ),
-                SizedBox(
-                  width: 10,
-                ),
+                const SizedBox(width: 10),
                 Poppins(
-                  text: 'Hey, ${authController.profileModel!.name.toString()} ',
+                  text: 'Hey, ${authController.profileModel?.name ?? "User"}',
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: Get.theme.primaryColor,
@@ -98,295 +111,63 @@ class _TutorDashboardState extends State<TutorDashboard> {
         ),
         actions: [
           InkWell(
-              onTap: () {
-                Get.to(NotificationScreen());
-              },
-              child: Icon(
-                Icons.notifications_active_outlined,
-                size: 24,
-                color: Get.theme.secondaryHeaderColor,
-              )),
-          SizedBox(
-            width: 12,
+            onTap: () => Get.to(NotificationScreen()),
+            child: Icon(Icons.notifications_active_outlined, size: 24, color: Get.theme.secondaryHeaderColor),
           ),
+          const SizedBox(width: 12),
           InkWell(
-              onTap: () {
-                Get.to(SettingScreen());
-              },
-              child: Image.asset(
-                Images.settings,
-                height: 20,
-                width: 20,
-              )),
-          SizedBox(
-            width: 36,
+            onTap: () => Get.to(SettingScreen()),
+            child: Image.asset(Images.settings, height: 20, width: 20),
           ),
+          const SizedBox(width: 36),
         ],
       ),
-      body: GridView(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      body: GetBuilder<CourseController>(
+        builder: (courseController) {
+          return GridView.count(
             crossAxisCount: 2,
-            mainAxisSpacing: 16,
             crossAxisSpacing: 16,
-            childAspectRatio: 1 / 1),
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-        children: [
-          InkWell(
-            onTap: () {
-              Get.to(CreateNewCourse(
-                courseName: '',
-                ScreenName: 'TutorDashboard',
-              ));
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Get.theme.cardColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(12),
-                  ),
-                  border: Border.all(color: Get.theme.primaryColor, width: 1)),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  spacing: 5,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 30,
-                      width: 30,
-                      child: Image.asset(
-                        Images.add,
-                        fit: BoxFit.cover,
-                        color: Get.theme.secondaryHeaderColor,
-                      ),
-                    ),
-                    Poppins(
-                      text: 'Create New Course',
-                      fontSize: 16,
-                      color: Get.theme.secondaryHeaderColor,
-                      fontWeight: FontWeight.w500,
-                      maxLines: 3,
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
+            mainAxisSpacing: 16,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+            children: [
+              // dashboardTile(
+              //   title: 'Create New Course',
+              //   iconPath: Images.add,
+              //   onTap: () => Get.to(CreateNewCourse(
+              //
+              //
+              //     courseName: '',
+              //     ScreenName: 'TutorDashboard',
+              //   )),
+              // ),
+              dashboardTile(
+                title: 'Courses',
+                iconPath: Images.course,
+                onTap: () => Get.to(CoursesScreen()),
               ),
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Get.to(CoursesScreen());
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Get.theme.cardColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(12),
-                  ),
-                  border: Border.all(color: Get.theme.primaryColor, width: 1)),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  spacing: 5,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 30,
-                      width: 30,
-                      child: Image.asset(
-                        Images.course,
-                        fit: BoxFit.cover,
-                        color: Get.theme.secondaryHeaderColor,
-                      ),
-                    ),
-                    Poppins(
-                      text: 'Courses',
-                      fontSize: 16,
-                      color: Get.theme.secondaryHeaderColor,
-                      fontWeight: FontWeight.w500,
-                      maxLines: 3,
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
+              dashboardTile(
+                title: 'Create Test',
+                iconPath: Images.test,
+                onTap: () => Get.to(AddTestScreen()),
               ),
-            ),
-          ),
-
-          InkWell(
-            onTap: () {
-              Get.to(AddTestScreen());
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Get.theme.cardColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(12),
-                  ),
-                  border: Border.all(color: Get.theme.primaryColor, width: 1)),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  spacing: 5,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 30,
-                      width: 30,
-                      child: Image.asset(
-                        Images.test,
-                        fit: BoxFit.cover,
-                        color: Get.theme.secondaryHeaderColor,
-                      ),
-                    ),
-                    Poppins(
-                      text: 'Create Test',
-                      fontSize: 16,
-                      color: Get.theme.secondaryHeaderColor,
-                      fontWeight: FontWeight.w500,
-                      maxLines: 3,
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
+              dashboardTile(
+                title: 'Test Series',
+                iconPath: Images.test,
+                onTap: () => Get.to(AvailableTestSeries()),
               ),
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Get.to(AvailableTestSeries());
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Get.theme.cardColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(12),
-                  ),
-                  border: Border.all(color: Get.theme.primaryColor, width: 1)),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  spacing: 5,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 30,
-                      width: 30,
-                      child: Image.asset(
-                        Images.test,
-                        fit: BoxFit.cover,
-                        color: Get.theme.secondaryHeaderColor,
-                      ),
-                    ),
-                    Poppins(
-                      text: 'Test Series',
-                      fontSize: 16,
-                      color: Get.theme.secondaryHeaderColor,
-                      fontWeight: FontWeight.w500,
-                      maxLines: 3,
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
+              dashboardTile(
+                title: 'Uploaded Pdfs',
+                iconPath: Images.i5,
+                onTap: () => Get.to(UploadedPdfsScreen()),
               ),
-            ),
-          ),
-
-          InkWell(
-            onTap: () {
-              Get.to(UploadedPdfsScreen());
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Get.theme.cardColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(12),
-                  ),
-                  border: Border.all(color: Get.theme.primaryColor, width: 1)),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  spacing: 5,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 30,
-                      width: 30,
-                      child: Image.asset(
-                        Images.i5,
-                        fit: BoxFit.cover,
-                        color: Get.theme.secondaryHeaderColor,
-                      ),
-                    ),
-                    Poppins(
-                      text: 'Uploaded Pdfs',
-                      fontSize: 16,
-                      color: Get.theme.secondaryHeaderColor,
-                      fontWeight: FontWeight.w500,
-                      maxLines: 3,
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
+              dashboardTile(
+                title: 'Payments',
+                iconPath: Images.wallet,
+                onTap: () => Get.to(PaymentScreen()),
               ),
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Get.to(PaymentScreen());
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Get.theme.cardColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(12),
-                  ),
-                  border: Border.all(color: Get.theme.primaryColor, width: 1)),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  spacing: 5,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 30,
-                      width: 30,
-                      child: Image.asset(
-                        Images.wallet,
-                        fit: BoxFit.cover,
-                        color: Get.theme.secondaryHeaderColor,
-                      ),
-                    ),
-                    Poppins(
-                      text: 'Payments',
-                      fontSize: 16,
-                      color: Get.theme.secondaryHeaderColor,
-                      fontWeight: FontWeight.w500,
-                      maxLines: 3,
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-          // InkWell(onTap: (){Get.to(AddBannerScreen());},
-          //   child: Container(decoration: BoxDecoration(color: Get.theme.cardColor,borderRadius: BorderRadius.all(Radius.circular(12),),border: Border.all(color: Get.theme.primaryColor,width: 1)),child: Padding(
-          //     padding: const EdgeInsets.all(20),
-          //     child: Column(spacing: 5,mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,children: [
-          //       SizedBox(height: 30,width: 30,child: Image.asset(Images.settings,fit: BoxFit.cover,color: Get.theme.secondaryHeaderColor,),),
-          //       Poppins(text: 'Add Banners',fontSize: 16,color: Get.theme.secondaryHeaderColor,fontWeight: FontWeight.w500,maxLines: 3,textAlign: TextAlign.center,)
-          //     ],),
-          //   ),),
-          // ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }

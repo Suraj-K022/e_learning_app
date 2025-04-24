@@ -4,11 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../../customWidgets/custom_buttons.dart';
 import '../../../../../customWidgets/customtext.dart';
 import '../../CreateNewCourses/create_new_course.dart';
 import 'VideoPlayerScreen/video_player_screen.dart';
 
 class CourseContentList extends StatefulWidget {
+
   final String appbarTitle;
   final String courseId;
 
@@ -28,6 +30,8 @@ class _CourseContentListState extends State<CourseContentList> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<CourseController>().getAllContent(widget.courseId);
+
+
     });
   }
 
@@ -40,6 +44,14 @@ class _CourseContentListState extends State<CourseContentList> {
   Widget build(BuildContext context) {
     return GetBuilder<CourseController>(builder: (courseController) {
       return Scaffold(
+        bottomNavigationBar: Padding(padding: EdgeInsets.all(24),child:
+        CustomButton(child: Poppins(text: 'Add Course Contents',fontSize: 16,fontWeight: FontWeight.w500,color: Get.theme.scaffoldBackgroundColor,), onPressed: (){
+          Get.to(() => CreateNewCourse(
+            courseId: widget.courseId,
+            courseName: widget.appbarTitle,
+            // ScreenName: 'CourseContentScreen'
+          ));
+        })),
         appBar: AppBar(
           backgroundColor: Get.theme.scaffoldBackgroundColor,
           centerTitle: true,
@@ -54,18 +66,7 @@ class _CourseContentListState extends State<CourseContentList> {
             fontWeight: FontWeight.w500,
             color: Get.theme.secondaryHeaderColor,
           ),
-          actions: [
-            InkWell(
-              onTap: () {
-                Get.to(() => CreateNewCourse(
-                    courseName: widget.appbarTitle,
-                    ScreenName: 'CourseContentScreen'));
-              },
-              child:
-                  Icon(CupertinoIcons.plus_app, color: Get.theme.primaryColor),
-            ),
-            const SizedBox(width: 24),
-          ],
+
         ),
         body: (courseController.allContentList == null ||
                 courseController.allContentList!.isEmpty)
@@ -90,21 +91,22 @@ class _CourseContentListState extends State<CourseContentList> {
                   itemBuilder: (context, index) {
                     final content = courseController.allContentList![index];
                     final cleanPdfUrl = sanitize(content.pdfUpload.toString());
-                    final cleanVideoUrl =
-                        sanitize(content.vedioUpload.toString());
+                    final cleanVideoUrl = sanitize(content.vedioUpload.toString());
+                    final cleanImageUrl = sanitize(content.contentImage.toString());
 
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: ListTile(
-                        leading: Poppins(
-                          text: '${index + 1} .',
-                          color: Get.theme.secondaryHeaderColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        // leading: Poppins(
+                        //   text: '${index + 1} .',
+                        //   color: Get.theme.secondaryHeaderColor,
+                        //   fontSize: 14,
+                        //   fontWeight: FontWeight.w500,
+                        // ),
                         onTap: () {
                           print(cleanPdfUrl);
                           print(cleanVideoUrl);
+                          print(cleanImageUrl);
 
                           Get.to(() => VideoPlayerScreen(
                                 discription: content.description.toString(),
@@ -116,7 +118,7 @@ class _CourseContentListState extends State<CourseContentList> {
                         trailing: InkWell(
                           onTap: () async {
                             Get.dialog(
-                              Center(child: CircularProgressIndicator()),
+                              Center(child: CircularProgressIndicator(color: Get.theme.primaryColor,)),
                               barrierDismissible: false,
                             );
 

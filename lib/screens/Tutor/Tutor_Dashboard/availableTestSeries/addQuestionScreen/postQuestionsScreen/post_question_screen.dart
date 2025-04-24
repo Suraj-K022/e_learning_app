@@ -14,7 +14,7 @@ class PostQuestionScreen extends StatefulWidget {
 }
 
 class _PostQuestionScreenState extends State<PostQuestionScreen> {
-  bool isLoading = false; // To track loading state
+  bool isLoading = false;
 
   final TextEditingController questionController = TextEditingController();
   final TextEditingController optionAController = TextEditingController();
@@ -23,10 +23,20 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
   final TextEditingController optionDController = TextEditingController();
   final TextEditingController answerController = TextEditingController();
 
+  String? questionError;
+  String? optionAError;
+  String? optionBError;
+  String? optionCError;
+  String? optionDError;
+  String? answerError;
+
   @override
   void initState() {
     super.initState();
-    Get.find<CourseController>().getMcqQuestions(widget.testId);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Get.find<CourseController>().getMcqQuestions(widget.testId);
+
+    },);
   }
 
   @override
@@ -41,44 +51,39 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
   }
 
   void _submitQuestion() async {
-    final question = questionController.text.trim();
-    final optionA = optionAController.text.trim();
-    final optionB = optionBController.text.trim();
-    final optionC = optionCController.text.trim();
-    final optionD = optionDController.text.trim();
-    final answer = answerController.text.trim();
+    setState(() {
+      questionError = questionController.text.trim().isEmpty ? 'Required' : null;
+      optionAError = optionAController.text.trim().isEmpty ? 'Required' : null;
+      optionBError = optionBController.text.trim().isEmpty ? 'Required' : null;
+      optionCError = optionCController.text.trim().isEmpty ? 'Required' : null;
+      optionDError = optionDController.text.trim().isEmpty ? 'Required' : null;
+      answerError = answerController.text.trim().isEmpty ? 'Required' : null;
+    });
 
-    if (question.isEmpty ||
-        optionA.isEmpty ||
-        optionB.isEmpty ||
-        optionC.isEmpty ||
-        optionD.isEmpty ||
-        answer.isEmpty) {
+    if ([questionError, optionAError, optionBError, optionCError, optionDError, answerError].any((e) => e != null)) {
       Get.snackbar('Error', 'Please fill all fields');
       return;
     }
 
     setState(() {
-      isLoading = true; // Set loading to true while submitting the question
+      isLoading = true;
     });
 
     try {
-      final response =
-          await Get.find<CourseController>().postQuestionsAndAnswers(
+      final response = await Get.find<CourseController>().postQuestionsAndAnswers(
         testSeriesId: int.parse(widget.testId),
-        question: question,
-        optionA: optionA,
-        optionB: optionB,
-        optionC: optionC,
-        optionD: optionD,
-        answer: answer,
+        question: questionController.text.trim(),
+        optionA: optionAController.text.trim(),
+        optionB: optionBController.text.trim(),
+        optionC: optionCController.text.trim(),
+        optionD: optionDController.text.trim(),
+        answer: answerController.text.trim(),
       );
 
       if (response.status == 200) {
         Get.snackbar('Success', 'Question submitted successfully');
         Get.find<CourseController>().getMcqQuestions(widget.testId);
 
-        // Clear fields after success
         questionController.clear();
         optionAController.clear();
         optionBController.clear();
@@ -92,7 +97,7 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
       Get.snackbar('Error', 'Failed to submit question: $error');
     } finally {
       setState(() {
-        isLoading = false; // Set loading to false after submission is done
+        isLoading = false;
       });
     }
   }
@@ -101,15 +106,15 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
         child: CustomButton(
           onPressed: _submitQuestion,
           child: Poppins(
             text: 'Submit',
             fontWeight: FontWeight.w500,
             fontSize: 16,
-            color: Get.theme.secondaryHeaderColor,
-          ), // Disable button while loading
+            color: Get.theme.scaffoldBackgroundColor,
+          ),
         ),
       ),
       appBar: AppBar(
@@ -135,87 +140,43 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Poppins(
-              text: 'Question',
-              fontWeight: FontWeight.w500,
-              color: Get.theme.hintColor,
-              fontSize: 14,
-            ),
-            SizedBox(height: 4),
-            CustomTextField(
-              hintText: 'Enter question',
-              controller: questionController,
-            ),
-            const SizedBox(height: 12),
-            Poppins(
-              text: 'Option A',
-              fontWeight: FontWeight.w500,
-              color: Get.theme.hintColor,
-              fontSize: 14,
-            ),
-            SizedBox(height: 4),
-            CustomTextField(
-              hintText: 'Enter Option A',
-              controller: optionAController,
-            ),
-            const SizedBox(height: 12),
-            Poppins(
-              text: 'Option B',
-              fontWeight: FontWeight.w500,
-              color: Get.theme.hintColor,
-              fontSize: 14,
-            ),
-            SizedBox(height: 4),
-            CustomTextField(
-              hintText: 'Enter Option B',
-              controller: optionBController,
-            ),
-            const SizedBox(height: 12),
-            Poppins(
-              text: 'Option C',
-              fontWeight: FontWeight.w500,
-              color: Get.theme.hintColor,
-              fontSize: 14,
-            ),
-            SizedBox(height: 4),
-            CustomTextField(
-              hintText: 'Enter Option C',
-              controller: optionCController,
-            ),
-            const SizedBox(height: 12),
-            Poppins(
-              text: 'Option D',
-              fontWeight: FontWeight.w500,
-              color: Get.theme.hintColor,
-              fontSize: 14,
-            ),
-            SizedBox(height: 4),
-            CustomTextField(
-              hintText: 'Enter Option D',
-              controller: optionDController,
-            ),
-            const SizedBox(height: 12),
-            Poppins(
-              text: 'Answer',
-              fontWeight: FontWeight.w500,
-              color: Get.theme.hintColor,
-              fontSize: 14,
-            ),
-            SizedBox(height: 4),
-            CustomTextField(
-              hintText: 'Enter correct option',
-              controller: answerController,
-            ),
+            _buildField('Question', 'Enter question', questionController, questionError),
+            _buildField('Option A', 'Enter Option A', optionAController, optionAError),
+            _buildField('Option B', 'Enter Option B', optionBController, optionBError),
+            _buildField('Option C', 'Enter Option C', optionCController, optionCError),
+            _buildField('Option D', 'Enter Option D', optionDController, optionDError),
+            _buildField('Answer(option)', 'Enter correct option', answerController, answerError),
             const SizedBox(height: 20),
             if (isLoading)
               Center(
                 child: CircularProgressIndicator(
                   color: Get.theme.primaryColor,
-                ), // Show loading indicator
+                ),
               ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildField(String label, String hint, TextEditingController controller, String? errorText) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Poppins(
+          text: label,
+          fontWeight: FontWeight.w500,
+          color: Get.theme.hintColor,
+          fontSize: 14,
+        ),
+        SizedBox(height: 4),
+        CustomTextField(
+          hintText: hint,
+          controller: controller,
+          errorText: errorText,
+        ),
+        SizedBox(height: 12),
+      ],
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:e_learning_app/controller/course_Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,6 +18,9 @@ class ReportProblemScreen extends StatefulWidget {
 
 class _ReportProblemScreenState extends State<ReportProblemScreen> {
   File? _image;
+  List<String> _selectedProblems = [];
+  final TextEditingController descriptionController = TextEditingController();
+
   Map<String, bool> _checkboxValues = {
     "Lectures": false,
     "Images": false,
@@ -28,12 +31,11 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
 
   Future<void> _pickImage() async {
     final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    await ImagePicker().pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      final fileSize = await pickedFile.length(); // Get file size in bytes
+      final fileSize = await pickedFile.length();
       if (fileSize > 3 * 1024 * 1024) {
-        // 3MB limit
         Get.snackbar("Error", "Image size exceeds 3MB limit",
             backgroundColor: Colors.red, colorText: Colors.white);
         return;
@@ -44,6 +46,45 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
     }
   }
 
+  void submitReport() {
+    // Get selected problems (checkbox values)
+    _selectedProblems = _checkboxValues.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+
+    // Ensure that at least one problem is selected
+    if (_selectedProblems.isEmpty) {
+      Get.snackbar("Required", "Please select at least one problem area.",
+          backgroundColor: Colors.orange, colorText: Colors.white);
+      return;
+    }
+
+    final String description = descriptionController.text.trim();
+    final String? imagePath = _image?.path;
+
+    // Print selected data for debugging
+    print("✅ Selected Problems: $_selectedProblems");
+    print("📝 Description: $description");
+    print("🖼️ Image Path: ${imagePath ?? 'No image selected'}");
+
+    // Prepare the report submission
+    Get.find<CourseController>().reportProblem(
+      type: _selectedProblems.join(','), // Join the list elements into a comma-separated string
+      description: description,
+      image:File(imagePath.toString()), // Only create File if imagePath is not null
+    ).then((response){
+      if(response.status==200){
+       Get.close(1);
+      }
+      else {
+        Get.snackbar('Error', response.message);
+      }
+    });
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,13 +92,12 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
         padding: const EdgeInsets.all(24),
         child: CustomButton(
           child: Poppins(
-              text: 'Submit',
-              fontWeight: FontWeight.w500,
-              fontSize: 16,
-              color: Get.theme.secondaryHeaderColor),
-          onPressed: () {
-            Get.back(canPop: true);
-          },
+            text: 'Submit',
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+            color: Get.theme.scaffoldBackgroundColor,
+          ),
+          onPressed: submitReport,
         ),
       ),
       appBar: AppBar(
@@ -86,17 +126,17 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
           ),
           SizedBox(height: 10),
           Column(
-            children: [
-              _buildCheckBoxItem("Lectures"),
-              _buildCheckBoxItem("Images"),
-              _buildCheckBoxItem("Pdfs"),
-              _buildCheckBoxItem("Doubts"),
-              _buildCheckBoxItem("Others"),
-            ],
+            children: _checkboxValues.keys
+                .map((label) => _buildCheckBoxItem(label))
+                .toList(),
           ),
           SizedBox(height: 20),
           CustomTextField(
-              hintText: 'Please describe the problem you faced', maxLines: 10),
+            controller: descriptionController,
+            hintText: 'Please describe the problem you faced',
+            maxLines: 10,
+
+          ),
           SizedBox(height: 20),
           Poppins(
             text: 'Supporting screenshot (optional)',
@@ -110,8 +150,8 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
-                border:
-                    Border.all(color: Get.theme.secondaryHeaderColor, width: 1),
+                border: Border.all(
+                    color: Get.theme.secondaryHeaderColor, width: 1),
               ),
               padding: EdgeInsets.symmetric(vertical: 6),
               child: Column(
@@ -178,10 +218,11 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
           ),
           SizedBox(width: 10),
           Poppins(
-              text: label,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Get.theme.secondaryHeaderColor),
+            text: label,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Get.theme.secondaryHeaderColor,
+          ),
         ],
       ),
     );

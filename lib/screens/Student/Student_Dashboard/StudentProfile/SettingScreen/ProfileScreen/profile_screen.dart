@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:e_learning_app/CustomWidgets/custom_snackbar.dart';
 import 'package:e_learning_app/controller/auth_controller.dart';
 import 'package:e_learning_app/utils/images.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,7 +23,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _authController = Get.find<AuthController>();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _authController = Get.find<AuthController>();
+
+    },);
 
     // Safe trigger for profile loading
     Future.delayed(Duration.zero, () {
@@ -33,10 +37,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
+      final file = File(image.path);
+      final bytes = await file.length();
+
+      const maxSizeInBytes = 2 * 1024 * 1024; // 2MB
+
+      if (bytes > maxSizeInBytes) {
+        showCustomSnackBar('"Image Too Large", "Please select an image smaller than 2MB."');
+        return;
+      }
+
       setState(() {});
-      await _uploadImage(File(image.path));
+      await _uploadImage(file);
     }
   }
+
 
   Future<void> _uploadImage(File imageFile) async {
     final controller = Get.find<AuthController>();
