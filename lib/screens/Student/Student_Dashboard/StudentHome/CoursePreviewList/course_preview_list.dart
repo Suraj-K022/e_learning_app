@@ -13,6 +13,7 @@ class CoursePreviewList extends StatefulWidget {
   final String courseId;
   final String title;
 
+
   CoursePreviewList({
     super.key,
     required this.title,
@@ -163,7 +164,7 @@ class _CoursePreviewListState extends State<CoursePreviewList> {
               },
               child: Poppins(
                 text: 'Pay ₹249',
-                color: Get.theme.secondaryHeaderColor,
+                color: Get.theme.scaffoldBackgroundColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),

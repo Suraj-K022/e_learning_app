@@ -39,7 +39,7 @@ class CourseContentScreen extends StatelessWidget {
         child: CustomButton(
             child: Poppins(
               text: 'Watch Video Lectures',
-              color: Get.theme.secondaryHeaderColor,
+              color: Get.theme.scaffoldBackgroundColor,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),

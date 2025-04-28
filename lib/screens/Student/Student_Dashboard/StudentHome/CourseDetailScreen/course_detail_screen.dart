@@ -257,10 +257,13 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
           SizedBox(height: 10),
           InkWell(
             onTap: () {
-              Get.to(PdfDetailScreen(
-                  title: widget.title,
-                  description: widget.description,
-                  pdfPath: widget.pdfUrl));
+              Get.to(()=>
+
+
+                  PdfDetailScreen(
+                      title: widget.title,
+                      description: widget.description,
+                      pdfPath: widget.pdfUrl));
             },
             child: PdfCard(
                 title: widget.title,

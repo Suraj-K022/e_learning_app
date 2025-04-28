@@ -78,7 +78,7 @@ class _StudentHomeState extends State<StudentHome> {
             return Row(
               children: [
                 InkWell(
-                  onTap: () => Get.to(ProfileScreen()),
+                  onTap: () => Get.to(()=>ProfileScreen()),
                   child: Container(
                     height: 40,
                     width: 40,
@@ -109,7 +109,7 @@ class _StudentHomeState extends State<StudentHome> {
         ),
         actions: [
           InkWell(
-            onTap: () => Get.to(NotificationScreen()),
+            onTap: () => Get.to(()=>NotificationScreen()),
             child: Icon(
               Icons.notifications_active_outlined,
               size: 24,
@@ -296,7 +296,7 @@ class _StudentHomeState extends State<StudentHome> {
         crossAxisCount: crossAxisCount,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
-        childAspectRatio: 1 / 1.1,
+        childAspectRatio: 1 / 1.2,
       ),
       itemBuilder: (context, index) {
         final course = courseController.getCourseList[index];
@@ -326,13 +326,16 @@ class _StudentHomeState extends State<StudentHome> {
           ),
           child: InkWell(
             onTap: () {
-              Get.to(CoursePreviewList(
-                pdfUrl: pdfUrl,
-                courseId: course.id.toString(),
-                title: course.courseName.toString(),
-                videoUrl: videoUrl,
-                imgUrl: imgUrl,
-              ));
+              Get.to(()=>
+
+                  CoursePreviewList(
+
+                    pdfUrl: pdfUrl,
+                    courseId: course.id.toString(),
+                    title: course.courseName.toString(),
+                    videoUrl: videoUrl,
+                    imgUrl: imgUrl,
+                  ));
             },
             child: CourseCard(
               count: course.totalContent.toString(),
@@ -366,7 +369,7 @@ class _StudentHomeState extends State<StudentHome> {
         itemBuilder: (context, index) {
           final note = courseController.getpdfNotes[index];
           return InkWell(
-            onTap: () => Get.to(PdfDetailScreen(
+            onTap: () => Get.to(()=>PdfDetailScreen(
               title: note.name ?? 'Untitled',
               description: 'View PDF',
               pdfPath: note.pdfUrl ?? '',
@@ -404,9 +407,10 @@ class _StudentHomeState extends State<StudentHome> {
         itemBuilder: (context, index) {
           final test = courseController.allTestSeries[index];
           return InkWell(
-            onTap: () => Get.to(TestSeriesScreen(
-              testId: courseController.allTestSeries[index].id.toString(),
-            )),
+            onTap: () => Get.to(()=>
+                TestSeriesScreen(appBarTitle: courseController.allTestSeries[index].title.toString(),
+                  testId: courseController.allTestSeries[index].id.toString(),
+                )),
             child: TestSeriesWidget(
               title: test.title.toString(),
               image: test.thumbnail.toString(),

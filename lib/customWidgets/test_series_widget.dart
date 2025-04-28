@@ -55,31 +55,31 @@ class TestSeriesWidget extends StatelessWidget {
                       fontSize: 14,
                     ),
                   ),
+                  // Icon(
+                  //   Icons.arrow_forward_ios,
+                  //   color: Get.theme.secondaryHeaderColor,
+                  //   size: 16,
+                  // )
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Poppins(
+                      text: 'MCQs',
+                      color: Get.theme.hintColor,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      maxLines: 2,
+                    ),
+                  ),
                   Icon(
                     Icons.arrow_forward_ios,
                     color: Get.theme.secondaryHeaderColor,
                     size: 16,
-                  )
+                  ),
                 ],
               ),
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: Poppins(
-              //         text: 'description',
-              //         color: Get.theme.hintColor,
-              //         fontWeight: FontWeight.w400,
-              //         fontSize: 14,
-              //         maxLines: 2,
-              //       ),
-              //     ),
-              //     Icon(
-              //       Icons.arrow_forward_ios,
-              //       color: Get.theme.secondaryHeaderColor,
-              //       size: 16,
-              //     ),
-              //   ],
-              // ),
             ],
           ),
         ],

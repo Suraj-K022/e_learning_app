@@ -2,7 +2,6 @@ import 'package:e_learning_app/customWidgets/test_series_widget.dart';
 import 'package:e_learning_app/screens/Student/Student_Dashboard/StudentHome/testSeriesScreen/test_series_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../../../../controller/course_Controller.dart';
 import '../../../../../customWidgets/Custom_input_text_field.dart';
 import '../../../../../customWidgets/course_card_widget.dart';
@@ -26,13 +25,12 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
   @override
   void initState() {
     super.initState();
-    // Fetch courses when screen is ready
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Get.find<CourseController>().getAllCourses();
-      Get.find<CourseController>().getAllTestSeries();
+      final controller = Get.find<CourseController>();
+      controller.getAllCourses();
+      controller.getAllTestSeries();
     });
 
-    // Listen to search input
     _searchController.addListener(() {
       Get.find<CourseController>().filterCourses(_searchController.text);
     });
@@ -44,37 +42,27 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
     super.dispose();
   }
 
-  // Show loading indicator
   Widget buildLoading() => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: Get.height / 3,
-          ),
-          Center(
-            child: CircularProgressIndicator(
-              color: Get.theme.primaryColor,
-            ),
-          ),
-        ],
-      );
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      SizedBox(height: Get.height / 3),
+      Center(child: CircularProgressIndicator(color: Get.theme.primaryColor)),
+    ],
+  );
 
-  // Show message when nothing found
   Widget buildEmptyState(String message) => Center(
-        child: Padding(
-          padding: EdgeInsets.only(top: Get.height / 3),
-          child: Poppins(
-            text: message,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Get.theme.hintColor,
-          ),
-        ),
-      );
+    child: Padding(
+      padding: EdgeInsets.only(top: Get.height / 3),
+      child: Poppins(
+        text: message,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        color: Get.theme.hintColor,
+      ),
+    ),
+  );
 
-  // Grid view builder
-  Widget buildGridView(
-      {required int count, required IndexedWidgetBuilder builder}) {
+  Widget buildGridView({required int count, required IndexedWidgetBuilder builder}) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: GridView.builder(
@@ -110,21 +98,16 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
           color: Get.theme.secondaryHeaderColor,
         ),
         leading: InkWell(
-            onTap: () => Get.back(),
-            child: Icon(
-              Icons.arrow_back_ios,
-              color: Get.theme.secondaryHeaderColor,
-              size: 24,
-            )),
+          onTap: () => Get.back(),
+          child: Icon(Icons.arrow_back_ios, color: Get.theme.secondaryHeaderColor, size: 24),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Show search only if it's not PDF
             if (!isPdf && !isTestSeries)
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                 child: CustomTextField(
                   controller: _searchController,
                   hintText: 'Search...',
@@ -135,7 +118,6 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
               builder: (controller) {
                 if (controller.isLoading) return buildLoading();
 
-                // Show Courses or Trending
                 if (isCourse || isTrending) {
                   if (controller.getCourseList.isEmpty) {
                     return buildEmptyState("No courses found.");
@@ -145,16 +127,20 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
                     count: controller.getCourseList.length,
                     builder: (context, index) {
                       final course = controller.getCourseList[index];
+
+                      // SAFELY get content if available
                       final contentList = controller.allContentList;
+                      final content = (contentList != null && contentList.length > index)
+                          ? contentList[index]
+                          : null;
+
+                      final pdfUrl = content?.pdfUpload ?? '';
+                      final videoUrl = content?.vedioUpload ?? '';
+                      final imgUrl = content?.contentImage ?? '';
 
                       return InkWell(
                         onTap: () {
-                          final pdfUrl = contentList?[index].pdfUpload ?? '';
-                          final videoUrl =
-                              contentList?[index].vedioUpload ?? '';
-                          final imgUrl = contentList?[index].contentImage ?? '';
-
-                          Get.to(CoursePreviewList(
+                          Get.to(() => CoursePreviewList(
                             courseId: course.id.toString(),
                             title: course.courseName ?? '',
                             pdfUrl: pdfUrl.toString(),
@@ -165,7 +151,7 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
                         child: CourseCard(
                           title: course.courseName ?? '',
                           description: 'See Full Course',
-                          count: course.totalContent.toString(),
+                          count: course.totalContent?.toString() ?? '0',
                           imageUrl: course.courseImage ?? '',
                         ),
                       );
@@ -173,7 +159,6 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
                   );
                 }
 
-                // Show PDFs or Test Series
                 if (isPdf) {
                   if (controller.getpdfNotes.isEmpty) {
                     return buildEmptyState("No PDFs found.");
@@ -186,7 +171,7 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
 
                       return InkWell(
                         onTap: () {
-                          Get.to(PdfDetailScreen(
+                          Get.to(() => PdfDetailScreen(
                             title: pdf.name ?? '',
                             description: 'View PDF',
                             pdfPath: pdf.pdfUrl ?? '',
@@ -201,7 +186,8 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
                       );
                     },
                   );
-                } // Show  Test Series
+                }
+
                 if (isTestSeries) {
                   if (controller.allTestSeries.isEmpty) {
                     return buildEmptyState("No Test found.");
@@ -210,18 +196,18 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
                   return buildGridView(
                     count: controller.allTestSeries.length,
                     builder: (context, index) {
+                      final test = controller.allTestSeries[index];
+
                       return InkWell(
                         onTap: () {
-                          Get.to(TestSeriesScreen(
-                            testId:
-                                controller.allTestSeries[index].id.toString(),
+                          Get.to(() => TestSeriesScreen(
+                            appBarTitle: test.title.toString(),
+                            testId: test.id.toString(),
                           ));
                         },
                         child: TestSeriesWidget(
-                          title:
-                              controller.allTestSeries[index].title.toString(),
-                          image: controller.allTestSeries[index].thumbnail
-                              .toString(),
+                          title: test.title.toString(),
+                          image: test.thumbnail.toString(),
                         ),
                       );
                     },

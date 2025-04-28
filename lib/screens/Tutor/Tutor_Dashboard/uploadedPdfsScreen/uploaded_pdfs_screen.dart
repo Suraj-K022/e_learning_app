@@ -36,10 +36,10 @@ class _UploadedPdfsScreenState extends State<UploadedPdfsScreen> {
             text: 'Add Pdfs',
             fontSize: 16,
             fontWeight: FontWeight.w500,
-            color: Get.theme.secondaryHeaderColor,
+            color: Get.theme.scaffoldBackgroundColor,
           ),
           onPressed: () {
-            Get.to(AddPdfScreen());
+            Get.to(()=>AddPdfScreen());
           },
         ),
       ),
@@ -136,7 +136,7 @@ class _UploadedPdfsScreenState extends State<UploadedPdfsScreen> {
                               ),
                         onTap: () {
                           if (!isDeleteVisible) {
-                            Get.to(PdfDetailScreen(
+                            Get.to(()=>PdfDetailScreen(
                               title: pdf.name.toString(),
                               description: '',
                               pdfPath: pdf.pdfUrl.toString(),

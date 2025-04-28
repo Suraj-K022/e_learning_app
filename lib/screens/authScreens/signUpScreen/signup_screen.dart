@@ -10,7 +10,6 @@ import '../../../customWidgets/customtext.dart';
 import '../../../data/model/body/registerUserBody.dart';
 import '../../../utils/images.dart';
 
-
 class SignupScreen extends StatefulWidget {
   final String type;
   const SignupScreen({super.key, required this.type});
@@ -34,6 +33,65 @@ class _SignupScreenState extends State<SignupScreen> {
   String? _passwordError;
   String? _phoneError;
 
+  @override
+  void initState() {
+    super.initState();
+
+    fullnameController.addListener(() {
+      if (_nameError != null && fullnameController.text.isNotEmpty) {
+        setState(() {
+          _nameError = null;
+        });
+      }
+    });
+
+    emailController.addListener(() {
+      if (_emailError != null && emailController.text.isNotEmpty) {
+        setState(() {
+          _emailError = null;
+        });
+      }
+    });
+
+    phoneController.addListener(() {
+      if (_phoneError != null && phoneController.text.isNotEmpty) {
+        setState(() {
+          _phoneError = null;
+        });
+      }
+    });
+
+    _passwordController.addListener(() {
+      if (_passwordError != null &&
+          _passwordController.text == _confirmPasswordController.text &&
+          _passwordController.text.isNotEmpty) {
+        setState(() {
+          _passwordError = null;
+        });
+      }
+    });
+
+    _confirmPasswordController.addListener(() {
+      if (_passwordError != null &&
+          _passwordController.text == _confirmPasswordController.text &&
+          _confirmPasswordController.text.isNotEmpty) {
+        setState(() {
+          _passwordError = null;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    fullnameController.dispose();
+    phoneController.dispose();
+    _confirmPasswordController.dispose();
+    _passwordController.dispose();
+    emailController.dispose();
+    super.dispose();
+  }
+
   void save() {
     setState(() {
       _nameError = fullnameController.text.isEmpty ? 'Name is required' : null;
@@ -43,9 +101,11 @@ class _SignupScreenState extends State<SignupScreen> {
           ? 'Only Gmail addresses are allowed'
           : null);
       _phoneError = phoneController.text.isEmpty ? 'Phone number is required' : null;
-      _passwordError = _passwordController.text != _confirmPasswordController.text
+      _passwordError = _passwordController.text.isEmpty || _confirmPasswordController.text.isEmpty
+          ? 'Password is required'
+          : (_passwordController.text != _confirmPasswordController.text
           ? 'Passwords do not match'
-          : null;
+          : null);
     });
 
     if (_nameError != null || _emailError != null || _passwordError != null || _phoneError != null) return;
@@ -62,12 +122,14 @@ class _SignupScreenState extends State<SignupScreen> {
     Get.find<AuthController>().signUp(registerUserBody: registerUserBody).then((value) {
       if (value.status == 200) {
         Get.off(() => SignInScreen(type: widget.type));
+      }
+      if (value.status == 400) {
+        showCustomSnackBar('Email or Phone number is Already taken,Please try another one', isError: true);
       } else {
         showCustomSnackBar(value.message, isError: true);
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -207,6 +269,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     controller: _confirmPasswordController,
                     obscureText: _obscureConfirmPassword,
                     suffixIcon: _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                    errorText: _passwordError,
                     onSuffixTap: () {
                       setState(() {
                         _obscureConfirmPassword = !_obscureConfirmPassword;
@@ -262,5 +325,3 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 }
-
-

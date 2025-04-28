@@ -53,7 +53,7 @@ class SettingScreen extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              Get.to(ProfileScreen());
+              Get.to(() => ProfileScreen());
             },
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8))),
@@ -116,7 +116,7 @@ class SettingScreen extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              Get.to(ReportProblemScreen());
+              Get.to(()=>ReportProblemScreen());
             },
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8))),
@@ -153,7 +153,7 @@ class SettingScreen extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              Get.to(TermsAndConditionScreen());
+              Get.to(()=>TermsAndConditionScreen());
             },
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8))),
@@ -181,7 +181,7 @@ class SettingScreen extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              Get.to(PrivacyPolicyScreen());
+              Get.to(()=>PrivacyPolicyScreen());
             },
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8))),
@@ -367,7 +367,7 @@ class SettingScreen extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              Get.to(DeleteAccountScreen());
+              Get.to(()=>DeleteAccountScreen());
             },
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8))),

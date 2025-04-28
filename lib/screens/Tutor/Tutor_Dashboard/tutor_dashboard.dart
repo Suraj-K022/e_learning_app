@@ -86,7 +86,7 @@ class _TutorDashboardState extends State<TutorDashboard> {
             return Row(
               children: [
                 InkWell(
-                  onTap: () => Get.to(ProfileScreen()),
+                  onTap: () => Get.to(()=>ProfileScreen()),
                   child: CircleAvatar(
                     backgroundColor: Get.theme.secondaryHeaderColor,
                     radius: 20,
@@ -111,12 +111,12 @@ class _TutorDashboardState extends State<TutorDashboard> {
         ),
         actions: [
           InkWell(
-            onTap: () => Get.to(NotificationScreen()),
+            onTap: () => Get.to(()=>NotificationScreen()),
             child: Icon(Icons.notifications_active_outlined, size: 24, color: Get.theme.secondaryHeaderColor),
           ),
           const SizedBox(width: 12),
           InkWell(
-            onTap: () => Get.to(SettingScreen()),
+            onTap: () => Get.to(()=>SettingScreen()),
             child: Image.asset(Images.settings, height: 20, width: 20),
           ),
           const SizedBox(width: 36),
@@ -143,27 +143,27 @@ class _TutorDashboardState extends State<TutorDashboard> {
               dashboardTile(
                 title: 'Courses',
                 iconPath: Images.course,
-                onTap: () => Get.to(CoursesScreen()),
+                onTap: () => Get.to(()=>CoursesScreen()),
               ),
-              dashboardTile(
-                title: 'Create Test',
-                iconPath: Images.test,
-                onTap: () => Get.to(AddTestScreen()),
-              ),
+              // dashboardTile(
+              //   title: 'Create Test',
+              //   iconPath: Images.test,
+              //   onTap: () => Get.to(AddTestScreen()),
+              // ),
               dashboardTile(
                 title: 'Test Series',
                 iconPath: Images.test,
-                onTap: () => Get.to(AvailableTestSeries()),
+                onTap: () => Get.to(()=>AvailableTestSeries()),
               ),
               dashboardTile(
                 title: 'Uploaded Pdfs',
                 iconPath: Images.i5,
-                onTap: () => Get.to(UploadedPdfsScreen()),
+                onTap: () => Get.to(()=>UploadedPdfsScreen()),
               ),
               dashboardTile(
                 title: 'Payments',
                 iconPath: Images.wallet,
-                onTap: () => Get.to(PaymentScreen()),
+                onTap: () => Get.to(()=>PaymentScreen()),
               ),
             ],
           );

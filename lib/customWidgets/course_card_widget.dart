@@ -51,27 +51,23 @@ class _CourseCardState extends State<CourseCard> {
                 ),
               ),
               const SizedBox(height: 8),
-              Row(
+              Column(mainAxisSize: MainAxisSize.min,crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    child: Poppins(
-                      text: widget.title,
-                      color: Get.theme.secondaryHeaderColor,
-                      fontWeight: FontWeight.w400,
-                      // maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      fontSize: 14,
-                    ),
+                  Poppins(
+                    text: widget.title,
+                    color: Get.theme.secondaryHeaderColor,
+                    fontWeight: FontWeight.w400,
+                    // maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    fontSize: 14,
                   ),
-                  Expanded(
-                    child: Poppins(
-                      textAlign: TextAlign.end,
-                      text: '${widget.count} Topics',
-                      color: Get.theme.primaryColor,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                    ),
+                  Poppins(
+                    textAlign: TextAlign.end,
+                    text: '${widget.count} Topics',
+                    color: Get.theme.primaryColor,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
                   ),
                 ],
               ),

@@ -166,7 +166,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           // PDF Button
           ListTile(
             onTap: () {
-              Get.to(PdfDetailScreen(
+              Get.to(()=>PdfDetailScreen(
                   title: widget.pdfName,
                   description: widget.discription,
                   pdfPath: widget.pdfPath));

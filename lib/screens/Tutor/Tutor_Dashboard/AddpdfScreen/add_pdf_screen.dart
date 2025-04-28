@@ -122,7 +122,7 @@ class _AddPdfScreenState extends State<AddPdfScreen> {
                   text: 'Save Pdf',
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: Get.theme.secondaryHeaderColor,
+                  color: Get.theme.scaffoldBackgroundColor,
                 ),
         ),
       ),

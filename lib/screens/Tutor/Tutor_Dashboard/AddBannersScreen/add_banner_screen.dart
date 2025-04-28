@@ -89,7 +89,7 @@ class _AddBannerScreenState extends State<AddBannerScreen> {
             text: _isLoading ? 'Uploading...' : 'Save Banner',
             fontSize: 16,
             fontWeight: FontWeight.w500,
-            color: Get.theme.secondaryHeaderColor,
+            color: Get.theme.scaffoldBackgroundColor,
           ),
         ),
       ),

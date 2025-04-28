@@ -8,7 +8,8 @@ import '../../../../../data/model/response/mcqModel.dart';
 
 class TestSeriesScreen extends StatefulWidget {
   final String testId;
-  const TestSeriesScreen({super.key, required this.testId});
+  final String appBarTitle;
+  const TestSeriesScreen({super.key, required this.testId, required this.appBarTitle});
 
   @override
   State<TestSeriesScreen> createState() => _TestSeriesScreenState();
@@ -109,7 +110,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Poppins(
-          text: 'Test',
+          text: widget.appBarTitle,
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: Get.theme.secondaryHeaderColor,
@@ -257,6 +258,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                 child: Poppins(
                                   text: optionText,
                                   fontSize: 14,
+                                  maxLines: 10,
                                   fontWeight: FontWeight.w400,
                                   color: Get.theme.secondaryHeaderColor,
                                 ),
@@ -400,7 +402,7 @@ class TestResultScreen extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         child: CustomButton(
           onPressed: () {
-            Get.until((route) => route.isFirst);
+            Get.close(2);
           },
           child: Poppins(
             text: "Finish",

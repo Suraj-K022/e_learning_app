@@ -29,6 +29,8 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
     "Others": false,
   };
 
+  bool _isLoading = false;  // Variable to track loading state
+
   Future<void> _pickImage() async {
     final pickedFile =
     await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -47,6 +49,10 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
   }
 
   void submitReport() {
+    setState(() {
+      _isLoading = true; // Set loading state to true when submitting
+    });
+
     // Get selected problems (checkbox values)
     _selectedProblems = _checkboxValues.entries
         .where((entry) => entry.value)
@@ -55,6 +61,9 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
 
     // Ensure that at least one problem is selected
     if (_selectedProblems.isEmpty) {
+      setState(() {
+        _isLoading = false; // Reset loading state
+      });
       Get.snackbar("Required", "Please select at least one problem area.",
           backgroundColor: Colors.orange, colorText: Colors.white);
       return;
@@ -72,18 +81,19 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
     Get.find<CourseController>().reportProblem(
       type: _selectedProblems.join(','), // Join the list elements into a comma-separated string
       description: description,
-      image:File(imagePath.toString()), // Only create File if imagePath is not null
-    ).then((response){
-      if(response.status==200){
-       Get.close(1);
-      }
-      else {
+      image: File(imagePath.toString()), // Only create File if imagePath is not null
+    ).then((response) {
+      setState(() {
+        _isLoading = false; // Reset loading state after submission
+      });
+
+      if (response.status == 200) {
+        Get.close(1);
+      } else {
         Get.snackbar('Error', response.message);
       }
     });
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -91,13 +101,20 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(24),
         child: CustomButton(
-          child: Poppins(
+          child: _isLoading
+              ? SizedBox(height: 24,width: 24,
+                child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                  Get.theme.scaffoldBackgroundColor),
+                          ),
+              )
+              : Poppins(
             text: 'Submit',
             fontWeight: FontWeight.w500,
             fontSize: 16,
             color: Get.theme.scaffoldBackgroundColor,
           ),
-          onPressed: submitReport,
+          onPressed: _isLoading ? null : submitReport, // Disable button while loading
         ),
       ),
       appBar: AppBar(
@@ -135,7 +152,6 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
             controller: descriptionController,
             hintText: 'Please describe the problem you faced',
             maxLines: 10,
-
           ),
           SizedBox(height: 20),
           Poppins(
@@ -228,3 +244,4 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
     );
   }
 }
+

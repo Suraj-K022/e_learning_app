@@ -194,7 +194,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
                       text: currentIndex == onboardData.length - 1
                           ? 'Get Started'
                           : 'Next',
-                      color: Get.theme.secondaryHeaderColor,
+                      color: Get.theme.scaffoldBackgroundColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
                     ),

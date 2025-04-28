@@ -167,9 +167,9 @@ class AuthController extends GetxController with GetxServiceMixin {
     // );
 
     if (responseModel.status == 200) {
-      profilePic = responseModel.data;
-      // profilePic = profileModelFromJson(jsonEncode(responseModel.data));
+      profilePic = responseModel.data['image'];
     }
+
 
     isLoading = false;
     update();

@@ -71,7 +71,7 @@ class _StudentProfileState extends State<StudentProfile> {
               // ),
               ListTile(
                 onTap: () {
-                  Get.to(SettingScreen());
+                  Get.to(()=>SettingScreen());
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(8))),
@@ -99,7 +99,7 @@ class _StudentProfileState extends State<StudentProfile> {
               ),
               ListTile(
                 onTap: () {
-                  Get.to(FaqsScreen());
+                  Get.to(()=>FaqsScreen());
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(8))),

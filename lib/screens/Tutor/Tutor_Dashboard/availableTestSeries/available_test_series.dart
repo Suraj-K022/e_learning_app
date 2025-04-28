@@ -51,7 +51,7 @@ class _AvailableTestSeriesState extends State<AvailableTestSeries> {
       ),
       bottomNavigationBar: Padding(padding: EdgeInsets.all(24),child:
         CustomButton(child: Poppins(text: 'Add Test',fontWeight: FontWeight.w500,color: Get.theme.scaffoldBackgroundColor,fontSize: 16,), onPressed: (){
-          Get.to(AddTestScreen());
+          Get.to(()=>AddTestScreen());
 
         }),),
       body: GetBuilder<CourseController>(builder: (controller) {

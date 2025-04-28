@@ -34,6 +34,81 @@ class _SignInScreenState extends State<SignInScreen> {
   String? passwordError;
 
   @override
+  void initState() {
+    super.initState();
+
+    emailphoneController.addListener(() {
+      if (emailError != null && emailphoneController.text.isNotEmpty) {
+        setState(() {
+          emailError = null;
+        });
+      }
+    });
+
+    passwordController.addListener(() {
+      if (passwordError != null && passwordController.text.isNotEmpty) {
+        setState(() {
+          passwordError = null;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    emailphoneController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  void save() {
+    final emailInput = emailphoneController.text.trim();
+    final passwordInput = passwordController.text.trim();
+
+    bool isValidEmail(String input) {
+      final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
+      return emailRegex.hasMatch(input);
+    }
+
+    bool isValidPhone(String input) {
+      final phoneRegex = RegExp(r"^[0-9]{10,15}$"); // Adjust length as needed
+      return phoneRegex.hasMatch(input);
+    }
+
+    setState(() {
+      emailError = emailInput.isEmpty
+          ? 'Enter email or phone number'
+          : (!isValidEmail(emailInput) && !isValidPhone(emailInput)
+          ? 'Enter a valid email or phone number'
+          : null);
+      passwordError = passwordInput.isEmpty ? 'Enter password' : null;
+    });
+
+    if (emailError != null || passwordError != null) {
+      return;
+    }
+
+    Get.find<AuthController>()
+        .signIn(
+      phone: emailInput,
+      userPassword: passwordInput,
+      type: widget.type,
+    )
+        .then((value) {
+      if (value.status == 200) {
+        if (widget.type == "Student") {
+          Get.off(() => StudentDashboard(index: 0));
+        } else if (widget.type == "Teacher" || widget.type == "Tutor") {
+          Get.off(() => TutorDashboard());
+        }
+      } else {
+        showCustomSnackBar(value.message, isError: true);
+      }
+    });
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Padding(
@@ -52,7 +127,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 const SizedBox(width: 5),
                 InkWell(
-                  onTap: () => Get.to(SignupScreen(type: widget.type)),
+                  onTap: () => Get.to(()=>SignupScreen(type: widget.type)),
                   child: Poppins(
                     text: 'Sign Up',
                     fontWeight: FontWeight.w400,
@@ -168,7 +243,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   alignment: Alignment.centerRight,
                   child: InkWell(
                     onTap: () {
-                      Get.to(OtpVerificationScreen(
+                      Get.to(()=>OtpVerificationScreen(
                         type: widget.type,
                         phNumber: emailphoneController.text,
                       ));
@@ -188,40 +263,4 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
-
-  void save() {
-    final emailInput = emailphoneController.text.trim();
-    final passwordInput = passwordController.text.trim();
-
-    setState(() {
-      emailError = emailInput.isEmpty
-          ? 'Enter email or Phone Number'
-          : (!emailInput.toLowerCase().endsWith('@gmail.com') ? 'Enter a valid Gmail address' : null);
-      passwordError = passwordInput.isEmpty ? 'Enter password' : null;
-    });
-
-    if (emailError != null || passwordError != null) {
-      return;
-    }
-
-    Get.find<AuthController>()
-        .signIn(
-      phone: emailInput,
-      userPassword: passwordInput,
-      type: widget.type,
-    )
-        .then((value) {
-      if (value.status == 200) {
-        if (widget.type == "Student") {
-          Get.off(() => StudentDashboard(index: 0));
-        } else if (widget.type == "Teacher" || widget.type == "Tutor") {
-          Get.off(() => TutorDashboard());
-        }
-      } else {
-        // Uncomment if needed
-        showCustomSnackBar(value.message, isError: true);
-      }
-    });
-  }
-
 }

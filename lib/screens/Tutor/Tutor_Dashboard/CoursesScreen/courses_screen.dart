@@ -30,7 +30,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Padding(padding: EdgeInsets.all(24),child: 
-        CustomButton(child: Poppins(text: 'Add New Course',fontSize: 16,fontWeight: FontWeight.w500,color: Get.theme.scaffoldBackgroundColor,), onPressed: (){Get.to(AddCourseNameScreen());}),),
+        CustomButton(child: Poppins(text: 'Add New Course',fontSize: 16,fontWeight: FontWeight.w500,color: Get.theme.scaffoldBackgroundColor,), onPressed: (){Get.to(()=>AddCourseNameScreen());}),),
       appBar: AppBar(
         
 

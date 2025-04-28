@@ -52,7 +52,7 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
             color: Get.theme.scaffoldBackgroundColor,
           ),
           onPressed: () async {
-            await Get.to(PostQuestionScreen(testId: widget.testSeriesId));
+            await Get.to(()=>PostQuestionScreen(testId: widget.testSeriesId));
             _loadQuestions(); // refresh on return
           },
         ),
