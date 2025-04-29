@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:e_learning_app/controller/auth_controller.dart';
+import 'package:e_learning_app/customWidgets/paidCourseCard.dart';
 import 'package:e_learning_app/customWidgets/test_series_widget.dart';
 import 'package:e_learning_app/screens/Student/Student_Dashboard/StudentHome/testSeriesScreen/test_series_screen.dart';
 import 'package:get/get.dart';
@@ -214,11 +215,18 @@ class _StudentHomeState extends State<StudentHome> {
 
               const SizedBox(height: 20),
 
-              buildSectionHeader('Courses', 'Courses'),
+              buildSectionHeader('Free Courses', 'Free Courses'),
               buildCourseGrid(courseController),
-              SizedBox(height: 20),
-              buildSectionHeader('Trending', 'Trending'),
-              buildCourseGrid(courseController),
+
+              buildSectionHeader('Paid Courses', 'Paid Courses'),
+              const SizedBox(height: 20),
+
+              buildPaidCourseGrid(),
+
+
+
+
+
               SizedBox(height: 20),
               buildSectionHeader('PDF Notes', 'PDF NOTES'),
               SizedBox(
@@ -348,6 +356,26 @@ class _StudentHomeState extends State<StudentHome> {
       },
     );
   }
+  Widget buildPaidCourseGrid() {
+    return Container(height:200,
+      child: GridView(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 10,crossAxisSpacing: 10,childAspectRatio: 1/1.6,crossAxisCount: 1),
+        shrinkWrap: true,
+
+        scrollDirection: Axis.horizontal,
+        physics: ScrollPhysics(),
+          children: [
+            PaidCourseCard(),
+            PaidCourseCard(),
+
+        ],
+
+
+      ),
+    )
+    ;
+  }
+
+
 
   Widget buildHorizontalPdfGrid(CourseController courseController) {
     if (courseController.getpdfNotes.isEmpty) {

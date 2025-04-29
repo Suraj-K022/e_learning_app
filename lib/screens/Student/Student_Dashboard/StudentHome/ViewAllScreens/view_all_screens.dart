@@ -83,7 +83,7 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
   @override
   Widget build(BuildContext context) {
     final isPdf = widget.appbarTitle == 'PDF NOTES';
-    final isCourse = widget.appbarTitle == 'Courses';
+    final isCourse = widget.appbarTitle == 'Free Courses';
     final isTrending = widget.appbarTitle == 'Trending';
     final isTestSeries = widget.appbarTitle == 'Test Series';
 

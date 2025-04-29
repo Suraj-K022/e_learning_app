@@ -1,7 +1,9 @@
+import 'package:e_learning_app/CustomWidgets/custom_snackbar.dart';
 import 'package:e_learning_app/controller/course_Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../../../../customWidgets/custom_buttons.dart';
 import '../../../../../customWidgets/customtext.dart';
 import 'courseContent/course_content_screen.dart';
@@ -28,12 +30,68 @@ class CoursePreviewList extends StatefulWidget {
 }
 
 class _CoursePreviewListState extends State<CoursePreviewList> {
+
+
+  late Razorpay _razorpay;
+
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    Get.snackbar(
+        "Payment Success", "Transaction ID: ${response.paymentId}");
+   Get.back();
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    Get.snackbar("Payment Failed", response.message ?? "Something went wrong");
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    Get.snackbar("External Wallet Selected", response.walletName ?? "Unknown");
+  }
+
+  void _startPayment() {
+    var options = {
+      'key': 'rzp_test_WZu8B3H1Bec0W9', // Replace with actual Razorpay key
+      'amount': 100000, // Amount in paise (₹199.00)
+      'name': 'Premium Subscription',
+      'description': 'Subscription for premium features',
+      'prefill': {
+        'contact': '1234567890',
+        'email': 'user@example.com',
+      },
+      'external': {
+        'wallets': ['paytm']
+      }
+    };
+
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      debugPrint("Error: $e");
+    }
+  }
+
+  @override
+  void dispose() {
+    _razorpay.clear(); // Clean up listeners
+    super.dispose();
+  }
+
+
+
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<CourseController>().getAllContent(widget.courseId);
     });
+
+    _razorpay = Razorpay();
+
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
 
   @override
@@ -118,20 +176,20 @@ class _CoursePreviewListState extends State<CoursePreviewList> {
           );
         },
       ),
-      // bottomNavigationBar: Padding(
-      //   padding: const EdgeInsets.all(24),
-      //   child: CustomButton(
-      //     onPressed: _showPaymentBottomSheet,
-      //     child: Poppins(
-      //       text: 'Get Full Course Access at Only ₹249!',
-      //       maxLines: 2,
-      //       textAlign: TextAlign.center,
-      //       color: Get.theme.secondaryHeaderColor,
-      //       fontWeight: FontWeight.w500,
-      //       fontSize: 14,
-      //     ),
-      //   ),
-      // ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(24),
+        child: CustomButton(
+          onPressed: _showPaymentBottomSheet,
+          child: Poppins(
+            text: 'Get Full Course Access at Only ₹249!',
+            maxLines: 2,
+            textAlign: TextAlign.center,
+            color: Get.theme.scaffoldBackgroundColor,
+            fontWeight: FontWeight.w500,
+            fontSize: 14,
+          ),
+        ),
+      ),
     );
   }
 
@@ -160,6 +218,8 @@ class _CoursePreviewListState extends State<CoursePreviewList> {
             CustomButton(
               onPressed: () {
                 // Add logic here for alternate purchase access
+                _startPayment();
+
            Get.back();
               },
               child: Poppins(
