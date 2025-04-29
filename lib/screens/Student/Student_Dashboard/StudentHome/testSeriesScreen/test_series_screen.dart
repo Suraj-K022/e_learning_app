@@ -109,6 +109,26 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
+        actions: [
+          GetBuilder<CourseController>(
+            builder: (controller) {
+              final totalQuestions = controller.getQuestions.length;
+              return Row(
+                children: [
+                  Poppins(
+                    text: '${currentIndex + 1} / $totalQuestions',
+                    color: Get.theme.secondaryHeaderColor,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                  const SizedBox(width: 24),
+                ],
+              );
+            },
+          )
+        ],
+
         title: Poppins(
           text: widget.appBarTitle,
           fontSize: 16,
@@ -278,6 +298,17 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 class TestResultScreen extends StatelessWidget {
   final List<McqModel> questions;

@@ -55,6 +55,7 @@ class _PdfDetailScreenState extends State<PdfDetailScreen> {
           children: [
             Poppins(
               text: widget.description,
+              maxLines: 100,
               fontWeight: FontWeight.w500,
               color: Get.theme.secondaryHeaderColor,
               fontSize: 16,

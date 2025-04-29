@@ -39,25 +39,19 @@ class _SignupScreenState extends State<SignupScreen> {
 
     fullnameController.addListener(() {
       if (_nameError != null && fullnameController.text.isNotEmpty) {
-        setState(() {
-          _nameError = null;
-        });
+        setState(() => _nameError = null);
       }
     });
 
     emailController.addListener(() {
       if (_emailError != null && emailController.text.isNotEmpty) {
-        setState(() {
-          _emailError = null;
-        });
+        setState(() => _emailError = null);
       }
     });
 
     phoneController.addListener(() {
       if (_phoneError != null && phoneController.text.isNotEmpty) {
-        setState(() {
-          _phoneError = null;
-        });
+        setState(() => _phoneError = null);
       }
     });
 
@@ -65,9 +59,7 @@ class _SignupScreenState extends State<SignupScreen> {
       if (_passwordError != null &&
           _passwordController.text == _confirmPasswordController.text &&
           _passwordController.text.isNotEmpty) {
-        setState(() {
-          _passwordError = null;
-        });
+        setState(() => _passwordError = null);
       }
     });
 
@@ -75,9 +67,7 @@ class _SignupScreenState extends State<SignupScreen> {
       if (_passwordError != null &&
           _passwordController.text == _confirmPasswordController.text &&
           _confirmPasswordController.text.isNotEmpty) {
-        setState(() {
-          _passwordError = null;
-        });
+        setState(() => _passwordError = null);
       }
     });
   }
@@ -95,12 +85,16 @@ class _SignupScreenState extends State<SignupScreen> {
   void save() {
     setState(() {
       _nameError = fullnameController.text.isEmpty ? 'Name is required' : null;
+
       _emailError = emailController.text.isEmpty
           ? 'Email is required'
-          : (!RegExp(r'^[\w-\.]+@gmail\.com$').hasMatch(emailController.text)
-          ? 'Only Gmail addresses are allowed'
+          : (!RegExp(r'^[\w\.\+\-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
+          .hasMatch(emailController.text)
+          ? 'Enter a valid email address'
           : null);
+
       _phoneError = phoneController.text.isEmpty ? 'Phone number is required' : null;
+
       _passwordError = _passwordController.text.isEmpty || _confirmPasswordController.text.isEmpty
           ? 'Password is required'
           : (_passwordController.text != _confirmPasswordController.text
@@ -122,9 +116,8 @@ class _SignupScreenState extends State<SignupScreen> {
     Get.find<AuthController>().signUp(registerUserBody: registerUserBody).then((value) {
       if (value.status == 200) {
         Get.off(() => SignInScreen(type: widget.type));
-      }
-      if (value.status == 400) {
-        showCustomSnackBar('Email or Phone number is Already taken,Please try another one', isError: true);
+      } else if (value.status == 400) {
+        showCustomSnackBar('Email or Phone number is already taken, please try another one', isError: true);
       } else {
         showCustomSnackBar(value.message, isError: true);
       }
@@ -257,9 +250,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     errorText: _passwordError,
                     suffixIcon: _obscurePassword ? Icons.visibility_off : Icons.visibility,
                     onSuffixTap: () {
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
+                      setState(() => _obscurePassword = !_obscurePassword);
                     },
                   ),
                   SizedBox(height: 20),
@@ -271,9 +262,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     suffixIcon: _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
                     errorText: _passwordError,
                     onSuffixTap: () {
-                      setState(() {
-                        _obscureConfirmPassword = !_obscureConfirmPassword;
-                      });
+                      setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
                     },
                   ),
                   SizedBox(height: Get.height * 0.04),
