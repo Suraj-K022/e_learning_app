@@ -1,40 +1,42 @@
-import 'package:e_learning_app/screens/Student/Student_Dashboard/StudentHome/PdfDetailScreen/pdf_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:open_filex/open_filex.dart';
 import 'package:video_player/video_player.dart';
-import 'dart:io';
 
 import '../../../../../../customWidgets/customtext.dart';
 import '../../../../../../utils/images.dart';
+import '../../../../../Student/Student_Dashboard/StudentHome/PdfDetailScreen/pdf_detail_screen.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
   final String pdfPath;
+  final String imagePath;
   final String pdfName;
   final String discription;
-
   final String videoUrl;
-  const VideoPlayerScreen(
-      {super.key,
-      required this.videoUrl,
-      required this.pdfPath,
-      required this.pdfName,
-      required this.discription});
+
+  const VideoPlayerScreen({
+    super.key,
+    required this.videoUrl,
+    required this.pdfPath,
+    required this.pdfName,
+    required this.discription, required this.imagePath,
+  });
 
   @override
-  _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
+  State<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
 }
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   late VideoPlayerController _controller;
   bool _isPlaying = false;
+  bool _isMuted = false;
+  bool _hasStarted = false;
 
   @override
   void initState() {
     super.initState();
     _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
       ..initialize().then((_) {
-        setState(() {}); // Update UI after initialization
+        setState(() {});
       });
   }
 
@@ -50,60 +52,74 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         _controller.pause();
         _isPlaying = false;
       } else {
+        if (!_hasStarted) {
+          _hasStarted = true;
+        }
         _controller.play();
         _isPlaying = true;
       }
     });
   }
 
-  // void _openPdf() {
-  //   if (File(widget.pdfPath).existsSync()) {
-  //     OpenFilex.open(widget.pdfPath);
-  //   } else {
-  //     Get.snackbar("Error", "PDF file not found", backgroundColor: Colors.red, colorText: Colors.white);
-  //   }
-  // }
+  void _toggleMute() {
+    setState(() {
+      _isMuted = !_isMuted;
+      _controller.setVolume(_isMuted ? 0.0 : 1.0);
+    });
+  }
+
+  String _formatDuration(Duration duration) {
+    if (duration == Duration.zero) return "00:00";
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = twoDigits(duration.inMinutes);
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+    return "$minutes:$seconds";
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: InkWell(
-          onTap: () => Get.back(),
-          child: Icon(Icons.arrow_back_ios_new,
-              size: 24, color: Get.theme.secondaryHeaderColor),
-        ),
         backgroundColor: Get.theme.scaffoldBackgroundColor,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new,
+              color: Get.theme.secondaryHeaderColor),
+          onPressed: () => Get.back(),
+        ),
       ),
       body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
         children: [
-          // Video Container
-          Container(
-            height: Get.height / 2,
-            decoration: BoxDecoration(
-              border: Border.all(color: Get.theme.hintColor, width: 1),
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-            ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                _controller.value.isInitialized
-                    ? AspectRatio(
-                        aspectRatio: _controller.value.aspectRatio,
-                        child: VideoPlayer(_controller),
-                      )
-                    : Center(
-                        child: CircularProgressIndicator(
-                            color: Get.theme.primaryColor)),
-
-                // Play/Pause Overlay
-                Positioned.fill(
+          // Video Player
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              _controller.value.isInitialized
+                  ? ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
                   child: GestureDetector(
                     onTap: _togglePlayPause,
-                    child: Container(
-                      color: Colors.black26,
-                      alignment: Alignment.center,
+                    child: _hasStarted
+                        ? VideoPlayer(_controller)
+                        : Container(child: Image.asset(Images.videoThumbnail,fit: BoxFit.cover,),),
+                  ),
+                ),
+              )
+                  : Center(
+                child: CircularProgressIndicator(
+                    color: Get.theme.primaryColor),
+              ),
+
+              // Play/Pause Button
+              if (_controller.value.isInitialized)
+                Positioned(
+                  child: GestureDetector(
+                    onTap: _togglePlayPause,
+                    child: AnimatedOpacity(
+                      opacity: _isPlaying ? 0.0 : 1.0,
+                      duration: const Duration(milliseconds: 300),
                       child: CircleAvatar(
                         backgroundColor: Colors.black54,
                         radius: 30,
@@ -117,7 +133,22 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   ),
                 ),
 
-                // Video Duration Labels
+              if (_hasStarted) ...[
+                // Mute Toggle
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: IconButton(
+                    icon: Icon(
+                      _isMuted ? Icons.volume_off : Icons.volume_up,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                    onPressed: _toggleMute,
+                  ),
+                ),
+
+                // Duration Labels
                 Positioned(
                   bottom: 30,
                   left: 20,
@@ -151,28 +182,31 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   ),
                 ),
               ],
-            ),
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          Poppins(
-            text: widget.videoUrl,
-            maxLines: 3,
+            ],
           ),
 
-          SizedBox(height: 20),
+          const SizedBox(height: 16),
 
-          // PDF Button
+          // Poppins(
+          //   text: "Video Source: ${Uri.parse(widget.videoUrl).host}",
+          //   fontSize: 14,
+          //   color: Get.theme.hintColor,
+          //   maxLines: 3,
+          // ),
+
+          const SizedBox(height: 24),
+
+          // PDF Tile
           ListTile(
             onTap: () {
-              Get.to(()=>PdfDetailScreen(
-                  title: widget.pdfName,
-                  description: widget.discription,
-                  pdfPath: widget.pdfPath));
+              Get.to(() => PdfDetailScreen(
+                title: widget.pdfName,
+                description: widget.discription,
+                pdfPath: widget.pdfPath,
+              ));
             },
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
+              borderRadius: BorderRadius.circular(8),
             ),
             tileColor: Get.theme.cardColor,
             leading: Image.asset(
@@ -193,23 +227,17 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               color: Get.theme.secondaryHeaderColor,
             ),
           ),
-          SizedBox(
-            height: 8,
-          ),
-          Poppins(
-            text: widget.pdfPath,
-            maxLines: 3,
-          )
+
+          const SizedBox(height: 8),
+
+          // Poppins(
+          //   text: "File Path: ${widget.pdfPath}",
+          //   fontSize: 13,
+          //   color: Get.theme.hintColor,
+          //   maxLines: 2,
+          // ),
         ],
       ),
     );
-  }
-
-  String _formatDuration(Duration duration) {
-    if (duration == Duration.zero) return "00:00";
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final minutes = twoDigits(duration.inMinutes);
-    final seconds = twoDigits(duration.inSeconds.remainder(60));
-    return "$minutes:$seconds";
   }
 }

@@ -4,6 +4,7 @@ import 'package:e_learning_app/controller/auth_controller.dart';
 import 'package:e_learning_app/customWidgets/paidCourseCard.dart';
 import 'package:e_learning_app/customWidgets/test_series_widget.dart';
 import 'package:e_learning_app/screens/Student/Student_Dashboard/StudentHome/testSeriesScreen/test_series_screen.dart';
+import 'package:e_learning_app/utils/images.dart';
 import 'package:get/get.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +80,7 @@ class _StudentHomeState extends State<StudentHome> {
             return Row(
               children: [
                 InkWell(
-                  onTap: () => Get.to(()=>ProfileScreen()),
+                  onTap: () => Get.to(() => ProfileScreen()),
                   child: Container(
                     height: 40,
                     width: 40,
@@ -110,7 +111,7 @@ class _StudentHomeState extends State<StudentHome> {
         ),
         actions: [
           InkWell(
-            onTap: () => Get.to(()=>NotificationScreen()),
+            onTap: () => Get.to(() => NotificationScreen()),
             child: Icon(
               Icons.notifications_active_outlined,
               size: 24,
@@ -215,29 +216,235 @@ class _StudentHomeState extends State<StudentHome> {
 
               const SizedBox(height: 20),
 
-              buildSectionHeader('Free Courses', 'Free Courses'),
-              buildCourseGrid(courseController),
+              // buildSectionHeader('Free Courses', 'Free Courses'),
+              // buildCourseGrid(courseController),
+              // buildSectionHeader('Paid Courses', 'Paid Courses'),
+              // const SizedBox(height: 20),
+              // buildPaidCourseGrid(),
+              // SizedBox(height: 20),
+              // buildSectionHeader('PDF Notes', 'PDF NOTES'),
+              // SizedBox(height: 20,),
+              // buildHorizontalPdfGrid(courseController),
+              // SizedBox(height: 20),
+              // buildSectionHeader('Test Series', 'Test Series'),
+              // SizedBox(height: 10),
+              // buildHorizontalTestSeriesGrid(courseController),
 
-              buildSectionHeader('Paid Courses', 'Paid Courses'),
-              const SizedBox(height: 20),
-
-              buildPaidCourseGrid(),
-
-
-
-
-
-              SizedBox(height: 20),
-              buildSectionHeader('PDF Notes', 'PDF NOTES'),
-              SizedBox(
-                height: 20,
-              ),
-
-              buildHorizontalPdfGrid(courseController),
-              SizedBox(height: 20),
-              buildSectionHeader('Test Series', 'Test Series'),
-              SizedBox(height: 10),
-              buildHorizontalTestSeriesGrid(courseController),
+              GridView(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1 / 1,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12),
+                children: [
+                  InkWell(
+                      onTap: () {
+                        Get.to(
+                            () => ViewAllScreens(appbarTitle: 'Free Courses'));
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8),
+                            ),
+                            color: Get.theme.cardColor),
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                                child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.lightBlue.shade100,
+                                    Colors.lightBlue.shade100,
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius:
+                                    BorderRadius.circular(12), // Optional
+                              ),
+                              child: Center(
+                                child: Image.asset(
+                                  Images.a2,
+                                  height: 50,
+                                  width: 50,
+                                ),
+                              ),
+                            )),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Poppins(
+                              text: 'Free Courses',
+                              maxLines: 2,
+                              color: Get.theme.secondaryHeaderColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            )
+                          ],
+                        ),
+                      )),
+                  InkWell(
+                    onTap: () {
+                      Get.to(() => ViewAllScreens(appbarTitle: 'Paid Courses'));
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(8),
+                          ),
+                          color: Get.theme.cardColor),
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                              child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.lightBlue.shade100,
+                                  Colors.lightBlue.shade100,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(12), // Optional
+                            ),
+                            child: Center(
+                              child: Image.asset(
+                                Images.a1,
+                                height: 50,
+                                width: 50,
+                              ),
+                            ),
+                          )),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Poppins(
+                            text: 'Paid Courses',
+                            maxLines: 2,
+                            color: Get.theme.secondaryHeaderColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Get.to(() => ViewAllScreens(appbarTitle: 'PDF Notes'));
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(8),
+                          ),
+                          color: Get.theme.cardColor),
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                              child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.lightBlue.shade100,
+                                  Colors.lightBlue.shade100,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(12), // Optional
+                            ),
+                            child: Center(
+                              child: Image.asset(
+                                Images.a4,
+                                height: 50,
+                                width: 50,
+                              ),
+                            ),
+                          )),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Poppins(
+                            text: 'PDF Notes',
+                            maxLines: 2,
+                            color: Get.theme.secondaryHeaderColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Get.to(() => ViewAllScreens(appbarTitle: 'Test Series'));
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(8),
+                          ),
+                          color: Get.theme.cardColor),
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                              child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.lightBlue.shade100,
+                                  Colors.lightBlue.shade100,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(12), // Optional
+                            ),
+                            child: Center(
+                              child: Image.asset(
+                                Images.a3,
+                                height: 50,
+                                width: 50,
+                              ),
+                            ),
+                          )),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Poppins(
+                            text: 'Free Test Series',
+                            maxLines: 2,
+                            color: Get.theme.secondaryHeaderColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              )
             ],
           ),
         );
@@ -334,10 +541,7 @@ class _StudentHomeState extends State<StudentHome> {
           ),
           child: InkWell(
             onTap: () {
-              Get.to(()=>
-
-                  CoursePreviewList(
-
+              Get.to(() => CoursePreviewList(
                     pdfUrl: pdfUrl,
                     courseId: course.id.toString(),
                     title: course.courseName.toString(),
@@ -346,7 +550,7 @@ class _StudentHomeState extends State<StudentHome> {
                   ));
             },
             child: CourseCard(
-              count: course.totalContent.toString(),
+              count: course.contentsCount.toString(),
               title: course.courseName.toString(),
               description: 'See Full Course',
               imageUrl: course.courseImage.toString(),
@@ -356,26 +560,26 @@ class _StudentHomeState extends State<StudentHome> {
       },
     );
   }
-  Widget buildPaidCourseGrid() {
-    return Container(height:200,
-      child: GridView(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 10,crossAxisSpacing: 10,childAspectRatio: 1/1.6,crossAxisCount: 1),
-        shrinkWrap: true,
 
+  Widget buildPaidCourseGrid() {
+    return Container(
+      height: 200,
+      child: GridView(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 1 / 1.6,
+            crossAxisCount: 1),
+        shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         physics: ScrollPhysics(),
-          children: [
-            PaidCourseCard(),
-            PaidCourseCard(),
-
+        children: [
+          PaidCourseCard(),
+          PaidCourseCard(),
         ],
-
-
       ),
-    )
-    ;
+    );
   }
-
-
 
   Widget buildHorizontalPdfGrid(CourseController courseController) {
     if (courseController.getpdfNotes.isEmpty) {
@@ -397,16 +601,16 @@ class _StudentHomeState extends State<StudentHome> {
         itemBuilder: (context, index) {
           final note = courseController.getpdfNotes[index];
           return InkWell(
-            onTap: () => Get.to(()=>PdfDetailScreen(
-              title: note.name ?? 'Untitled',
-              description: 'View PDF',
-              pdfPath: note.pdfUrl ?? '',
-            )),
+            onTap: () => Get.to(() => PdfDetailScreen(
+                  title: note.name ?? 'Untitled',
+                  description: 'View PDF',
+                  pdfPath: note.pdfUrl ?? '',
+                )),
             child: PdfCard(
               imgUrl: note.imageUrl ?? '',
               title: note.name ?? '',
               description: 'View PDF',
-              color: Get.theme.primaryColor,
+              // color: Get.theme.primaryColor,
             ),
           );
         },
@@ -435,8 +639,9 @@ class _StudentHomeState extends State<StudentHome> {
         itemBuilder: (context, index) {
           final test = courseController.allTestSeries[index];
           return InkWell(
-            onTap: () => Get.to(()=>
-                TestSeriesScreen(appBarTitle: courseController.allTestSeries[index].title.toString(),
+            onTap: () => Get.to(() => TestSeriesScreen(
+                  appBarTitle:
+                      courseController.allTestSeries[index].title.toString(),
                   testId: courseController.allTestSeries[index].id.toString(),
                 )),
             child: TestSeriesWidget(

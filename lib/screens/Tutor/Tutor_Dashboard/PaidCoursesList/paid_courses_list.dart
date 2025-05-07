@@ -1,82 +1,75 @@
 import 'package:e_learning_app/controller/course_Controller.dart';
-import 'package:e_learning_app/customWidgets/custom_buttons.dart';
-import 'package:e_learning_app/customWidgets/customtext.dart';
+import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/tutor_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../AddTestScreen/add_test_screen.dart';
-import 'addQuestionScreen/add_question_screen.dart';
+import '../../../../customWidgets/custom_buttons.dart';
+import '../../../../customWidgets/customtext.dart';
+import 'AddNewPaidCourse/PaidCourseContentList/paid_course_content_list.dart';
+import 'AddNewPaidCourse/add_new_paid_course.dart';
 
-
-class AvailableTestSeries extends StatefulWidget {
-  const AvailableTestSeries({super.key});
+class PaidCoursesList extends StatefulWidget {
+  const PaidCoursesList({super.key});
 
   @override
-  State<AvailableTestSeries> createState() => _AvailableTestSeriesState();
+  State<PaidCoursesList> createState() => _PaidCoursesListState();
 }
 
-class _AvailableTestSeriesState extends State<AvailableTestSeries> {
-  final CourseController _courseController = Get.find<CourseController>();
+class _PaidCoursesListState extends State<PaidCoursesList> {
   final Set<int> _showDelete = {};
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _courseController.getAllTestSeries();
+      Get.find<CourseController>().getMyPaidCourses();
     });
   }
 
-  Future<void> _onRefresh() async {
-    await _courseController.getAllTestSeries();
+  Future<void> _refreshCourses() async {
+    await Get.find<CourseController>().getMyPaidCourses();
   }
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<CourseController>(builder: (controller) {
-      final testSeries = controller.allTestSeries;
-
       return Scaffold(
         appBar: AppBar(
-          backgroundColor: Get.theme.scaffoldBackgroundColor,
           centerTitle: true,
+          backgroundColor: Get.theme.scaffoldBackgroundColor,
+          title: Poppins(
+            text: 'Paid Courses',
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Get.theme.secondaryHeaderColor,
+          ),
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios, color: Get.theme.secondaryHeaderColor),
-            onPressed: () => Get.close(1),
-          ),
-          title: Poppins(
-            text: 'Available Test Series',
-            fontWeight: FontWeight.w500,
-            fontSize: 16,
-            color: Get.theme.secondaryHeaderColor,
+            onPressed: () => Get.off(TutorDashboard()),
           ),
         ),
         body: RefreshIndicator(
-          onRefresh: _onRefresh,
+          onRefresh: _refreshCourses,
           color: Get.theme.scaffoldBackgroundColor,
           backgroundColor: Get.theme.primaryColor,
-          child: testSeries.isEmpty
-              ?  Center(
-              child: Center(child: Poppins(text: 'No Test Series found',fontWeight: FontWeight.w500,fontSize: 14,color: Get.theme.secondaryHeaderColor,))
-          )
+          child: controller.myPaidCourses.isEmpty
+              ? Center(child: Poppins(text: 'No Course found',fontWeight: FontWeight.w500,fontSize: 14,color: Get.theme.secondaryHeaderColor,))
               : ListView.builder(
-            physics: AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.all(12),
-            itemCount: testSeries.length,
+            itemCount: controller.myPaidCourses.length,
             itemBuilder: (context, index) {
-              final test = testSeries[index];
+              final course = controller.myPaidCourses[index];
               final isDeleteVisible = _showDelete.contains(index);
-              final title = (test.title ?? '').trim().isEmpty ? 'Untitled' : test.title!;
-              final id = test.id?.toString() ?? '';
 
               return Column(
                 children: [
                   ListTile(
                     onTap: () {
                       if (!isDeleteVisible) {
-                        Get.to(() => AddQuestionScreen(
-                          testName: title,
-                          testSeriesId: id,
+                        Get.to(() => PaidCourseContentList(
+                          appbarTitle: course.title ?? '',
+                          courseId: course.id.toString(),
                         ));
+                        controller.getPaidCourseContent(course.id.toString());
                       }
                     },
                     onLongPress: () {
@@ -97,19 +90,19 @@ class _AvailableTestSeriesState extends State<AvailableTestSeries> {
                       width: 35,
                       color: Get.theme.scaffoldBackgroundColor,
                       child: Image.network(
-                        test.thumbnail ?? '',
+                        course.image ?? '',
                         fit: BoxFit.cover,
                         errorBuilder: (_, __, ___) => Icon(Icons.broken_image),
                       ),
                     ),
                     title: Poppins(
-                      text: title,
+                      text: course.title ?? '',
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Get.theme.secondaryHeaderColor,
                     ),
                     subtitle: Poppins(
-                      text: 'Test Series',
+                      text: "${course.contentsCount ?? 0} Topics",
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                       color: Get.theme.hintColor,
@@ -118,8 +111,8 @@ class _AvailableTestSeriesState extends State<AvailableTestSeries> {
                         ? IconButton(
                       icon: Icon(Icons.delete, color: Colors.red),
                       onPressed: () async {
-                        await controller.deleteTest(int.parse(test.id.toString()));
-                        await _onRefresh();
+                        await controller.deletePaidCourse(int.parse(course.id.toString()));
+                        await _refreshCourses();
                         setState(() => _showDelete.remove(index));
                       },
                     )
@@ -134,9 +127,9 @@ class _AvailableTestSeriesState extends State<AvailableTestSeries> {
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(24.0),
           child: CustomButton(
-            onPressed: () => Get.to(() => AddTestScreen()),
+            onPressed: () => Get.to(() => AddNewPaidCourse()),
             child: Poppins(
-              text: 'Add New Test',
+              text: 'Add New Course',
               fontSize: 16,
               fontWeight: FontWeight.w500,
               color: Get.theme.scaffoldBackgroundColor,
@@ -147,3 +140,4 @@ class _AvailableTestSeriesState extends State<AvailableTestSeries> {
     });
   }
 }
+

@@ -1,5 +1,9 @@
+import 'package:e_learning_app/customWidgets/paidCourseCard.dart';
 import 'package:e_learning_app/customWidgets/test_series_widget.dart';
+import 'package:e_learning_app/screens/Student/Student_Dashboard/StudentHome/AvailablePaidCourseScreen/available_paid_course_screen.dart';
+import 'package:e_learning_app/screens/Student/Student_Dashboard/StudentHome/CoursePreviewList/courseContent/course_content_screen.dart';
 import 'package:e_learning_app/screens/Student/Student_Dashboard/StudentHome/testSeriesScreen/test_series_screen.dart';
+import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/CoursesScreen/CourseContentList/course_content_list.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../controller/course_Controller.dart';
@@ -24,6 +28,7 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
 
   @override
   void initState() {
+
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final controller = Get.find<CourseController>();
@@ -62,7 +67,12 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
     ),
   );
 
-  Widget buildGridView({required int count, required IndexedWidgetBuilder builder}) {
+  Widget buildGridView({
+    required int count,
+    required IndexedWidgetBuilder builder,
+    int crossAxisCount = 2,
+    double childAspectRatio = 1 / 1.1, // default aspect ratio
+  }) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: GridView.builder(
@@ -70,21 +80,23 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
         physics: NeverScrollableScrollPhysics(),
         itemCount: count,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
+          crossAxisCount: crossAxisCount,
           mainAxisSpacing: 16,
           crossAxisSpacing: 16,
-          childAspectRatio: 1 / 1.1,
+          childAspectRatio: childAspectRatio,
         ),
         itemBuilder: builder,
       ),
     );
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    final isPdf = widget.appbarTitle == 'PDF NOTES';
+    final isPdf = widget.appbarTitle == 'PDF Notes';
     final isCourse = widget.appbarTitle == 'Free Courses';
-    final isTrending = widget.appbarTitle == 'Trending';
+    final isPaidCourse = widget.appbarTitle == 'Paid Courses';
     final isTestSeries = widget.appbarTitle == 'Test Series';
 
     return Scaffold(
@@ -118,7 +130,7 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
               builder: (controller) {
                 if (controller.isLoading) return buildLoading();
 
-                if (isCourse || isTrending) {
+                if (isCourse ) {
                   if (controller.getCourseList.isEmpty) {
                     return buildEmptyState("No courses found.");
                   }
@@ -151,7 +163,7 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
                         child: CourseCard(
                           title: course.courseName ?? '',
                           description: 'See Full Course',
-                          count: course.totalContent?.toString() ?? '0',
+                          count: course.contentsCount?.toString() ?? '0',
                           imageUrl: course.courseImage ?? '',
                         ),
                       );
@@ -181,12 +193,29 @@ class _ViewAllScreensState extends State<ViewAllScreens> {
                           title: pdf.name ?? '',
                           description: 'View PDF',
                           imgUrl: pdf.imageUrl ?? '',
-                          color: Get.theme.cardColor,
+                          // color: Get.theme.cardColor,
                         ),
                       );
                     },
                   );
                 }
+                if (isPaidCourse) {
+                  return buildGridView(
+                    count: 10,
+                    crossAxisCount: 1,
+                    childAspectRatio: 1.5,
+                    builder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          Get.to(()=>AvailablePaidCourseScreen(amount: '200',title: 'Python', courseId: '91', videoUrl: 'videoUrl', imgUrl: 'imgUrl', pdfUrl: 'pdfUrl'));
+                        },
+                        child: PaidCourseCard(),
+                      );
+                    },
+                  );
+                }
+
+
 
                 if (isTestSeries) {
                   if (controller.allTestSeries.isEmpty) {

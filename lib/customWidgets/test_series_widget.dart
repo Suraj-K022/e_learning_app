@@ -6,8 +6,8 @@ import 'customtext.dart';
 
 class TestSeriesWidget extends StatelessWidget {
   final String title;
-
   final String image;
+
   const TestSeriesWidget({
     super.key,
     required this.title,
@@ -28,16 +28,18 @@ class TestSeriesWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 100,
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              // color: color,
+              color: Get.theme.scaffoldBackgroundColor,
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
                 image,
-                width: Get.width,
+                height: 100,
+                width: double.infinity,
+                fit: BoxFit.cover,
               ),
             ),
           ),
@@ -45,32 +47,24 @@ class TestSeriesWidget extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Poppins(
-                      text: title,
-                      color: Get.theme.secondaryHeaderColor,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                    ),
-                  ),
-                  // Icon(
-                  //   Icons.arrow_forward_ios,
-                  //   color: Get.theme.secondaryHeaderColor,
-                  //   size: 16,
-                  // )
-                ],
+              Poppins(
+                text: title,
+                color: Get.theme.secondaryHeaderColor,
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              Row(
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
+                  const Expanded(
                     child: Poppins(
                       text: 'MCQs',
-                      color: Get.theme.hintColor,
+                      color: Colors.grey,
                       fontWeight: FontWeight.w400,
                       fontSize: 14,
-                      maxLines: 2,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Icon(

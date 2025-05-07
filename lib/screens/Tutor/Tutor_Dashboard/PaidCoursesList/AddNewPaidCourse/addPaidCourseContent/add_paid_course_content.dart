@@ -1,37 +1,39 @@
 import 'dart:io';
+import 'dart:ui';
+
+import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/PaidCoursesList/AddNewPaidCourse/PaidCourseContentList/paid_course_content_list.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
-import 'dart:ui';  // Import for BackdropFilter
 
-import '../../../../customWidgets/Custom_input_text_field.dart';
-import '../../../../customWidgets/custom_buttons.dart';
-import '../../../../customWidgets/customtext.dart';
-import '../../../../controller/course_Controller.dart';
+import '../../../../../../controller/course_Controller.dart';
+import '../../../../../../customWidgets/Custom_input_text_field.dart';
+import '../../../../../../customWidgets/custom_buttons.dart';
+import '../../../../../../customWidgets/customtext.dart';
 
-
-class CreateNewCourse extends StatefulWidget {
+class AddPaidCourseContent extends StatefulWidget {
   final String courseName;
   final String courseId;
 
-  const CreateNewCourse({
+  const AddPaidCourseContent({
     super.key,
     required this.courseName,
     required this.courseId,
   });
 
   @override
-  State<CreateNewCourse> createState() => _CreateNewCourseState();
+  State<AddPaidCourseContent> createState() => _AddPaidCourseContentState();
 }
 
-class _CreateNewCourseState extends State<CreateNewCourse> {
+class _AddPaidCourseContentState extends State<AddPaidCourseContent> {
   final _picker = ImagePicker();
-
   final List<File> collection = [];
+
   final TextEditingController courseTitleController = TextEditingController();
   final TextEditingController courseContentController = TextEditingController();
-  late TextEditingController courseNameController;
+  late final TextEditingController courseNameController;
 
   File? _thumbnailFile;
   File? _videoFile;
@@ -39,7 +41,6 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
   VideoPlayerController? _videoController;
 
   bool _isSaving = false;
-
   bool _titleError = false;
   bool _contentError = false;
   bool _thumbnailError = false;
@@ -68,10 +69,7 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
       if (picked != null) {
         final file = File(picked.path);
         debugPrint("Picked file: ${file.path}");
-        setState(() {
-          onPicked(file);
-          collection.add(file);
-        });
+        onPicked(file);
       }
     } catch (e) {
       debugPrint("File picking error: $e");
@@ -82,13 +80,15 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
     await _pickFile(
       pickFunction: () => _picker.pickImage(source: ImageSource.gallery),
       onPicked: (file) {
-        final bytes = file.lengthSync();
-        final sizeInMB = bytes / (1024 * 1024);
+        final sizeInMB = file.lengthSync() / (1024 * 1024);
         if (sizeInMB > 2) {
           Get.snackbar("File Too Large", "Thumbnail image must be less than 2MB.");
           return;
         }
-        _thumbnailFile = file;
+        setState(() {
+          _thumbnailFile = file;
+          collection.add(file);
+        });
       },
     );
   }
@@ -97,19 +97,33 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
     await _pickFile(
       pickFunction: () => _picker.pickVideo(source: ImageSource.gallery),
       onPicked: (file) {
-        _videoFile = file;
-        _videoController?.dispose();
-        _videoController = VideoPlayerController.file(file)
-          ..initialize().then((_) => setState(() {}));
+        setState(() {
+          _videoFile = file;
+          _videoController?.dispose();
+          _videoController = VideoPlayerController.file(file)
+            ..initialize().then((_) => setState(() {}));
+          collection.add(file);
+        });
       },
     );
   }
 
   Future<void> _pickPDF() async {
-    await _pickFile(
-      pickFunction: () => _picker.pickMedia(),
-      onPicked: (file) => _pdfFile = file,
-    );
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+      );
+      if (result != null && result.files.single.path != null) {
+        final file = File(result.files.single.path!);
+        setState(() {
+          _pdfFile = file;
+          collection.add(file);
+        });
+      }
+    } catch (e) {
+      debugPrint("PDF pick error: $e");
+    }
   }
 
   Future<void> _saveCourse() async {
@@ -126,40 +140,41 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
       return;
     }
 
-    try {
-      final response = await Get.find<CourseController>().addContent(
-        courseId: widget.courseId,
-        course: courseNameController.text,
-        title: courseTitleController.text,
-        description: courseContentController.text,
-        contentImg: _thumbnailFile!,
-        contentVideo: _videoFile!,
-        contentPdf: _pdfFile!,
-      );
-
-      debugPrint("Upload status: ${response.status}");
-
+    Get.find<CourseController>()
+        .addPaidCourseContent(
+      courseId: widget.courseId,
+      course: courseNameController.text,
+      title: courseTitleController.text,
+      description: courseContentController.text,
+      contentImg: _thumbnailFile!,
+      contentVideo: _videoFile!,
+      contentPdf: _pdfFile!,
+    )
+        .then((response) async {
       if (response.status == 200) {
-        await Get.find<CourseController>().getAllCourses();
-        Get.find<CourseController>().getAllContent(widget.courseId);
-        Get.close(1);
+
+        Get.off(PaidCourseContentList(courseId: widget.courseId, appbarTitle: widget.courseName));
+
       } else {
         Get.snackbar("Upload Failed", "Course was not saved. Try again.");
       }
-    } catch (e) {
+    })
+        .catchError((e) {
       debugPrint("Save Error: $e");
       Get.snackbar("Error", "Something went wrong. Please try again.");
-    } finally {
+    })
+        .whenComplete(() {
       setState(() => _isSaving = false);
-    }
+    });
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Poppins(
-          text: 'Add Course',
+          text: 'Add Contents',
           fontSize: 16,
           fontWeight: FontWeight.w500,
           color: Get.theme.secondaryHeaderColor,
@@ -168,7 +183,7 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
         backgroundColor: Get.theme.scaffoldBackgroundColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Get.theme.secondaryHeaderColor),
-          onPressed: () => Get.back(),
+          onPressed: () => Get.close(1),
         ),
       ),
       body: Stack(
@@ -179,10 +194,7 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
               _buildLabel("Course Name"),
               const SizedBox(height: 8),
               widget.courseName.isEmpty
-                  ? CustomTextField(
-                controller: courseNameController,
-                hintText: 'Course Name',
-              )
+                  ? CustomTextField(controller: courseNameController, hintText: 'Course Name')
                   : _readOnlyDisplay(widget.courseName),
               const SizedBox(height: 20),
 
@@ -221,15 +233,13 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
             Positioned.fill(
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                child: Container(
-                  color: Colors.black.withOpacity(0.3),  // Dark overlay behind the blur
-                ),
+                child: Container(color: Colors.black.withOpacity(0.3)),
               ),
             ),
           if (_isSaving)
-            Center(
+            const Center(
               child: CircularProgressIndicator(
-                color: Colors.blue,  // Spinner color
+                color: Colors.blue,
                 strokeWidth: 4,
               ),
             ),
@@ -240,7 +250,7 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
         child: CustomButton(
           onPressed: _isSaving ? null : _saveCourse,
           child: Poppins(
-            text: 'Save Course',
+            text: 'Save Course Content',
             fontSize: 16,
             fontWeight: FontWeight.w500,
             color: Get.theme.scaffoldBackgroundColor,
@@ -307,11 +317,7 @@ class _CreateNewCourseState extends State<CreateNewCourse> {
           if (isImage)
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.file(
-                selectedFile,
-                height: 100,
-                fit: BoxFit.cover,
-              ),
+              child: Image.file(selectedFile, height: 100, fit: BoxFit.cover),
             )
           else
             Poppins(

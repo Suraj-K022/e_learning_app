@@ -39,6 +39,7 @@ class Images {
 
   static const String bglayer = 'assets/images/bglayer.png';
   static const String nocourse = 'assets/images/nocourse.png';
+  static const String videoThumbnail = 'assets/images/videothumbnail.png';
 
   static const String b1 = 'assets/images/b1.jpg';
   static const String b2 = 'assets/images/b2.jpg';
@@ -46,4 +47,8 @@ class Images {
   static const String b4 = 'assets/images/b4.jpg';
   static const String dummyimg = 'assets/images/ptg2.png';
   static const String google = 'assets/icons/google.png';
+  static const String a1 = 'assets/icons/a1.png';
+  static const String a2 = 'assets/icons/a2.png';
+  static const String a3 = 'assets/icons/a3.png';
+  static const String a4 = 'assets/icons/a4.png';
 }

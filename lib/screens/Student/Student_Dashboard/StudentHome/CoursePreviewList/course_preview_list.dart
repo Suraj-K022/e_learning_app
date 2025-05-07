@@ -138,7 +138,7 @@ class _CoursePreviewListState extends State<CoursePreviewList> {
                     final imgUrl = contentData?.contentImage ?? '';
                     final description = contentData?.description ?? '';
 
-                    Get.to(() => CourseContentScreen(showWidget: 'No',
+                    Get.to(() => CourseContentScreen(
                       imgUrl: imgUrl,
                       videoUrl: videoUrl.toString(),
                       pdfUrl: pdfUrl.toString(),
@@ -176,99 +176,99 @@ class _CoursePreviewListState extends State<CoursePreviewList> {
           );
         },
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(24),
-        child: CustomButton(
-          onPressed: _showPaymentBottomSheet,
-          child: Poppins(
-            text: 'Get Full Course Access at Only ₹249!',
-            maxLines: 2,
-            textAlign: TextAlign.center,
-            color: Get.theme.scaffoldBackgroundColor,
-            fontWeight: FontWeight.w500,
-            fontSize: 14,
-          ),
-        ),
-      ),
+      // bottomNavigationBar: Padding(
+      //   padding: const EdgeInsets.all(24),
+      //   child: CustomButton(
+      //     onPressed: _showPaymentBottomSheet,
+      //     child: Poppins(
+      //       text: 'Get Full Course Access at Only ₹249!',
+      //       maxLines: 2,
+      //       textAlign: TextAlign.center,
+      //       color: Get.theme.scaffoldBackgroundColor,
+      //       fontWeight: FontWeight.w500,
+      //       fontSize: 14,
+      //     ),
+      //   ),
+      // ),
     );
   }
 
-  void _showPaymentBottomSheet() {
-    Get.bottomSheet(
-      Container(
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: Get.theme.cardColor,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Poppins(
-              text: "📚 Why Choose Full Course PDFs & Videos?",
-              color: Get.theme.secondaryHeaderColor,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-            ),
-            SizedBox(height: 10),
-            ..._benefitList(),
-            SizedBox(height: 15),
-            CustomButton(
-              onPressed: () {
-                // Add logic here for alternate purchase access
-                _startPayment();
-
-           Get.back();
-              },
-              child: Poppins(
-                text: 'Pay ₹249',
-                color: Get.theme.scaffoldBackgroundColor,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-    );
-  }
-
-  List<Widget> _benefitList() {
-    return [
-      _buildBenefit("Comprehensive Learning",
-          "Structured notes & expert-led video lectures."),
-      _buildBenefit("Study Anytime, Anywhere",
-          "Access PDFs & videos on the go, at your own pace."),
-      _buildBenefit("Exam-Ready Content",
-          "Concise notes for quick and effective revision."),
-      _buildBenefit("Cost-Effective",
-          "Save money while accessing premium learning material."),
-      _buildBenefit("Better Retention",
-          "Visual & written content together boost understanding."),
-      _buildBenefit("Doubt Clearance",
-          "Step-by-step explanations simplify complex topics."),
-    ];
-  }
-
-  Widget _buildBenefit(String title, String description) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(Icons.check_circle, color: Colors.green),
-          SizedBox(width: 8),
-          Expanded(
-            child: Text("$title\n$description",
-                style: GoogleFonts.poppins(
-                    color: Get.theme.secondaryHeaderColor, fontSize: 12)),
-          ),
-        ],
-      ),
-    );
-  }
+  // void _showPaymentBottomSheet() {
+  //   Get.bottomSheet(
+  //     Container(
+  //       padding: const EdgeInsets.all(16.0),
+  //       decoration: BoxDecoration(
+  //         color: Get.theme.cardColor,
+  //         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  //       ),
+  //       child: Column(
+  //         mainAxisSize: MainAxisSize.min,
+  //         children: [
+  //           Poppins(
+  //             text: "📚 Why Choose Full Course PDFs & Videos?",
+  //             color: Get.theme.secondaryHeaderColor,
+  //             fontSize: 16,
+  //             fontWeight: FontWeight.bold,
+  //             textAlign: TextAlign.center,
+  //             maxLines: 2,
+  //           ),
+  //           SizedBox(height: 10),
+  //           ..._benefitList(),
+  //           SizedBox(height: 15),
+  //           CustomButton(
+  //             onPressed: () {
+  //               // Add logic here for alternate purchase access
+  //               _startPayment();
+  //
+  //          Get.back();
+  //             },
+  //             child: Poppins(
+  //               text: 'Pay ₹249',
+  //               color: Get.theme.scaffoldBackgroundColor,
+  //               fontSize: 14,
+  //               fontWeight: FontWeight.w500,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //     isScrollControlled: true,
+  //     backgroundColor: Colors.transparent,
+  //   );
+  // }
+  //
+  // List<Widget> _benefitList() {
+  //   return [
+  //     _buildBenefit("Comprehensive Learning",
+  //         "Structured notes & expert-led video lectures."),
+  //     _buildBenefit("Study Anytime, Anywhere",
+  //         "Access PDFs & videos on the go, at your own pace."),
+  //     _buildBenefit("Exam-Ready Content",
+  //         "Concise notes for quick and effective revision."),
+  //     _buildBenefit("Cost-Effective",
+  //         "Save money while accessing premium learning material."),
+  //     _buildBenefit("Better Retention",
+  //         "Visual & written content together boost understanding."),
+  //     _buildBenefit("Doubt Clearance",
+  //         "Step-by-step explanations simplify complex topics."),
+  //   ];
+  // }
+  //
+  // Widget _buildBenefit(String title, String description) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 6),
+  //     child: Row(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Icon(Icons.check_circle, color: Colors.green),
+  //         SizedBox(width: 8),
+  //         Expanded(
+  //           child: Text("$title\n$description",
+  //               style: GoogleFonts.poppins(
+  //                   color: Get.theme.secondaryHeaderColor, fontSize: 12)),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

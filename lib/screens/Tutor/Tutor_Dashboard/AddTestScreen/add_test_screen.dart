@@ -70,7 +70,7 @@ class _AddTestScreenState extends State<AddTestScreen> {
       setState(() => _isLoading = false);
 
       if (response.status == 200) {
-        Get.off(AvailableTestSeries());
+        Get.close(1);
         Get.find<CourseController>().getAllTestSeries();
       } else {
         Get.snackbar('Error', response.message);

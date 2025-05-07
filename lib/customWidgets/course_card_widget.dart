@@ -39,8 +39,10 @@ class _CourseCardState extends State<CourseCard> {
             children: [
               Container(
                 height: 100,
+                padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
+                  color: Get.theme.scaffoldBackgroundColor
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(8)),

@@ -23,6 +23,16 @@ class CourseRepo {
     }
   }
 
+
+  Future getAllTransactions() async {
+    try {
+      return await apiClient.getData(AppConstants.transactions);
+    } catch (e, straktrace) {
+      debugPrint("Error fetching Transactions: $e $straktrace");
+      rethrow;
+    }
+  }
+
   Future getAllTestSeries() async {
     try {
       return await apiClient.getData(AppConstants.gettestseries);
@@ -52,7 +62,7 @@ class CourseRepo {
 
   Future getMcqQuestions({required String id}) async {
     try {
-      return await apiClient.getData("${AppConstants.getQuestionsofTest}/$id}");
+      return await apiClient.getData("${AppConstants.getQuestionsofTest}$id}");
     } catch (e, straktrace) {
       debugPrint("Error fetching All Courses: $e $straktrace");
       rethrow;
@@ -110,6 +120,33 @@ class CourseRepo {
     }
   }
 
+
+
+
+
+  Future<Response> postTransaction
+      (
+
+      String courseName,
+      String studentName,
+      String paymentMethod,
+      String amount,
+      String transactionId
+) async {
+    try {
+      return await apiClient.postData(AppConstants.transactionComplete, {
+        "course_name": courseName,
+        "student_name": studentName,
+        "payment_method": paymentMethod,
+        "amount": amount,
+        "transaction_id": transactionId,
+      });
+    } catch (e) {
+      debugPrint("Error sending phone number & pass: $e");
+      rethrow;
+    }
+  }
+
   Future<Response> addCourse(
     String coursename,
     List thumbnailImg,
@@ -128,6 +165,8 @@ class CourseRepo {
     }
   }
 
+
+
   Future<Response> addTest(
     String testName,
     List thumbnailImg,
@@ -135,7 +174,7 @@ class CourseRepo {
     List<MultipartBody> collection = [];
     for (var item in thumbnailImg) {
       collection
-          .add(MultipartBody("thumbnail", item)); // Do something with each item
+          .add(MultipartBody("thumbnail", item));
     }
     try {
       return await apiClient.postMultipartData(AppConstants.testseries,
@@ -147,6 +186,7 @@ class CourseRepo {
   }
 
   Future<Response> addContent(
+      String courseId,
     String course,
     String title,
     String description,
@@ -162,7 +202,7 @@ class CourseRepo {
       }
 
       if (contentVideo != null && await contentVideo.exists()) {
-        multipartBody.add(MultipartBody('vedio_upload', contentVideo.path));
+        multipartBody.add(MultipartBody('video_upload', contentVideo.path));
       }
 
       if (contentPdf != null && await contentPdf.exists()) {
@@ -174,6 +214,7 @@ class CourseRepo {
       return await apiClient.postMultipartData(
         AppConstants.addcontent,
         body: {
+          "course_id":courseId,
           "course": course,
           "title": title,
           "description": description,
@@ -250,6 +291,8 @@ class CourseRepo {
     }
   }
 
+
+
   Future deleteQuestions(int questionId) async {
     try {
       return await apiClient
@@ -278,10 +321,11 @@ class CourseRepo {
       rethrow;
     }
   }
+
   Future deleteTest(int testId) async {
     try {
       return await apiClient
-          .deleteData("${AppConstants.deletecourse}$testId");
+          .deleteData("${AppConstants.deleteTestSeries}$testId");
     } catch (e, straktrace) {
       debugPrint("Error deleting Test: $e $straktrace");
       rethrow;
@@ -324,6 +368,127 @@ class CourseRepo {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  Future<Response> addPaidCourse(
+      String teacherName,
+      String courseName,
+      String actualPrice,
+      String discountPrice,
+      List thumbnailImg,
+      ) async {
+    List<MultipartBody> collection = [];
+    for (var item in thumbnailImg) {
+      collection.add(
+          MultipartBody("image", item)); // Do something with each item
+    }
+    try {
+      return await apiClient.postMultipartData(AppConstants.addPaidCourses,
+          body: {"teacher_name": teacherName,"title": courseName,"price": actualPrice,"discount": discountPrice}, multipartBody: collection);
+    } catch (e) {
+      debugPrint("Error adding course & thumbnail: $e");
+      rethrow;
+    }
+  }
+
+
+  Future deletePAidCourse(int courseId) async {
+    try {
+      return await apiClient
+          .deleteData("${AppConstants.deletePaidCourse}$courseId");
+    } catch (e, straktrace) {
+      debugPrint("Error deleting Course: $e $straktrace");
+      rethrow;
+    }
+  }
+
+
+  Future getPaidCoursesContent(String courseId) async {
+    try {
+      return await apiClient
+          .getData("${AppConstants.getPaidCoursesContents}?course_id=$courseId");
+    } catch (e, straktrace) {
+      debugPrint("Error getting Course: $e $straktrace");
+      rethrow;
+    }
+  }
+
+
+
+
+  Future<Response> addPaidCourseContent(
+      String courseId,
+      String course,
+      String title,
+      String description,
+      File? contentImg,
+      File? contentVideo,
+      File? contentPdf,
+      ) async {
+    try {
+      List<MultipartBody> multipartBody = [];
+
+      if (contentImg != null && await contentImg.exists()) {
+        multipartBody.add(MultipartBody('content_image', contentImg.path));
+      }
+
+      if (contentVideo != null && await contentVideo.exists()) {
+        multipartBody.add(MultipartBody('vedio_upload', contentVideo.path));
+      }
+
+      if (contentPdf != null && await contentPdf.exists()) {
+        multipartBody.add(MultipartBody('pdf_upload', contentPdf.path));
+      }
+
+      log("Prepared Multipart Files: $multipartBody");
+
+      return await apiClient.postMultipartData(
+        AppConstants.addPaidCourseContent,
+        body: {
+          "course_id": courseId,
+          "course": course,
+          "title": title,
+          "description": description,
+        },
+        multipartBody: multipartBody,
+      );
+    } catch (e) {
+      debugPrint("Error adding content: $e");
+      rethrow;
+    }
+  }
+
+  Future deletePaidCourseContent(int contentId) async {
+    try {
+      return await apiClient
+          .deleteData("${AppConstants.deletePaidCourseContent}$contentId");
+    } catch (e, straktrace) {
+      debugPrint("Error deleting Course: $e $straktrace");
+      rethrow;
+    }
+  }
+
+
+  Future getMyPaidCourse() async {
+    try {
+      return await apiClient.getData(AppConstants.getMyPaidCourses);
+    } catch (e, straktrace) {
+      debugPrint("Error fetching All Courses: $e $straktrace");
+      rethrow;
+    }
+  }
 
 
 }

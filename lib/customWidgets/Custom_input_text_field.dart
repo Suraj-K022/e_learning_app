@@ -10,6 +10,8 @@ class CustomTextField extends StatefulWidget {
   final IconData? suffixIcon;
   final VoidCallback? onSuffixTap;
   final IconData? prefixIcon;
+  final double? prefixIconSize;
+  final Color? prefixIconColor;
   final double? height;
   final int? maxLines;
   final bool readOnly;
@@ -26,6 +28,8 @@ class CustomTextField extends StatefulWidget {
     this.suffixIcon,
     this.onSuffixTap,
     this.prefixIcon,
+    this.prefixIconSize,
+    this.prefixIconColor,
     this.height,
     this.maxLines = 1,
     this.onChanged,
@@ -102,12 +106,22 @@ class _CustomTextFieldState extends State<CustomTextField> {
           contentPadding:
           const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           prefixIcon: widget.prefixIcon != null
-              ? Icon(widget.prefixIcon, color: Get.theme.primaryColor)
+              ? Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Icon(
+              widget.prefixIcon,
+              color: widget.prefixIconColor ?? Get.theme.primaryColor,
+              size: widget.prefixIconSize ?? 20,
+            ),
+          )
               : null,
           suffixIcon: widget.suffixIcon != null
               ? GestureDetector(
             onTap: widget.onSuffixTap,
-            child: Icon(widget.suffixIcon, color: Colors.grey),
+            child: Icon(
+              widget.suffixIcon,
+              color: Colors.grey,
+            ),
           )
               : null,
         ),

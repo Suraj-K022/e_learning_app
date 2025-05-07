@@ -20,135 +20,126 @@ class _UploadedPdfsScreenState extends State<UploadedPdfsScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<CourseController>().getPdfNotes();
+    });
+  }
 
-    },);
+  Future<void> _onRefresh() async {
+    await Get.find<CourseController>().getPdfNotes();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(24),
-        child: CustomButton(
-          child: Poppins(
-            text: 'Add Pdfs',
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Get.theme.scaffoldBackgroundColor,
-          ),
-          onPressed: () {
-            Get.to(()=>AddPdfScreen());
-          },
-        ),
-      ),
-      backgroundColor: Get.theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: Get.theme.scaffoldBackgroundColor,
-        centerTitle: true,
-        leading: InkWell(
-          onTap: () => Get.back(),
-          child: Icon(Icons.arrow_back_ios,
-              size: 24, color: Get.theme.secondaryHeaderColor),
-        ),
-        title: Poppins(
-          text: 'Uploaded Pdfs',
-          fontWeight: FontWeight.w500,
-          fontSize: 16,
-          color: Get.theme.secondaryHeaderColor,
-        ),
-      ),
-      body: GetBuilder<CourseController>(builder: (courseController) {
-        final pdfList = courseController.getpdfNotes;
+    return GetBuilder<CourseController>(builder: (courseController) {
+      final pdfList = courseController.getpdfNotes;
 
-        return RefreshIndicator(
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Get.theme.scaffoldBackgroundColor,
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: Get.theme.secondaryHeaderColor),
+            onPressed: () => Get.close(1),
+          ),
+          title: Poppins(
+            text: 'Uploaded Pdfs',
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+            color: Get.theme.secondaryHeaderColor,
+          ),
+        ),
+        body: RefreshIndicator(
+          onRefresh: _onRefresh,
           color: Get.theme.scaffoldBackgroundColor,
           backgroundColor: Get.theme.primaryColor,
-          onRefresh: () async {
-            await courseController.getPdfNotes();
-          },
           child: pdfList.isEmpty
-              ? ListView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  children: [
-                    SizedBox(height: Get.height * 0.3),
-                    Center(
-                      child: Poppins(
-                        text: 'No PDF Found',
-                        color: Get.theme.hintColor,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
+              ? Center(child: Poppins(text: 'No PDF Notes found',fontWeight: FontWeight.w500,fontSize: 14,color: Get.theme.secondaryHeaderColor,))
+              : ListView.builder(
+            physics: AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(12),
+            itemCount: pdfList.length,
+            itemBuilder: (context, index) {
+              final pdf = pdfList[index];
+              final isDeleteVisible = _showDelete.contains(index);
+              final title = (pdf.name ?? '').trim().isEmpty ? 'Untitled PDF' : pdf.name!;
+              final id = pdf.id?.toString() ?? '';
+
+              return Column(
+                children: [
+                  ListTile(
+                    onTap: () {
+                      if (!isDeleteVisible) {
+                        Get.to(() => PdfDetailScreen(
+                          title: title,
+                          description: '',
+                          pdfPath: pdf.pdfUrl.toString(),
+                        ));
+                      }
+                    },
+                    onLongPress: () {
+                      setState(() {
+                        isDeleteVisible
+                            ? _showDelete.remove(index)
+                            : _showDelete.add(index);
+                      });
+                    },
+                    tileColor: Get.theme.cardColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    leading: Container(
+                      height: 35,
+                      width: 35,
+                      color: Get.theme.scaffoldBackgroundColor,
+                      child: Image.network(
+                        pdf.imageUrl ?? '',
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Icon(Icons.picture_as_pdf),
                       ),
                     ),
-                  ],
-                )
-              : ListView.builder(
-                  itemCount: pdfList.length,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  itemBuilder: (context, index) {
-                    final pdf = pdfList[index];
-                    final isDeleteVisible = _showDelete.contains(index);
-
-                    return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 6),
-                      color: Get.theme.cardColor,
-                      child: ListTile(
-                        onLongPress: () {
-                          setState(() {
-                            if (_showDelete.contains(index)) {
-                              _showDelete.remove(index);
-                            } else {
-                              _showDelete.add(index);
-                            }
-                          });
-                        },
-                        leading: Poppins(
-                          text: "${index + 1}",
-                          color: Get.theme.secondaryHeaderColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        title: Poppins(
-                          text: pdf.name.toString(),
-                          color: Get.theme.secondaryHeaderColor,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                        ),
-                        trailing: isDeleteVisible
-                            ? IconButton(
-                                icon: Icon(Icons.delete, color: Colors.red),
-                                onPressed: () async {
-                                  await courseController.deletePdfs(int.parse(courseController.getpdfNotes[index].id.toString())); // Make sure you have this method
-                                  await courseController
-                                      .getPdfNotes(); // Refresh after deletion
-                                  setState(() {
-                                    _showDelete.remove(index);
-                                  });
-                                },
-                              )
-                            : Icon(
-                                Icons.arrow_forward_ios_outlined,
-                                size: 20,
-                                color: Get.theme.secondaryHeaderColor,
-                              ),
-                        onTap: () {
-                          if (!isDeleteVisible) {
-                            Get.to(()=>PdfDetailScreen(
-                              title: pdf.name.toString(),
-                              description: '',
-                              pdfPath: pdf.pdfUrl.toString(),
-                            ));
-                          }
-                        },
-                      ),
-                    );
-                  },
-                ),
-        );
-      }),
-    );
+                    title: Poppins(
+                      text: title,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Get.theme.secondaryHeaderColor,
+                    ),
+                    subtitle: Poppins(
+                      text: 'PDF Resource',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: Get.theme.hintColor,
+                    ),
+                    trailing: isDeleteVisible
+                        ? IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red),
+                      onPressed: () async {
+                        await courseController.deletePdfs(int.parse(id));
+                        await _onRefresh();
+                        setState(() => _showDelete.remove(index));
+                      },
+                    )
+                        : Icon(Icons.arrow_forward_ios, size: 20, color: Get.theme.secondaryHeaderColor),
+                  ),
+                  SizedBox(height: 8),
+                ],
+              );
+            },
+          ),
+        ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: CustomButton(
+            onPressed: () => Get.to(() => AddPdfScreen()),
+            child: Poppins(
+              text: 'Add Pdfs',
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Get.theme.scaffoldBackgroundColor,
+            ),
+          ),
+        ),
+      );
+    });
   }
 }

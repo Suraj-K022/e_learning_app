@@ -9,7 +9,7 @@ import '../../CourseDetailScreen/course_detail_screen.dart';
 class CourseContentScreen extends StatelessWidget {
 
   final String imgUrl;
-  final String showWidget;
+  // final String showWidget;
   final String videoUrl;
   final String pdfUrl;
 
@@ -24,16 +24,15 @@ class CourseContentScreen extends StatelessWidget {
     required this.discription,
     required this.videoUrl,
     required this.pdfUrl,
-    required this.imgUrl, required this.showWidget,
+    required this.imgUrl,
   });
 
-  final paymentController = Get.put(PaymentController());
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar:
-          // Obx(() => paymentController.isPaymentSuccessful.value ?
       Padding(
         padding: const EdgeInsets.all(24),
         child: CustomButton(

@@ -144,7 +144,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 ),
               )
                   : Poppins(
-                text: value == 0 ? 'Send Verification Code' : 'Submit OTP',
+                text: value == 0 ? 'Send Verification Code' : 'Submit ',
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: Get.theme.scaffoldBackgroundColor,

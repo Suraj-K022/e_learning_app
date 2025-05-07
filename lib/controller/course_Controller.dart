@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:e_learning_app/data/model/response/allContentModel.dart';
 import 'package:e_learning_app/data/model/response/mcqModel.dart';
+import 'package:e_learning_app/data/model/response/paidCourseContentsModel.dart';
+import 'package:e_learning_app/data/model/response/paidCoursesModel.dart';
 import 'package:e_learning_app/data/model/response/pdfnotesModel.dart';
 import 'package:e_learning_app/data/model/response/privacyPolicyModel.dart';
 import 'package:e_learning_app/data/model/response/termsConditionModel.dart';
@@ -14,6 +16,7 @@ import '../CustomWidgets/custom_snackbar.dart';
 import '../data/model/response/allCourseModel.dart';
 import '../data/api/api_checker.dart';
 import '../data/model/base/response_model.dart';
+import '../data/model/response/transactionDetailModel.dart';
 import '../utils/app_constants.dart';
 
 class CourseController extends GetxController with GetxServiceMixin {
@@ -27,18 +30,15 @@ class CourseController extends GetxController with GetxServiceMixin {
   List<TestSeriesModel> allTestSeries = [];
   List<PdfNotesModel> getpdfNotes = [];
   List<McqModel> getQuestions = [];
-
   List<TermsConditionModel> getTermsCondition = [];
   List<PrivacyPolicyModel> getPrivacyPolicy = [];
-
-  List<AllContentModel>? _allContentList;
-  List<AllContentModel>? get allContentList => _allContentList;
+  List<AllContentModel>? allContentList=[];
   List getBannerList = [];
-
-  List<AllCourses> filteredCourses = []; // Exposed to UI
-
+  List<AllCourses> filteredCourses = [];
   List<AllCourses> get getCourseList => filteredCourses;
-  // Fetch Courses
+  List<PaidCoursesModel> myPaidCourses = [];
+  List<PaidCoursesContentsModel> paidCourseContents = [];
+  List<TransactionDetailsModel> getTransactionDetails = [];
 
   Future<ResponseModel> getAllCourses() async {
     isLoading = true;
@@ -54,7 +54,6 @@ class CourseController extends GetxController with GetxServiceMixin {
 
     if (responseModel.status == 200) {
       _allCourses = allCoursesFromJson(jsonEncode(responseModel.data));
-      // _allCourses = allCoursesFromJson(jsonEncode(responseModel.data));
       filteredCourses = _allCourses; // Initially show all
     }
 
@@ -63,13 +62,14 @@ class CourseController extends GetxController with GetxServiceMixin {
     return responseModel;
   }
 
+
   Future<ResponseModel> getAllTestSeries() async {
     isLoading = true;
     update();
 
     Response response = await courseRepo.getAllTestSeries();
     ResponseModel responseModel = await checkResponseModel(response);
-
+    //
     // showCustomSnackBar(
     //   responseModel.message,
     //   isError: responseModel.status == 200 ? false : true,
@@ -128,6 +128,28 @@ class CourseController extends GetxController with GetxServiceMixin {
     return responseModel;
   }
 
+  Future<ResponseModel> getAllTransactions() async {
+    isLoading = true;
+    update();
+
+    Response response = await courseRepo.getAllTransactions();
+    ResponseModel responseModel = await checkResponseModel(response);
+
+    // showCustomSnackBar(
+    //   responseModel.message,
+    //   isError: responseModel.status == 200 ? false : true,
+    // );
+
+    if (responseModel.status == 200) {
+      getTransactionDetails =
+          transactionDetailsModelFromJson(jsonEncode(responseModel.data));
+    }
+
+    isLoading = false;
+    update();
+    return responseModel;
+  }
+
   Future<ResponseModel> getPdfNotes() async {
     isLoading = true;
     update();
@@ -147,7 +169,7 @@ class CourseController extends GetxController with GetxServiceMixin {
     isLoading = false;
     update();
     return responseModel;
-  } // Fetch Content
+  }
 
   Future<ResponseModel> getMcqQuestions(String id) async {
     isLoading = true;
@@ -172,7 +194,7 @@ class CourseController extends GetxController with GetxServiceMixin {
 
     Response response = await courseRepo.getAllContent(id: id);
     ResponseModel responseModel = await checkResponseModel(response);
-    //
+
     // showCustomSnackBar(
     //   responseModel.message,
     //   isError: responseModel.status != 200,
@@ -180,9 +202,7 @@ class CourseController extends GetxController with GetxServiceMixin {
 
     if (responseModel.status == 200) {
       // Make sure responseModel.data is a List
-      _allContentList = (responseModel.data as List)
-          .map((item) => AllContentModel.fromJson(item))
-          .toList();
+      allContentList = allContentModelFromJson(jsonEncode(responseModel.data));
     }
 
     isLoading = false;
@@ -226,28 +246,59 @@ class CourseController extends GetxController with GetxServiceMixin {
 
   Future<ResponseModel> addCourse(
       {required String coursename, required List thumbnailImg}) async {
+    isLoading=true;
     update();
     Response response = await courseRepo.addCourse(coursename, thumbnailImg);
 
     log("AddCourse Response: ${jsonEncode(response.body)}");
 
     ResponseModel responseModel = await checkResponseModel(response);
-    //
+
     // showCustomSnackBar(responseModel.message,
     //     isError: responseModel.status == 200 ? false : true);
 
     if (responseModel.status == 200) {}
 
+    isLoading=false;
     update();
     return responseModel;
   }
 
   Future<ResponseModel> addTest(
       {required String testName, required List thumbnailImg}) async {
+    isLoading=true;
     update();
     Response response = await courseRepo.addTest(testName, thumbnailImg);
 
     log("AddTest Response: ${jsonEncode(response.body)}");
+
+    ResponseModel responseModel = await checkResponseModel(response);
+
+    // showCustomSnackBar(responseModel.message,
+    //     isError: responseModel.status == 200 ? false : true);
+
+    if (responseModel.status == 200) {}
+
+    isLoading=false;
+    update();
+    return responseModel;
+  }
+
+  Future<ResponseModel> addContent(
+      {  required String courseId,
+        required String course,
+      required String title,
+      required String description,
+      required File contentImg,
+      required File contentVideo,
+      required File contentPdf}) async {
+    isLoading=true;
+    update();
+    Response response = await courseRepo.addContent(
+
+        courseId,course, title, description, contentImg, contentVideo, contentPdf);
+
+    log("AddCourse Response: ${jsonEncode(response.body)}");
 
     ResponseModel responseModel = await checkResponseModel(response);
     //
@@ -255,34 +306,8 @@ class CourseController extends GetxController with GetxServiceMixin {
     //     isError: responseModel.status == 200 ? false : true);
 
     if (responseModel.status == 200) {}
-
+    isLoading=false;
     update();
-    return responseModel;
-  }
-
-  Future<ResponseModel> addContent(
-      {required String course,
-      required String title,
-      required String description,
-      required File contentImg,
-      required File contentVideo,
-      required File contentPdf}) async {
-    update();
-    isLoading = true;
-    Response response = await courseRepo.addContent(
-        course, title, description, contentImg, contentVideo, contentPdf);
-
-    log("AddCourse Response: ${jsonEncode(response.body)}");
-
-    ResponseModel responseModel = await checkResponseModel(response);
-
-    // showCustomSnackBar(responseModel.message,
-    //     isError: responseModel.status == 200 ? false : true);
-
-    if (responseModel.status == 200) {}
-
-    update();
-    isLoading = false;
     return responseModel;
   }
 
@@ -290,6 +315,7 @@ class CourseController extends GetxController with GetxServiceMixin {
       {required String course,
       required File contentImg,
       required File contentPdf}) async {
+    isLoading=true;
     update();
     Response response =
         await courseRepo.addPdfs(course, contentImg, contentPdf);
@@ -303,11 +329,13 @@ class CourseController extends GetxController with GetxServiceMixin {
 
     if (responseModel.status == 200) {}
 
+    isLoading=false;
     update();
     return responseModel;
   }
 
   Future<ResponseModel> addBanner({required File contentImg}) async {
+    isLoading=true;
     update();
     Response response = await courseRepo.addBanners(contentImg);
 
@@ -320,22 +348,26 @@ class CourseController extends GetxController with GetxServiceMixin {
 
     if (responseModel.status == 200) {}
 
+    isLoading=false;
     update();
     return responseModel;
   }
 
   Future<ResponseModel> deleteContent(int contentId) async {
+    isLoading=true;
+    update();
     try {
       Response response = await courseRepo.apiClient
           .deleteData("${AppConstants.deletecontent}$contentId");
 
       ResponseModel responseModel = await checkResponseModel(response);
-
+      //
       // showCustomSnackBar(
       //   responseModel.message,
       //   isError: responseModel.status != 200,
       // );
-
+      isLoading=false;
+      update();
       return responseModel;
     } catch (e) {
       // showCustomSnackBar("Something went wrong", isError: true);
@@ -351,6 +383,7 @@ class CourseController extends GetxController with GetxServiceMixin {
       required String optionC,
       required String optionD,
       required String answer}) async {
+    isLoading=true;
     update();
     Response response = await courseRepo.postQuestions(
         testSeriesId, question, optionA, optionB, optionC, optionD, answer);
@@ -364,11 +397,40 @@ class CourseController extends GetxController with GetxServiceMixin {
 
     if (responseModel.status == 200) {}
 
+    isLoading=false;
+    update();
+    return responseModel;
+  }
+
+  Future<ResponseModel> postTransactions({
+    required String courseName,
+    required String studentName,
+    required String paymentMethod,
+    required String amount,
+    required String transactionId,
+  }) async {
+    isLoading=true;
+    update();
+    Response response = await courseRepo.postTransaction(
+        courseName, studentName, paymentMethod, amount, transactionId);
+
+    log("jjoj" + jsonEncode(response.statusCode)); // Logs response status code
+
+    ResponseModel responseModel = await checkResponseModel(response);
+    //
+    // showCustomSnackBar(responseModel.message,
+    //     isError: responseModel.status == 200 ? false : true);
+
+    if (responseModel.status == 200) {}
+
+    isLoading=false;
     update();
     return responseModel;
   }
 
   Future<ResponseModel> deleteQuestion(int questionId) async {
+    isLoading=true;
+    update();
     try {
       Response response = await courseRepo.apiClient
           .deleteData("${AppConstants.deleteQuestion}$questionId");
@@ -379,14 +441,18 @@ class CourseController extends GetxController with GetxServiceMixin {
       //   responseModel.message,
       //   isError: responseModel.status != 200,
       // );
-
+      isLoading=false;
+      update();
       return responseModel;
     } catch (e) {
       // showCustomSnackBar("Something went wrong", isError: true);
       rethrow;
     }
   }
+
   Future<ResponseModel> deletePdfs(int pdfId) async {
+    isLoading=true;
+    update();
     try {
       Response response = await courseRepo.apiClient
           .deleteData("${AppConstants.deletepdf}$pdfId");
@@ -397,14 +463,18 @@ class CourseController extends GetxController with GetxServiceMixin {
       //   responseModel.message,
       //   isError: responseModel.status != 200,
       // );
-
+      isLoading=false;
+      update();
       return responseModel;
     } catch (e) {
       // showCustomSnackBar("Something went wrong", isError: true);
       rethrow;
     }
   }
+
   Future<ResponseModel> deleteCourse(int courseId) async {
+    isLoading=true;
+    update();
     try {
       Response response = await courseRepo.apiClient
           .deleteData("${AppConstants.deletecourse}$courseId");
@@ -415,17 +485,176 @@ class CourseController extends GetxController with GetxServiceMixin {
       //   responseModel.message,
       //   isError: responseModel.status != 200,
       // );
-
+      isLoading=false;
+      update();
       return responseModel;
     } catch (e) {
       // showCustomSnackBar("Something went wrong", isError: true);
       rethrow;
     }
   }
+
   Future<ResponseModel> deleteTest(int testId) async {
+    isLoading=true;
+    update();
     try {
       Response response = await courseRepo.apiClient
           .deleteData("${AppConstants.deleteTestSeries}$testId");
+
+      ResponseModel responseModel = await checkResponseModel(response);
+
+      // showCustomSnackBar(
+      //   responseModel.message,
+      //   isError: responseModel.status != 200,
+      // );
+      isLoading=false;
+      update();
+      return responseModel;
+    } catch (e) {
+      // showCustomSnackBar("Something went wrong", isError: true);
+      rethrow;
+    }
+  }
+
+  Future<ResponseModel> reportProblem({
+    required String type,
+    required String description,
+    required File image,
+  }) async {
+    isLoading = true;
+    update();
+
+    Response response = await courseRepo.postProblem(type, description, image);
+
+    log("problem Response: ${jsonEncode(response.body)}");
+
+    ResponseModel responseModel = await checkResponseModel(response);
+
+    // showCustomSnackBar(responseModel.message,
+    //     isError: responseModel.status == 200 ? false : true);
+
+    if (responseModel.status == 200) {}
+
+    isLoading = false;
+    update();
+    return responseModel;
+  }
+
+  Future<ResponseModel> addPaidCourse(
+      {required String teacherName,
+      required String courseName,
+      required String actualPrice,
+      required String discountPrice,
+      required List thumbnailImg}) async {
+    isLoading=true;
+    update();
+    Response response = await courseRepo.addPaidCourse(
+        teacherName, courseName, actualPrice, discountPrice, thumbnailImg);
+
+    log("AddCourse Response: ${jsonEncode(response.body)}");
+
+    ResponseModel responseModel = await checkResponseModel(response);
+
+    // showCustomSnackBar(responseModel.message,
+    //     isError: responseModel.status == 200 ? false : true);
+
+    if (responseModel.status == 200) {
+
+    }
+    isLoading=false;
+    update();
+    return responseModel;
+  }
+
+
+
+  Future<ResponseModel> deletePaidCourse(int courseId) async {
+    isLoading=true;
+    update();
+    try {
+      Response response = await courseRepo.apiClient
+          .deleteData("${AppConstants.deletePaidCourse}$courseId");
+
+      ResponseModel responseModel = await checkResponseModel(response);
+      //
+      // showCustomSnackBar(
+      //   responseModel.message,
+      //   isError: responseModel.status != 200,
+      // );
+      isLoading=false;
+      update();
+      return responseModel;
+    } catch (e) {
+      // showCustomSnackBar("Something went wrong", isError: true);
+      rethrow;
+    }
+  }
+
+
+  Future<ResponseModel> addPaidCourseContent(
+      {required String courseId,
+      required String course,
+      required String title,
+      required String description,
+      required File contentImg,
+      required File contentVideo,
+      required File contentPdf}) async {
+    isLoading=true;
+    update();
+
+    Response response = await courseRepo.addPaidCourseContent(courseId, course,
+        title, description, contentImg, contentVideo, contentPdf);
+
+    log("AddCourse Response: ${jsonEncode(response.body)}");
+
+    ResponseModel responseModel = await checkResponseModel(response);
+    //
+    // showCustomSnackBar(responseModel.message,
+    //     isError: responseModel.status == 200 ? false : true);
+
+    if (responseModel.status == 200) {
+    }
+
+
+    isLoading = false;
+    update();
+    return responseModel;
+  }
+
+  Future<ResponseModel> getPaidCourseContent(String courseId) async {
+    isLoading = true;
+    update();
+    try {
+      Response response = await courseRepo.apiClient
+          .getData('${AppConstants.getPaidCoursesContents}?course_id=$courseId');
+
+
+      ResponseModel responseModel = await checkResponseModel(response);
+      update();
+
+      if (responseModel.status == 200) {
+        paidCourseContents =
+            paidCoursesContentsModelFromJson(jsonEncode(responseModel.data));
+        update();
+      }
+
+      // showCustomSnackBar(
+      //   responseModel.message,
+      //   isError: responseModel.status != 200,
+      // );
+      isLoading = false;
+      update();
+      return responseModel;
+    } catch (e) {
+      // showCustomSnackBar("Something went wrong", isError: true);
+      rethrow;
+    }
+  }
+
+  Future<ResponseModel> deletePaidCourseContent(int contentId) async {
+    try {
+      Response response = await courseRepo.apiClient
+          .deleteData("${AppConstants.deletePaidCourseContent}$contentId");
 
       ResponseModel responseModel = await checkResponseModel(response);
 
@@ -442,37 +671,26 @@ class CourseController extends GetxController with GetxServiceMixin {
   }
 
 
-
-
-
-
-
-
-
-
-
-  Future<ResponseModel> reportProblem(
-      {
-        required String type,
-        required String description,
-        required File image,
-        }) async {
-    update();
+  Future<ResponseModel> getMyPaidCourses() async {
     isLoading = true;
-    Response response = await courseRepo.postProblem(
-         type,description, image);
-
-    log("problem Response: ${jsonEncode(response.body)}");
-
-    ResponseModel responseModel = await checkResponseModel(response);
-
-    // showCustomSnackBar(responseModel.message,
-    //     isError: responseModel.status == 200 ? false : true);
-
-    if (responseModel.status == 200) {}
-
     update();
+
+    Response response = await courseRepo.getMyPaidCourse();
+    ResponseModel responseModel = await checkResponseModel(response);
+    //
+    // showCustomSnackBar(
+    //   responseModel.message,
+    //   isError: responseModel.status == 200 ? false : true,
+    // );
+
+    if (responseModel.status == 200) {
+      myPaidCourses = paidCoursesModelFromJson(jsonEncode(responseModel.data));
+
+    }
+
     isLoading = false;
+    update();
     return responseModel;
   }
+
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:e_learning_app/controller/auth_controller.dart';
 import 'package:e_learning_app/controller/course_Controller.dart';
 import 'package:e_learning_app/customWidgets/custom_buttons.dart';
 import 'package:flutter/material.dart';
@@ -9,15 +10,17 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../../customWidgets/Custom_input_text_field.dart';
 import '../../../../../customWidgets/customtext.dart';
 
-class AddCourseNameScreen extends StatefulWidget {
-  const AddCourseNameScreen({super.key});
+class AddNewPaidCourse extends StatefulWidget {
+  const AddNewPaidCourse({super.key});
 
   @override
-  State<AddCourseNameScreen> createState() => _AddCourseNameScreenState();
+  State<AddNewPaidCourse> createState() => _AddNewPaidCourseState();
 }
 
-class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
+class _AddNewPaidCourseState extends State<AddNewPaidCourse> {
   final TextEditingController _courseNameController = TextEditingController();
+  final TextEditingController _actualPriceController = TextEditingController();
+  final TextEditingController _discountPriceController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
 
   File? _thumbnailFile;
@@ -25,11 +28,14 @@ class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
 
   String? _courseNameError;
   String? _thumbnailError;
+  String? _actualPriceError;
+  String? _discountPriceError;
 
   bool _isLoading = false;
 
   Future<void> _pickThumbnail() async {
-    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile =
+    await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       final file = File(pickedFile.path);
       final bytes = file.lengthSync();
@@ -50,13 +56,34 @@ class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
 
   void _saveCourse() {
     final courseName = _courseNameController.text.trim();
+    final actualPriceText = _actualPriceController.text.trim();
+    final discountPriceText = _discountPriceController.text.trim();
 
     setState(() {
       _courseNameError = courseName.isEmpty ? 'Course name is required' : null;
+      _actualPriceError = actualPriceText.isEmpty
+          ? 'Price is required'
+          : double.tryParse(actualPriceText) == null || double.parse(actualPriceText) <= 0
+          ? 'Enter a valid price'
+          : null;
+
+
+
+
+
+      _discountPriceError = discountPriceText.isEmpty
+          ? 'Price is required'
+          : double.tryParse(discountPriceText) == null || double.parse(discountPriceText) <= 0
+          ? 'Enter a valid price'
+          : null;
       _thumbnailError = _thumbnailPath == null ? 'Thumbnail is required' : null;
+
+
+
+
     });
 
-    if (_courseNameError != null || _thumbnailError != null) {
+    if (_courseNameError != null || _thumbnailError != null || _actualPriceError != null|| _discountPriceError != null ) {
       return;
     }
 
@@ -64,14 +91,26 @@ class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
       _isLoading = true;
     });
 
-    Get.find<CourseController>().addCourse(
-      coursename: courseName,
+    Get.find<CourseController>()
+        .addPaidCourse(
+      courseName: courseName,
+      teacherName: Get.find<AuthController>().profileModel!.username.toString(),
+      actualPrice: actualPriceText,
+      discountPrice: discountPriceText,
       thumbnailImg: [_thumbnailPath!],
-    ).then((response) {
+    )
+        .then((response) {
       if (response.status == 200) {
         Get.close(1);
-        Get.find<CourseController>().getAllCourses();
+        Get.find<CourseController>().getMyPaidCourses();
 
+        _courseNameController.clear();
+        _actualPriceController.clear();
+        _discountPriceController.clear();
+        setState(() {
+          _thumbnailFile = null;
+          _thumbnailPath = null;
+        });
       } else {
         Get.snackbar('Error', response.message);
       }
@@ -92,10 +131,11 @@ class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
         child: CustomButton(
           onPressed: _isLoading ? null : _saveCourse,
           child: _isLoading
-              ?  SizedBox(
+              ? SizedBox(
             width: 20,
             height: 20,
-            child: CircularProgressIndicator(color: Get.theme.scaffoldBackgroundColor,
+            child: CircularProgressIndicator(
+              color: Get.theme.scaffoldBackgroundColor,
               strokeWidth: 2.5,
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
@@ -128,6 +168,51 @@ class _AddCourseNameScreenState extends State<AddCourseNameScreen> {
             hintText: 'Add Course',
             controller: _courseNameController,
             errorText: _courseNameError,
+          ),
+          const SizedBox(height: 20),
+          Row(spacing: 16,crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Poppins(
+                        text: 'Actual Price',
+                        fontSize: 16,
+                        color: Get.theme.secondaryHeaderColor),
+                    const SizedBox(height: 8),
+                    CustomTextField(
+                      prefixIcon: Icons.currency_rupee_rounded,
+                      prefixIconSize: 20,
+                      hintText: 'Price',
+                      maxDigits: 4,
+                      keyboardType: TextInputType.number,
+                      controller:_actualPriceController,
+                      errorText: _actualPriceError,
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Poppins(
+                        text: 'Discount Price',
+                        fontSize: 16,
+                        color: Get.theme.secondaryHeaderColor),
+                    const SizedBox(height: 8),
+                    CustomTextField(
+                      prefixIcon: Icons.currency_rupee_rounded,
+                      prefixIconSize: 20,
+                      hintText: 'Price',
+                      maxDigits: 4,
+                      keyboardType: TextInputType.number,
+                      controller: _discountPriceController,
+                      errorText: _discountPriceError,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 20),
           Poppins(

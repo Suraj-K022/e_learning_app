@@ -2,6 +2,7 @@ import 'package:e_learning_app/controller/auth_controller.dart';
 import 'package:e_learning_app/controller/course_Controller.dart';
 import 'package:e_learning_app/screens/Student/Student_Dashboard/StudentProfile/SettingScreen/setting_screen.dart';
 import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/AddTestScreen/add_test_screen.dart';
+import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/PaidCoursesList/paid_courses_list.dart';
 import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/availableTestSeries/available_test_series.dart';
 import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/uploadedPdfsScreen/uploaded_pdfs_screen.dart';
 import 'package:e_learning_app/screens/Tutor/Tutor_Dashboard/CoursesScreen/courses_screen.dart';
@@ -26,7 +27,7 @@ class _TutorDashboardState extends State<TutorDashboard> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<AuthController>().getProfile();
-      Get.find<CourseController>().getAllCourses();
+      // Get.find<CourseController>().getAllCourses();
     });
   }
 
@@ -37,29 +38,39 @@ class _TutorDashboardState extends State<TutorDashboard> {
   }) {
     return InkWell(
       onTap: onTap,
-      child: Container(
+      borderRadius: BorderRadius.circular(16),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
           color: Get.theme.cardColor,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Get.theme.primaryColor),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+          border: Border.all(color: Get.theme.primaryColor.withOpacity(0.3)),
         ),
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 30,
-              width: 30,
-              child: Image.asset(iconPath, color: Get.theme.secondaryHeaderColor),
+            Image.asset(
+              iconPath,
+              height: 36,
+              width: 36,
+              color: Get.theme.secondaryHeaderColor,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Poppins(
               text: title,
-              fontSize: 16,
-              maxLines: 3,
-              color: Get.theme.secondaryHeaderColor,
-              fontWeight: FontWeight.w500,
+              fontSize: 14,
+              maxLines: 2,
               textAlign: TextAlign.center,
+              fontWeight: FontWeight.w600,
+              color: Get.theme.secondaryHeaderColor,
             ),
           ],
         ),
@@ -69,24 +80,21 @@ class _TutorDashboardState extends State<TutorDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: Get.theme.scaffoldBackgroundColor,
+    return Scaffold(
+      backgroundColor: Get.theme.scaffoldBackgroundColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Get.theme.scaffoldBackgroundColor,
+        elevation: 0,
         title: GetBuilder<AuthController>(
           builder: (authController) {
             if (authController.isLoading) {
-              return Poppins(
-                text: 'Loading...',
-                color: Get.theme.primaryColor,
-                fontWeight: FontWeight.w400,
-                fontSize: 12,
-              );
+              return SizedBox(height: 24,width: 24,child: CircularProgressIndicator(backgroundColor: Get.theme.scaffoldBackgroundColor,color: Get.theme.primaryColor,));
             }
             return Row(
               children: [
                 InkWell(
-                  onTap: () => Get.to(()=>ProfileScreen()),
+                  onTap: () => Get.to(() => const ProfileScreen()),
                   child: CircleAvatar(
                     backgroundColor: Get.theme.secondaryHeaderColor,
                     radius: 20,
@@ -94,16 +102,20 @@ class _TutorDashboardState extends State<TutorDashboard> {
                         ? NetworkImage(authController.profileModel!.image!)
                         : null,
                     child: (authController.profileModel?.image?.isEmpty ?? true)
-                        ? Icon(Icons.person, color: Colors.white)
+                        ? const Icon(Icons.person, color: Colors.white)
                         : null,
                   ),
                 ),
                 const SizedBox(width: 10),
-                Poppins(
-                  text: 'Hey, ${authController.profileModel?.name ?? "User"}',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Get.theme.primaryColor,
+                Expanded(
+                  child: Poppins(
+                    text: 'Hey, ${authController.profileModel?.name ?? "User"}',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Get.theme.primaryColor,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             );
@@ -111,61 +123,64 @@ class _TutorDashboardState extends State<TutorDashboard> {
         ),
         actions: [
           InkWell(
-            onTap: () => Get.to(()=>NotificationScreen()),
+            onTap: () => Get.to(() => const NotificationScreen()),
             child: Icon(Icons.notifications_active_outlined, size: 24, color: Get.theme.secondaryHeaderColor),
           ),
           const SizedBox(width: 12),
           InkWell(
-            onTap: () => Get.to(()=>SettingScreen()),
+            onTap: () => Get.to(() => const SettingScreen()),
             child: Image.asset(Images.settings, height: 20, width: 20),
           ),
-          const SizedBox(width: 36),
+          const SizedBox(width: 24),
         ],
       ),
       body: GetBuilder<CourseController>(
         builder: (courseController) {
-          return GridView.count(
-            crossAxisCount: 2,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-            children: [
-              // dashboardTile(
-              //   title: 'Create New Course',
-              //   iconPath: Images.add,
-              //   onTap: () => Get.to(CreateNewCourse(
-              //
-              //
-              //     courseName: '',
-              //     ScreenName: 'TutorDashboard',
-              //   )),
-              // ),
-              dashboardTile(
-                title: 'Courses',
-                iconPath: Images.course,
-                onTap: () => Get.to(()=>CoursesScreen()),
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+
+                  const SizedBox(height: 20),
+                  GridView.count(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      dashboardTile(
+                        title: 'Create Free Courses',
+                        iconPath: Images.course,
+                        onTap: () => Get.to(() => const CoursesScreen()),
+                      ),
+                      dashboardTile(
+                        title: 'Create Paid Courses',
+                        iconPath: Images.test,
+                        onTap: () => Get.to(() => const PaidCoursesList()),
+                      ),
+                      dashboardTile(
+                        title: 'Test Series',
+                        iconPath: Images.test,
+                        onTap: () => Get.to(() => const AvailableTestSeries()),
+                      ),
+                      dashboardTile(
+                        title: 'Uploaded Pdfs',
+                        iconPath: Images.i5,
+                        onTap: () => Get.to(() => const UploadedPdfsScreen()),
+                      ),
+                      dashboardTile(
+                        title: 'Payments',
+                        iconPath: Images.wallet,
+                        onTap: () => Get.to(() => const PaymentScreen()),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              // dashboardTile(
-              //   title: 'Create Test',
-              //   iconPath: Images.test,
-              //   onTap: () => Get.to(AddTestScreen()),
-              // ),
-              dashboardTile(
-                title: 'Test Series',
-                iconPath: Images.test,
-                onTap: () => Get.to(()=>AvailableTestSeries()),
-              ),
-              dashboardTile(
-                title: 'Uploaded Pdfs',
-                iconPath: Images.i5,
-                onTap: () => Get.to(()=>UploadedPdfsScreen()),
-              ),
-              dashboardTile(
-                title: 'Payments',
-                iconPath: Images.wallet,
-                onTap: () => Get.to(()=>PaymentScreen()),
-              ),
-            ],
+            ),
           );
         },
       ),
